@@ -87,7 +87,7 @@ Le plateau visible à la Figure 3 trois parties :
 
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure3_plateau.jpg" alt="Plateau de jeu">
-  <figcaption><br><strong>Figure 3 :</strong> Plateau de jeu</figcaption></br>
+  <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
 </figure></br>
 
 Les cartes effets sont divisé en deux:
