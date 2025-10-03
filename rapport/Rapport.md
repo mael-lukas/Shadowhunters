@@ -90,21 +90,26 @@ Le plateau visible à la Figure 3 trois parties :
   <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
 </figure>
 
-Les cartes effets sont divisé en trois:
+Les cartes effets sont divisé en deux:
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
-- Les cartes Ténèbres sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés offensif et sabotage;
-<figure style="text-align: center;">
-  <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
-  <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
-</figure>
-- Les cartes Lumières sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés défensif et soutien.
-<figure style="text-align: center;">
-  <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
-  <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
-</figure>
+- Les cartes équipement:
+    - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés offensif et sabotage;
+        <figure style="text-align: center;">
+        <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
+        <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
+        </figure>
+    - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés défensif et soutien.
+        <figure style="text-align: center;">
+        <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
+        <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
+        </figure>
 
 Déroulement d'une partie:
-Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
+- Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
+Après cela les joueurs ont leurs rôles attribué aléatoirement, puis ces derniers ont leurs ordre définis par un lancer de dé.
+- Un tours de jeu commence par un lancer de dé pour savoir où le joueur doit aller, ainsi lorsque qu'il lance son dé ce dernier va dans le lieux indiqué par valeur mais si il ce retrouve sur le même lieux il doit relancer le dé. Dans le cas où il fait un 7 il peut aller dans n'importe quel lieux à l'exception du lieux sur lequel il se trouve.  
+Le joueur effectue l'effet ou non indiqué sur la carte lieux et si il y a un joueur au sein de la même zone ce dernier à la possibilité d'effectuer une attaque contre ce dernier.
+- La révélation peux ce faire à tout instant, même pendant le tour de l'adversaire.
 
 Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition des camps
 | Nombre de joueur | Nombre de Shadow | Nombre de Hunter | Nombre de Neutre |
@@ -116,17 +121,19 @@ Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition de
 | 8 | 3 | 3 | 2 (sauf Bob) |
 
 
-
-Présenter ici une description des principales règles du jeu. Il doit y avoir suffisamment d'éléments pour pouvoir former entièrement le jeu, sans pour autant entrer dans les détails . Notez que c'est une description en «français» qui est demandé, il n'est pas question d'informatique et de programmation dans cette section.
-
 ### 1.3 Conception Logiciel
-Présenter ici les packages de votre solution, ainsi que leurs dépendances.
+Pour la suite de la production du projet, a été décidé de partir sur le mode de jeu à 4 joueurs car ce dernier permet de rendre la première version à produire du projet plus simple car enlevant le camp Neutre, ce qui enlève de nombreuse condition de victoire différentes.
+
+Etant donner que nous avons en notre possession le jeu, il est alors possible de scanner les différent élément du jeu afin de pouvoir les intégrers à notre code. L'ajout de cet aspect graphique est ce qui peut être produit ultérieuremnt.
+
 
 
 ## 2 Description et conception des états
+
 L'objectif de cette section est une description très fine des états dans le projet. Plusieurs niveaux de descriptions sont attendus. Le premier doit être général, afin que le lecteur puisse comprendre les éléments et principes en jeux. Le niveau suivant est celui de la conception logicielle. Pour ce faire, on présente à la fois un diagramme des classes, ainsi qu'un commentaire détaillé de ce diagramme. Indiquer l'utilisation de patron de conception sera très apprécié. Notez bien que les règles de changement d'état ne sont pas attendues dans cette section, même s'il n'est pas interdit d'illustrer de temps à autre des états par leurs possibles changements.
 
 ### 2.1 Description des états
+
 
 ### 2.2 Conception logicielle
 	
