@@ -62,13 +62,13 @@ Le plateau de jeu peut être vu en Figure 1.
 
 <figure style="text-align: center;">
   <img src="img_rapport/figure1_shadowhunters_Original.png" alt="Shadow Hunter">
-  <figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
+  <figcaption><br><strong>Figure 1 :</strong> Shadow Hunter</figcaption></br>
 </figure>
 
 Exemple de rendue d'une partie:
 <figure style="text-align: center;">
   <img src="img_rapport/figure2_partie.jpg" alt="Partie">
-  <figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
+  <figcaption><br><strong>Figure 2 :</strong> Représentation d'une partie</figcaption></br>
 </figure>
 
 
@@ -87,7 +87,7 @@ Le plateau visible à la Figure 3 trois parties :
 
 <figure style="text-align: center;">
   <img src="img_rapport/figure3_plateau.jpg" alt="Plateau de jeu">
-  <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
+  <figcaption><br><strong>Figure 3 :</strong> Plateau de jeu</figcaption></br>
 </figure>
 
 Les cartes effets sont divisé en deux:
@@ -96,12 +96,12 @@ Les cartes effets sont divisé en deux:
     - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés offensif et sabotage;
         <figure style="text-align: center;">
         <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
-        <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
+        <figcaption><br><strong>Figure 5 :</strong> Carte Ténèbre</figcaption></br>
         </figure>
     - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés défensif et soutien.
         <figure style="text-align: center;">
         <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
-        <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
+        <figcaption><br><strong>Figure 6 :</strong> Carte Lumière</figcaption></br>
         </figure>
 
 Déroulement d'une partie:
