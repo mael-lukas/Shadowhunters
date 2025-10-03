@@ -15,12 +15,8 @@ using namespace state;
 
 int main(int argc,char* argv[])
 {
-    Example example;
-    ExampleA exampleA;
-    exampleA.setX(53);
-    example.setA(exampleA);
-
-    cout << "It works !" << endl;
+    Board testBoard;
+    cout << "Ta mère la " << endl;
 
     return 0;
 }
