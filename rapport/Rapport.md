@@ -133,7 +133,11 @@ Etant donner que nous avons en notre possession le jeu, il est alors possible de
 L'objectif de cette section est une description très fine des états dans le projet. Plusieurs niveaux de descriptions sont attendus. Le premier doit être général, afin que le lecteur puisse comprendre les éléments et principes en jeux. Le niveau suivant est celui de la conception logicielle. Pour ce faire, on présente à la fois un diagramme des classes, ainsi qu'un commentaire détaillé de ce diagramme. Indiquer l'utilisation de patron de conception sera très apprécié. Notez bien que les règles de changement d'état ne sont pas attendues dans cette section, même s'il n'est pas interdit d'illustrer de temps à autre des états par leurs possibles changements.
 
 ### 2.1 Description des états
+L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restant sont controllés par des Intelligences Artificielle (ou d'autre joueur).
 
+#### 2.1.1 État du terrain
+
+#### 2.1.1 État du joueur
 
 ### 2.2 Conception logicielle
 	
@@ -143,8 +147,10 @@ L'objectif de cette section est une description très fine des états dans le pr
 
 ### 2.5 Ressources
 
-Illustration 1: Diagramme des classes d'état
-
+<figure style="text-align: center;">
+<img src="img_rapport/figure7_dia_state.png" alt="Diagramme des classes état">
+<figcaption><strong>Figure 6 :</strong> Diagramme des classes d'état</figcaption>
+</figure>
 
 ## 3 Rendu: Stratégie et Conception
 Présentez ici la stratégie générale que vous comptez suivre pour rendre un état. Cela doit tenir compte des problématiques de synchronisation entre les changements d'états et la vitesse d'affichage à l'écran. Puis, lorsque vous serez rendu à la partie client/serveur, expliquez comment vous aller gérer les problèmes liés à la latence. Après cette description, présentez la conception logicielle. Pour celle-ci, il est fortement recommandé de former une première partie indépendante de toute librairie graphique, puis de présenter d'autres parties qui l'implémente pour une librairie particulière. Enfin, toutes les classes de la première partie doivent avoir pour unique dépendance les classes d'état de la section précédente.
