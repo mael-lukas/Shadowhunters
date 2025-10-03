@@ -65,6 +65,12 @@ Le plateau de jeu peut être vu en Figure 1.
   <figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
 </figure>
 
+Exemple de rendue d'une partie:
+<figure style="text-align: center;">
+  <img src="img_rapport/figure2_partie.jpg" alt="Partie">
+  <figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
+</figure>
+
 
 ### 1.2 Règles du jeu
 Le jeu est divisé en trois camp:
@@ -72,19 +78,33 @@ Le jeu est divisé en trois camp:
 - les Hunters ont le même but que les Shadows
 - les Neutres ont des conditions de victoire propre au rôle du joueur  
 
-Dans les camps chaque rôle à un effet qui lui est propre et qui peut être utilisé lorsque le ce dernier décide de ce révêler
+Dans les camps chaque rôle à un effet qui lui est propre et qui peut être utilisé uniquement après que ce dernier ce soit révêler. Les effets peuvent être utilisable qu'une seule fois par tour ou une unique fois par partie.
 
-Le plateau visible à la Figure 2 trois parties :
+Le plateau visible à la Figure 3 trois parties :
 - une partie à gauche contenant les points de vie ainsi que les informations à propos des points de vie max des différents rôles ;
 - une partie au milieu contenant les cartes des différentes zones et lieux ;
 - une partie à droite contenant les cartes effets (les cartes Ténèbres, les cartes Lumières et les cartes Vision)
 
 <figure style="text-align: center;">
-  <img src="img_rapport/figure2_plateau.jpg" alt="Plateau de jeu">
-  <figcaption><strong>Figure 2 :</strong> Plateau de jeu</figcaption>
+  <img src="img_rapport/figure3_plateau.jpg" alt="Plateau de jeu">
+  <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
 </figure>
 
-Les cartes effets 
+Les cartes effets sont divisé en trois:
+- Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
+- Les cartes Ténèbres sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés offensif et sabotage;
+<figure style="text-align: center;">
+  <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
+  <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
+</figure>
+- Les cartes Lumières sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés défensif et soutien.
+<figure style="text-align: center;">
+  <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
+  <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
+</figure>
+
+Déroulement d'une partie:
+Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
 
 Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition des camps
 | Nombre de joueur | Nombre de Shadow | Nombre de Hunter | Nombre de Neutre |
