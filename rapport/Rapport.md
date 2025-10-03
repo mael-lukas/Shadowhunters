@@ -98,6 +98,7 @@ Les cartes effets sont divisé en deux:
         <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
         <figcaption><br><strong>Figure 5 :</strong> Carte Ténèbre</figcaption></br>
         </figure>
+        
     - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés défensif et soutien.
         <figure style="text-align: center;">
         <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
