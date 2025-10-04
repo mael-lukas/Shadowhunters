@@ -60,16 +60,16 @@ Durant ce projet, l'objectif est de reproduire le jeu Shadow Hunter. Shadow Hunt
 Le plateau de jeu peut être vu en Figure 1.
 
 
-<figure style="text-align: center;">
+<br><figure style="text-align: center;">
   <img src="img_rapport/figure1_shadowhunters_Original.png" alt="Shadow Hunter">
   <figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
-</figure>
+</figure></br>
 
 Exemple de rendue d'une partie:
-<figure style="text-align: center;">
+<br><figure style="text-align: center;">
   <img src="img_rapport/figure2_partie.jpg" alt="Partie">
   <figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
-</figure>
+</figure></br>
 
 
 ### 1.2 Règles du jeu
@@ -85,26 +85,39 @@ Le plateau visible à la Figure 3 trois parties :
 - une partie au milieu contenant les cartes des différentes zones et lieux ;
 - une partie à droite contenant les cartes effets (les cartes Ténèbres, les cartes Lumières et les cartes Vision)
 
-<figure style="text-align: center;">
+<br><figure style="text-align: center;">
   <img src="img_rapport/figure3_plateau.jpg" alt="Plateau de jeu">
   <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
-</figure>
+</figure></br>
 
 Les cartes effets sont divisé en trois:
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
-- Les cartes Ténèbres sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés offensif et sabotage;
-<figure style="text-align: center;">
-  <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
-  <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
-</figure>
-- Les cartes Lumières sont des équipement que les joueurs peuvent utilisé, ces derniers sont d'avantages tournés défensif et soutien.
-<figure style="text-align: center;">
-  <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
-  <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
-</figure>
+        <br><figure style="text-align: center;">
+        <img src="img_rapport/figure4_carte_vision.jpg" alt="Carte vision">
+        <figcaption><strong>Figure 4 :</strong> Carte Vision</figcaption>
+        </figure></br>
+- Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés offensif et sabotage;
+        <br><figure style="text-align: center;">
+        <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
+        <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
+        </figure></br>
+
+- Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés défensif et soutien.
+        <br><figure style="text-align: center;">
+        <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
+        <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
+        </figure></br>
+
+Parmis les cartes ténèbres et lumières, il y a deux types de cartes:
+- les cartes équipements qui accompagneront le joueur tout le long de la partie.
+- les cartes à utilisation immédiate
 
 Déroulement d'une partie:
-Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
+- Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
+Après cela les joueurs ont leurs rôles attribué aléatoirement, puis ces derniers ont leurs ordre définis par un lancer de dé.
+- Un tours de jeu commence par un lancer de dé pour savoir où le joueur doit aller, ainsi lorsque qu'il lance son dé ce dernier va dans le lieux indiqué par valeur mais si il ce retrouve sur le même lieux il doit relancer le dé. Dans le cas où il fait un 7 il peut aller dans n'importe quel lieux à l'exception du lieux sur lequel il se trouve.  
+Le joueur effectue l'effet ou non indiqué sur la carte lieux et si il y a un joueur au sein de la même zone ce dernier à la possibilité d'effectuer une attaque contre ce dernier.
+- La révélation peux ce faire à tout instant, même pendant le tour de l'adversaire.
 
 Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition des camps
 | Nombre de joueur | Nombre de Shadow | Nombre de Hunter | Nombre de Neutre |
@@ -116,28 +129,67 @@ Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition de
 | 8 | 3 | 3 | 2 (sauf Bob) |
 
 
-
-Présenter ici une description des principales règles du jeu. Il doit y avoir suffisamment d'éléments pour pouvoir former entièrement le jeu, sans pour autant entrer dans les détails . Notez que c'est une description en «français» qui est demandé, il n'est pas question d'informatique et de programmation dans cette section.
-
 ### 1.3 Conception Logiciel
-Présenter ici les packages de votre solution, ainsi que leurs dépendances.
+Pour la suite de la production du projet, a été décidé de partir sur le mode de jeu à 4 joueurs car ce dernier permet de rendre la première version à produire du projet plus simple car enlevant le camp Neutre, ce qui enlève de nombreuse condition de victoire différentes.
+
+Etant donner que nous avons en notre possession le jeu, il est alors possible de scanner les différent élément du jeu afin de pouvoir les intégrers à notre code. L'ajout de cet aspect graphique est ce qui peut être produit ultérieuremnt.
+
 
 
 ## 2 Description et conception des états
+
 L'objectif de cette section est une description très fine des états dans le projet. Plusieurs niveaux de descriptions sont attendus. Le premier doit être général, afin que le lecteur puisse comprendre les éléments et principes en jeux. Le niveau suivant est celui de la conception logicielle. Pour ce faire, on présente à la fois un diagramme des classes, ainsi qu'un commentaire détaillé de ce diagramme. Indiquer l'utilisation de patron de conception sera très apprécié. Notez bien que les règles de changement d'état ne sont pas attendues dans cette section, même s'il n'est pas interdit d'illustrer de temps à autre des états par leurs possibles changements.
 
 ### 2.1 Description des états
+L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restant sont controllés par des Intelligences Artificielle (ou d'autre joueur).
+
+#### 2.1.1 État du terrain
+Le terrain est constitué de trois parties, une partie indiquant les points de vie où les jeutons de chaques représenterons les dégats subit par chaque joueur.
+La seconde partie sera celle des lieux représentant la position des joueurs à l'instanté. Cela permet de savoir si il y a des joueurs dans la même zone, mais aussi connaitre les effet de chaque lieux.
+La troisième partie est la pioche, où il y a trois tas de cartes, vision, lumières et ténèbres.
+
+#### 2.1.2 État du joueur
+Les joueurs ont accès au différentes informations propre à leurs rôles. Ils ont aussi la possibilité d'attaqué ou non un adversaire si ils ce trouvent au sein de la même zone. Le joueur a aussi la possibilité de ce révêler afin de pouvoir utiliser son effet.
+
+#### 2.1.3 État du packet de carte
+Les packets de cartes sont divisé en trois les cartes visions qui vont apportés des informations aux joueurs concernant leurs adversaires, les cartes lumières donnent des effets au joueurs et les cartes ténèbres qui font de même.
 
 ### 2.2 Conception logicielle
-	
+#### 2.2.1 Classes Player
+<figure style="text-align: center;">
+<img src="img_rapport/figure7_class_Player.png" alt="Classes Player">
+<figcaption><strong>Figure 7 :</strong> Classes Player</figcaption>
+</figure>
+La classe Player est ce qui va permettre de définir les différentes informations propres au statu du joueur basic, ce qui correspond à un personnages révélé. Par la suite cet classe risque d'être hérité pour contruire les différents rôles nécessitant des effets spécifiques.  
+La classe player est relié à un énumérateur contenat les différent rôle.
+
+#### 2.2.2 Classes Board
+<figure style="text-align: center;">
+<img src="img_rapport/figure8_class_Board.png" alt="Classes Board">
+<figcaption><strong>Figure 8 :</strong> Classes Board</figcaption>
+</figure>
+La classes Board va faire en sorte de garder les positions des différent joueur, mais aussi de contenir les packets de cartes.  
+La classe est relié à trois énumérations, que ce soit les types cartes, les différents lieux et enfin les différent dés utilisés.
+
+#### 2.2.3 Classes Pack of Card
+<figure style="text-align: center;">
+<img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
+<figcaption><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
+</figure>
+La classe PackOfCard sert à la création des difféerents packet de cartes.  
+Cet classes est relié à deux énumération, l'énumérateur type card contenant les information propre au type de carte. Et l'énumérateur de card prennant en compte les différents spécificité propres au cartes.
+
+
 ### 2.3 Conception logicielle: extension pour le rendu
 
 ### 2.4 Conception logicielle: extension pour le moteur de jeu
 
 ### 2.5 Ressources
 
-Illustration 1: Diagramme des classes d'état
-
+<figure style="text-align: center;">
+<img src="img_rapport/figure10_dia_state.png" alt="Diagramme des classes état">
+<figcaption><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
+</figure>
 
 ## 3 Rendu: Stratégie et Conception
 Présentez ici la stratégie générale que vous comptez suivre pour rendre un état. Cela doit tenir compte des problématiques de synchronisation entre les changements d'états et la vitesse d'affichage à l'écran. Puis, lorsque vous serez rendu à la partie client/serveur, expliquez comment vous aller gérer les problèmes liés à la latence. Après cette description, présentez la conception logicielle. Pour celle-ci, il est fortement recommandé de former une première partie indépendante de toute librairie graphique, puis de présenter d'autres parties qui l'implémente pour une librairie particulière. Enfin, toutes les classes de la première partie doivent avoir pour unique dépendance les classes d'état de la section précédente.
