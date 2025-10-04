@@ -92,6 +92,10 @@ Le plateau visible à la Figure 3 trois parties :
 
 Les cartes effets sont divisé en deux:
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
+        <br><figure style="text-align: center;">
+        <img src="img_rapport/figure4_carte_vision.jpg" alt="Carte vision">
+        <figcaption><strong>Figure 4 :</strong> Carte Vision</figcaption>
+        </figure></br>
 - Les cartes équipement:
     - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés offensif et sabotage;
         <br><figure style="text-align: center;">
