@@ -62,13 +62,13 @@ Le plateau de jeu peut être vu en Figure 1.
 
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure1_shadowhunters_Original.png" alt="Shadow Hunter">
-  <figcaption><br><strong>Figure 1 :</strong> Shadow Hunter</figcaption></br>
+  <figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
 </figure></br>
 
 Exemple de rendue d'une partie:
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure2_partie.jpg" alt="Partie">
-  <figcaption><br><strong>Figure 2 :</strong> Représentation d'une partie</figcaption></br>
+  <figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
 </figure></br>
 
 
@@ -96,13 +96,13 @@ Les cartes effets sont divisé en deux:
     - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés offensif et sabotage;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
-        <figcaption><br><strong>Figure 5 :</strong> Carte Ténèbre</figcaption></br>
+        <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
         </figure></br>
 
     - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés défensif et soutien.
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
-        <figcaption><br><strong>Figure 6 :</strong> Carte Lumière</figcaption></br>
+        <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
         </figure></br>
 
 Déroulement d'une partie:
@@ -150,7 +150,7 @@ L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses 
 
 <figure style="text-align: center;">
 <img src="img_rapport/figure7_dia_state.png" alt="Diagramme des classes état">
-<figcaption><strong>Figure 6 :</strong> Diagramme des classes d'état</figcaption>
+<figcaption><strong>Figure 7 :</strong> Diagramme des classes d'état</figcaption>
 </figure>
 
 ## 3 Rendu: Stratégie et Conception
