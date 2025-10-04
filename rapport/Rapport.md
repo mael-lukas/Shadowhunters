@@ -90,24 +90,27 @@ Le plateau visible à la Figure 3 trois parties :
   <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
 </figure></br>
 
-Les cartes effets sont divisé en deux:
+Les cartes effets sont divisé en trois:
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure4_carte_vision.jpg" alt="Carte vision">
         <figcaption><strong>Figure 4 :</strong> Carte Vision</figcaption>
         </figure></br>
-- Les cartes équipement:
-    - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés offensif et sabotage;
+- Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés offensif et sabotage;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
         <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
         </figure></br>
 
-    - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs.Certaines cartes sont des équipement et d'autre à jouer immédiatement, ces derniers sont d'avantages tournés défensif et soutien.
+- Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés défensif et soutien.
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
         <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
         </figure></br>
+
+Parmis les cartes ténèbres et lumières, il y a deux types de cartes:
+- les cartes équipements qui accompagneront le joueur tout le long de la partie.
+- les cartes à utilisation immédiate
 
 Déroulement d'une partie:
 - Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
@@ -141,11 +144,42 @@ L'objectif de cette section est une description très fine des états dans le pr
 L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restant sont controllés par des Intelligences Artificielle (ou d'autre joueur).
 
 #### 2.1.1 État du terrain
+Le terrain est constitué de trois parties, une partie indiquant les points de vie où les jeutons de chaques représenterons les dégats subit par chaque joueur.
+La seconde partie sera celle des lieux représentant la position des joueurs à l'instanté. Cela permet de savoir si il y a des joueurs dans la même zone, mais aussi connaitre les effet de chaque lieux.
+La troisième partie est la pioche, où il y a trois tas de cartes, vision, lumières et ténèbres.
 
-#### 2.1.1 État du joueur
+#### 2.1.2 État du joueur
+Les joueurs ont accès au différentes informations propre à leurs rôles. Ils ont aussi la possibilité d'attaqué ou non un adversaire si ils ce trouvent au sein de la même zone. Le joueur a aussi la possibilité de ce révêler afin de pouvoir utiliser son effet.
+
+#### 2.1.3 État du packet de carte
+Les packets de cartes sont divisé en trois les cartes visions qui vont apportés des informations aux joueurs concernant leurs adversaires, les cartes lumières donnent des effets au joueurs et les cartes ténèbres qui font de même.
 
 ### 2.2 Conception logicielle
-	
+#### 2.2.1 Classes Player
+<figure style="text-align: center;">
+<img src="img_rapport/figure7_class_Player.png" alt="Classes Player">
+<figcaption><strong>Figure 7 :</strong> Classes Player</figcaption>
+</figure>
+La classe Player est ce qui va permettre de définir les différentes informations propres au statu du joueur basic, ce qui correspond à un personnages révélé. Par la suite cet classe risque d'être hérité pour contruire les différents rôles nécessitant des effets spécifiques.  
+La classe player est relié à un énumérateur contenat les différent rôle.
+
+#### 2.2.2 Classes Board
+<figure style="text-align: center;">
+<img src="img_rapport/figure8_class_Board.png" alt="Classes Board">
+<figcaption><strong>Figure 8 :</strong> Classes Board</figcaption>
+</figure>
+La classes Board va faire en sorte de garder les positions des différent joueur, mais aussi de contenir les packets de cartes.  
+La classe est relié à trois énumérations, que ce soit les types cartes, les différents lieux et enfin les différent dés utilisés.
+
+#### 2.2.3 Classes Pack of Card
+<figure style="text-align: center;">
+<img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
+<figcaption><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
+</figure>
+La classe PackOfCard sert à la création des difféerents packet de cartes.  
+Cet classes est relié à deux énumération, l'énumérateur type card contenant les information propre au type de carte. Et l'énumérateur de card prennant en compte les différents spécificité propres au cartes.
+
+
 ### 2.3 Conception logicielle: extension pour le rendu
 
 ### 2.4 Conception logicielle: extension pour le moteur de jeu
@@ -153,8 +187,8 @@ L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses 
 ### 2.5 Ressources
 
 <figure style="text-align: center;">
-<img src="img_rapport/figure7_dia_state.png" alt="Diagramme des classes état">
-<figcaption><strong>Figure 7 :</strong> Diagramme des classes d'état</figcaption>
+<img src="img_rapport/figure10_dia_state.png" alt="Diagramme des classes état">
+<figcaption><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
 </figure>
 
 ## 3 Rendu: Stratégie et Conception
