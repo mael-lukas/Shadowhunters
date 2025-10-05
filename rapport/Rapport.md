@@ -113,10 +113,10 @@ Parmis les cartes ténèbres et lumières, il y a deux types de cartes:
 - les cartes à utilisation immédiate
 
 Déroulement d'une partie:
-- Avant de commencer la partie, le positionnement des différents lieux est faites de manières aléatoires. 
-Après cela les joueurs ont leurs rôles attribué aléatoirement, puis ces derniers ont leurs ordre définis par un lancer de dé.
-- Un tours de jeu commence par un lancer de dé pour savoir où le joueur doit aller, ainsi lorsque qu'il lance son dé ce dernier va dans le lieux indiqué par valeur mais si il ce retrouve sur le même lieux il doit relancer le dé. Dans le cas où il fait un 7 il peut aller dans n'importe quel lieux à l'exception du lieux sur lequel il se trouve.  
-Le joueur effectue l'effet ou non indiqué sur la carte lieux et si il y a un joueur au sein de la même zone ce dernier à la possibilité d'effectuer une attaque contre ce dernier.
+- Avant de commencer la partie, le positionnement des différents lieux est fait de manière aléatoire. 
+Après cela, les joueurs ont leurs rôles attribués aléatoirement, puis ces derniers ont leurs ordre définis par un lancer de dé.
+- Un tours de jeu commence par un lancer de dé pour savoir où le joueur doit aller (somme d'un d4 et d'un d6), la somme des dé indique le lieu où  le joueur doit se déplacer, un 7 lui laisse choisir mais il doit toujours changer de lieu(il n'est pas possible de rester deux fois sur le même lieu).    
+Le joueur peut ensuite effectuer l'effet indiqué sur la carte lieux et, si il y a un joueur au sein de la même zone le joueur dont c'est le tour à la possibilité d'effectuer une attaque contre ce dernier.Il lance alors ces deux dé d4 et d6 et inflige au joueur attaqué la valeur absolue de la différence en blessures(si la différence est de 0 il n'inflige pas de dégats).
 - La révélation peux ce faire à tout instant, même pendant le tour de l'adversaire.
 
 Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition des camps
