@@ -32,7 +32,7 @@ namespace state {
         playerPos[WOODS] = {};
         playerPos[GATE] = {};
         playerPos[CHURCH] = {};
-        playerPos[OUTSIDE] = {p1,p2};
+        playerPos[OUTSIDE] = {&p1,&p2};
 
     }
     
@@ -52,7 +52,7 @@ namespace state {
         return hermitPack.listOfCards[0]; // TODO : implement
     }
     
-    std::vector<Player&> Board::getNeighbours (Player& player) {
-        return NULL; // TODO : implement
+    std::vector<Player> Board::getNeighbours (Player& player) {
+        return {}; // TODO : implement
     }
 }

@@ -88,9 +88,6 @@
       </dia:composite>
     </dia:attribute>
   </dia:diagramdata>
-  <dia:layer name="Background" visible="true" connectable="false"/>
-  <dia:layer name="Background" visible="true" connectable="false"/>
-  <dia:layer name="Background" visible="true" connectable="false"/>
   <dia:layer name="Background" visible="true" connectable="true" active="true">
     <dia:object type="UML - LargePackage" version="0" id="O0">
       <dia:attribute name="obj_pos">
@@ -1971,13 +1968,13 @@
         <dia:point val="30.6,-0.05"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="30.55,-0.1;33.67,1.4"/>
+        <dia:rectangle val="30.55,-0.1;33.9875,1.4"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="30.6,-0.05"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="3.02"/>
+        <dia:real val="3.3374999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="1.3999999999999999"/>
@@ -2085,13 +2082,13 @@
         <dia:point val="36.35,0.15"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="36.3,0.1;39.27,1.6"/>
+        <dia:rectangle val="36.3,0.1;39.5675,1.6"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="36.35,0.15"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="2.8700000000000001"/>
+        <dia:real val="3.1675"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="1.3999999999999999"/>
