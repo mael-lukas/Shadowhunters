@@ -3,7 +3,7 @@
 #include <algorithm>
 
 namespace state {
-    Board::Board () : darkPack(WHITECOUNT, WHITE), whitePack(DARKCOUNT-WHITECOUNT-1, DARK), hermitPack(HERMITCOUNT-DARKCOUNT-1, HERMIT) {
+    Board::Board () : whitePack(WHITECOUNT, WHITE), darkPack(DARKCOUNT-WHITECOUNT-1, DARK), hermitPack(HERMITCOUNT-DARKCOUNT-1, HERMIT) {
         dieToCell[2] = HERMITZONE;
         dieToCell[3] = HERMITZONE;
         dieToCell[4] = GATE;
