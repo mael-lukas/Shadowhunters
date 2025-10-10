@@ -26,14 +26,69 @@ namespace state{
 
     //Overwrite some function
 
+
+    void Emi::useCapacity() {
+        if(!revealed){
+            // On effectue le déplacement vers l'autre cellule de la même zone
+             std::vector<Cell> neighbours = board->getNeighbours(*this);
+
+                for(auto& cell : neighbours) {
+                if(cell.getZone() == board->getCell(*this).getZone() &&
+                cell.getId() != board->getCell(*this).getId()) {
+                    board->movePlayerTo(*this, cell);
+                    break; // Déplacement effectué, on arrête 
+                }
+            }
+        }
+    }
+
+
+    void Franklin::useCapacity() {
+        if (!revealed){
+            if (abilityUsed) return; // déjà utilisé
+            abilityUsed = true;
+
+            int dmg = board->rollDice(ONLYD4);
+            Player* target = board->chooseTarget(*this);
+            if (target) target->receiveDamage(dmg);
+        }
+    }
+
+    void Georges::useCapacity() {
+        if (!revealed){
+            if (abilityUsed) return; // déjà utilisé
+            abilityUsed = true;
+
+            int dmg = board->rollDice(ONLYD6);
+            Player* target = board->chooseTarget(*this);
+            if (target) target->receiveDamage(dmg);
+        }
+    }
+
+    
     bool Vampire::attackOther(Player& other){
         if(!revealed){
             Player::attackOther(other);
         }
         else{
-            return 0; //TODO
+            
+            int damage =board->rollDice(DIFF);
+             // Calcul des dégâts après défense/équipement
+            int damage_supposed = player.getAttacked(*this,damage);
+            // Si des dégâts ont effectivement été infligés → soin de 2
+            if (damage_supposed > 0){
+                receiveDamage(-2, *this);
+                int real_damage = damage_supposed;
+                return dealDamage(damage_supposed,other);
+            }else{
+                return  false
+            }
+            
         }
     }
+
+
+    
 
 
 

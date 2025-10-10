@@ -1,5 +1,11 @@
 #include "Player.h"
 
+
+void Player::useAbility() {
+    // Par défaut : rien
+}
+
+
 namespace state
 {
     Player::Player(Board* board,int maxHP,Role role) : board(board),maxHP(maxHP),role(role)
@@ -21,17 +27,27 @@ namespace state
 
     int Player::getAttacked(Player& attacker,int damage)
     {
-
+        
     }
 
     bool Player::dealDamage(int damage,Player& victim)
     {
+        bool alive = victim.receiveDamage(damage);
 
+        return alive;
     }
 
     bool Player::receiveDamage(int damage)
     {
+        wounds += damage;
 
+        if (wounds < 0) wounds = 0;
+        if (wounds >= MaxHp) {
+            wounds = MaxHP;
+            isAlive = false;
+        }
+
+        return isAlive;
     }
 
 }
