@@ -87,7 +87,7 @@ namespace state
         return hermitPack.draw(); // TODO : implement
     }
 
-    std::vector<Player> Board::getNeighbours(Player &player)
+    std::vector<Player*> Board::getNeighbours(Player &player)
     {
         // Get player pos
         Cell pos = player.position;
