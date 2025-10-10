@@ -31,13 +31,9 @@ namespace state
             cellToZone[temp[i + 1]] = i;
         }
 
-        Player p1 = Werewolf(this);
-        Player p2 = Franklin(this);
-        // Player p1(this,14,SHADOW);
-        // Player p2(this,12,HUNTER);
         
-        playerList.emplace_back(new Player(this, 14, SHADOW));
-        playerList.emplace_back(new Player(this, 12, HUNTER));
+        playerList.emplace_back(new Werewolf(this));
+        playerList.emplace_back(new Franklin(this));
 
         playerPos[GRAVEYARD] = {};
         playerPos[ALTAR] = {};
@@ -45,9 +41,9 @@ namespace state
         playerPos[WOODS] = {};
         playerPos[GATE] = {};
         playerPos[CHURCH] = {};
-        playerPos[OUTSIDE] = {&p1, &p2};
-    }
         playerPos[OUTSIDE] = {playerList[0].get(),playerList[1].get()};
+    }
+
 
     /** Create 2 dice one D4 and one D6 and return either the sum of both (rule=SUM),
      * the absolute difference of both (rule=DIFF),
