@@ -29,6 +29,7 @@ namespace state {
     std::mt19937 g(rd()); // seed the generator
     std::shuffle(listOfCards.begin(), listOfCards.end(), g);
   }
+  
 
   Card PackOfCards::draw () {
     if (listOfCards.empty()) {
