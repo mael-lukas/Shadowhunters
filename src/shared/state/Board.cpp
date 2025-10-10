@@ -49,7 +49,8 @@ namespace state
      * the absolute difference of both (rule=DIFF),
      * only the D4 (rule=ONLYD4),
      * only the D6 (rule=ONLYD6).
-     * @tparam rule  the type of result expected.
+     * @param rule  the type of result expected.
+     * @return the result of the diceroll(int between 0 and 10 depending on the type of result expected)
      */
     int Board::rollDice(RollRule rule)
     {
@@ -87,16 +88,21 @@ namespace state
         return hermitPack.draw(); // TODO : implement
     }
 
+
+    /// @brief search for the players in the same zone as the player
+    /// @param player the player of which we want the neighbouting players
+    /// @return the list possibly empty of the neighbours of the player
     std::vector<Player*> Board::getNeighbours(Player &player)
     {
         // Get player pos
         Cell pos = player.position;
+        // other pos in zone
         Cell pos2;
         // Get zone
         int Zone = cellToZone[pos];
         
-        
-        std::vector<Player> neighbours = {};
+        // list of players 
+        std::vector<Player*> neighbours = {};
 
         //get the other zone
         for (std::map<Cell, int>::iterator iter = cellToZone.begin(); iter != cellToZone.end(); ++iter)
@@ -110,8 +116,23 @@ namespace state
             }
         }
         // Get players in zone
-        
-        
-        return {}; // TODO : implement
+
+        //all players in pos
+        std::vector<Player*>   temp =playerPos[pos];
+        //all players in pos2
+        std::vector<Player*> temp2= playerPos[pos2];
+        //check if they are neighbour or the player itself 
+        for(Player* neighbour:temp){
+            if (neighbour!=&player){
+                neighbours.emplace_back(neighbour);
+            }
+        }
+        // not used as the player should normally be in only one place
+        // for(Player* neighbour:temp2){
+        //     if (neighbour!=&player){
+        //         neighbours.emplace_back(neighbour);
+        //     }
+        // }      
+        return neighbours;
     }
 }
