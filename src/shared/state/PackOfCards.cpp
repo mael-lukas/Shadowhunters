@@ -25,8 +25,8 @@ namespace state {
   }
 
   void PackOfCards::shuffle () {
-    std::random_device rd;
-    std::mt19937 g(rd());
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 g(rd()); // seed the generator
     std::shuffle(listOfCards.begin(), listOfCards.end(), g);
   }
 
