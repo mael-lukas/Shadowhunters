@@ -31,7 +31,6 @@ namespace state
             cellToZone[temp[i + 1]] = i;
         }
 
-        
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
 
@@ -41,17 +40,9 @@ namespace state
         playerPos[WOODS] = {};
         playerPos[GATE] = {};
         playerPos[CHURCH] = {};
-        playerPos[OUTSIDE] = {playerList[0].get(),playerList[1].get()};
+        playerPos[OUTSIDE] = {playerList[0].get(), playerList[1].get()};
     }
 
-
-    /** Create 2 dice one D4 and one D6 and return either the sum of both (rule=SUM),
-     * the absolute difference of both (rule=DIFF),
-     * only the D4 (rule=ONLYD4),
-     * only the D6 (rule=ONLYD6).
-     * @param rule  the type of result expected.
-     * @return the result of the diceroll(int between 0 and 10 depending on the type of result expected)
-     */
     int Board::rollDice(RollRule rule)
     {
 
@@ -88,42 +79,31 @@ namespace state
         return hermitPack.draw(); // TODO : implement
     }
 
-
     /// @brief search for the players in the same zone as the player
-    /// @param player the player of which we want the neighbouting players
+    /// @param player the player of which we want the neighbouring players, the  player shouldn't be on OUTSIDE
     /// @return the list possibly empty of the neighbours of the player
-    std::vector<Player*> Board::getNeighbours(Player &player)
+    std::vector<Player *> Board::getNeighbours(Player &player)
     {
         // Get player pos
         Cell pos = player.position;
         // other pos in zone
         Cell pos2;
-        // Get zone
-        int Zone = cellToZone[pos];
-        
-        // list of players 
-        std::vector<Player*> neighbours = {};
+        pos2=getOtherCellInSameZone(pos);
 
-        //get the other zone
-        for (std::map<Cell, int>::iterator iter = cellToZone.begin(); iter != cellToZone.end(); ++iter)
-        {
-            Cell k = iter->first;
-            // ignore value
-            int v = iter->second;
-            if (v = Zone and k != pos)
-            {
-                pos2 = k;
-            }
-        }
+        // list of players in the same zone
+        std::vector<Player *> neighbours = {};
+
         // Get players in zone
 
-        //all players in pos
-        std::vector<Player*>   temp =playerPos[pos];
-        //all players in pos2
-        std::vector<Player*> temp2= playerPos[pos2];
-        //check if they are neighbour or the player itself 
-        for(Player* neighbour:temp){
-            if (neighbour!=&player){
+        // all players in pos
+        std::vector<Player *> temp = playerPos[pos];
+        // all players in pos2
+        std::vector<Player *> temp2 = playerPos[pos2];
+        // check if they are neighbour or the player itself
+        for (Player *neighbour : temp)
+        {
+            if (neighbour != &player)
+            {
                 neighbours.emplace_back(neighbour);
             }
         }
@@ -132,7 +112,31 @@ namespace state
         //     if (neighbour!=&player){
         //         neighbours.emplace_back(neighbour);
         //     }
-        // }      
+        // }
         return neighbours;
     }
+
+    void Board::movePlayerTo(Player *player, Cell cell)
+    {
+    }
+
+    Cell Board::getOtherCellInSameZone(Cell cell)
+    {
+        int Zone = cellToZone[cell];
+
+        Cell otherCell;
+        // get the other CEll in the same zone
+        for (std::map<Cell, int>::iterator iter = cellToZone.begin(); iter != cellToZone.end(); ++iter)
+        {
+            Cell k = iter->first;
+            // ignore value
+            int v = iter->second;
+            if (v = Zone and k != cell)
+            {
+                otherCell = k;
+            }
+        }
+        return otherCell;
+    }
+
 }
