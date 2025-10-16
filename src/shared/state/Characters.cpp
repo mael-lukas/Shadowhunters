@@ -28,7 +28,7 @@ namespace state{
 
 
     void Emi::useCapacity() {
-        if(!revealed){
+        /*if(!revealed){
             // On effectue le déplacement vers l'autre cellule de la même zone
              std::vector<Player*> neighbours = board->getNeighbours(*this);
 
@@ -39,30 +39,30 @@ namespace state{
                     break; // Déplacement effectué, on arrête 
                 }
             }
-        }
+        }*/
     }
 
 
     void Franklin::useCapacity() {
-        if (!revealed){
+        /*if (!revealed){
             if (capacityUsed) return; // déjà utilisé
             capacityUsed = true;
 
             int dmg = board->rollDice(ONLYD4);
             Player* target = board->chooseTarget(*this);
             if (target) target->receiveDamage(dmg);
-        }
+        }*/
     }
 
     void Georges::useCapacity() {
-        if (!revealed){
+       /* if (!revealed){
             if (capacityUsed) return; // déjà utilisé
             capacityUsed = true;
 
             int dmg = board->rollDice(ONLYD6);
             Player* target = board->chooseTarget(*this);
             if (target) target->receiveDamage(dmg);
-        }
+        }*/
     }
 
     

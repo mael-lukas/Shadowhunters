@@ -8,12 +8,17 @@ using namespace state;
 BOOST_AUTO_TEST_CASE(TestState) {
     PackOfCards whitePack(WHITECOUNT, WHITE);
     PackOfCards darkPack(DARKCOUNT-WHITECOUNT-1,DARK);
+    PackOfCards hermitPack(HERMITCOUNT-DARKCOUNT-1,HERMIT);
     BOOST_CHECK_EQUAL(whitePack.packSize, 2);
     BOOST_CHECK_EQUAL(whitePack.listOfCards.size(), 2);
     BOOST_CHECK_EQUAL(whitePack.type, WHITE);
     Card drawnCard = whitePack.draw();
     BOOST_CHECK_EQUAL(drawnCard, WHITE1);
     BOOST_CHECK_EQUAL(darkPack.listOfCards[0],DARK1);
+    hermitPack.shuffle();
+    Card drawnHermit = hermitPack.draw();
+   // BOOST_CHECK_EQUAL(drawnHermit, HERMIT1);
+    std::cout << static_cast<Card>(drawnHermit) << std::endl;
     
 }
 
