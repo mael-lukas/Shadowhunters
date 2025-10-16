@@ -38,9 +38,9 @@ namespace state{
             // Si une autre cellule a bien été trouvée (différente)
             if (otherCell != currentCell)
             {
-                board->movePlayerTo(this, otherCell);
+                board->movePlayerTo(*this, otherCell);
             }
-        }*/
+        }
     }
 
     void Franklin::useCapacity()
