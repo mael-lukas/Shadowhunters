@@ -40,7 +40,7 @@ namespace state{
             {
                 board->movePlayerTo(this, otherCell);
             }
-        }
+        }*/
     }
 
     void Franklin::useCapacity()

@@ -116,8 +116,17 @@ namespace state
         return neighbours;
     }
 
-    void Board::movePlayerTo(Player *player, Cell cell)
+    void Board::movePlayerTo(Player &player, Cell newPos)
     {
+        Cell oldPos=player.position;
+        player.position=newPos;
+        //shift player to the end of the vector then pop the last element i.e the player
+        remove(playerPos[oldPos].begin(),playerPos[oldPos].end(),&player);
+        playerPos[oldPos].pop_back();
+
+        playerPos[newPos].emplace_back(&player);
+
+
     }
 
     Cell Board::getOtherCellInSameZone(Cell cell)
