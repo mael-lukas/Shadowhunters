@@ -30,9 +30,9 @@ namespace state{
     void Emi::useCapacity() {
         if(!revealed){
             // On effectue le déplacement vers l'autre cellule de la même zone
-             std::vector<Cell> neighbours = board->getNeighbours(*this);
+             std::vector<Player*> neighbours = board->getNeighbours(*this);
 
-                for(auto& cell : neighbours) {
+                for(Player* player : neighbours) {
                 if(cell.getZone() == board->getCell(*this).getZone() &&
                 cell.getId() != board->getCell(*this).getId()) {
                     board->movePlayerTo(*this, cell);
@@ -45,8 +45,8 @@ namespace state{
 
     void Franklin::useCapacity() {
         if (!revealed){
-            if (abilityUsed) return; // déjà utilisé
-            abilityUsed = true;
+            if (capacityUsed) return; // déjà utilisé
+            capacityUsed = true;
 
             int dmg = board->rollDice(ONLYD4);
             Player* target = board->chooseTarget(*this);
@@ -56,8 +56,8 @@ namespace state{
 
     void Georges::useCapacity() {
         if (!revealed){
-            if (abilityUsed) return; // déjà utilisé
-            abilityUsed = true;
+            if (capacityUsed) return; // déjà utilisé
+            capacityUsed = true;
 
             int dmg = board->rollDice(ONLYD6);
             Player* target = board->chooseTarget(*this);
@@ -74,14 +74,14 @@ namespace state{
             
             int damage =board->rollDice(DIFF);
              // Calcul des dégâts après défense/équipement
-            int damage_supposed = player.getAttacked(*this,damage);
+            int damage_supposed = other.getAttacked(*this,damage);
             // Si des dégâts ont effectivement été infligés → soin de 2
             if (damage_supposed > 0){
-                receiveDamage(-2, *this);
+                this->receiveDamage(-2);
                 int real_damage = damage_supposed;
                 return dealDamage(damage_supposed,other);
             }else{
-                return  false
+                return  false;
             }
             
         }

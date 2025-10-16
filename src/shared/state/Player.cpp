@@ -1,10 +1,6 @@
 #include "Player.h"
 
 
-void Player::useAbility() {
-    // Par défaut : rien
-}
-
 
 namespace state
 {
@@ -42,12 +38,16 @@ namespace state
         wounds += damage;
 
         if (wounds < 0) wounds = 0;
-        if (wounds >= MaxHp) {
-            wounds = MaxHP;
+        if (wounds >= maxHP) {
+            wounds = maxHP;
             isAlive = false;
         }
 
         return isAlive;
+    }
+
+    void Player::useCapacity() {
+    // Par défaut : rien
     }
 
 }
