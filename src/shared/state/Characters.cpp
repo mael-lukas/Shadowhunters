@@ -26,70 +26,93 @@ namespace state{
 
     //Overwrite some function
 
+    void Emi::useCapacity()
+    {
+        if (revealed)
+        {
+            // Récupère la cellule actuelle d'Emi
+            Cell currentCell = position;
 
-    void Emi::useCapacity() {
-        if(!revealed){
-            // On effectue le déplacement vers l'autre cellule de la même zone
-             std::vector<Player*> neighbours = board->getNeighbours(*this);
+            Cell otherCell = board->getOtherCellInSameZone(currentCell);
 
-                for(Player* player : neighbours) {
-                if(cell.getZone() == board->getCell(*this).getZone() &&
-                cell.getId() != board->getCell(*this).getId()) {
-                    board->movePlayerTo(*this, cell);
-                    break; // Déplacement effectué, on arrête 
-                }
+            // Si une autre cellule a bien été trouvée (différente)
+            if (otherCell != currentCell)
+            {
+                board->movePlayerTo(this, otherCell);
             }
         }
     }
 
+    void Franklin::useCapacity()
+    {
 
-    void Franklin::useCapacity() {
-        if (!revealed){
-            if (capacityUsed) return; // déjà utilisé
+        if (revealed)
+        {
+            if (capacityUsed)
+                return; // déjà utilisé
             capacityUsed = true;
 
-            int dmg = board->rollDice(ONLYD4);
-            Player* target = board->chooseTarget(*this);
-            if (target) target->receiveDamage(dmg);
+            // Fait par l'engine
+            // Player *target = engine->chooseTarget(*this);
+            // int dmg = board->rollDice(ONLYD4);
+            // if (target)
+            //  target->receiveDamage(dmg);
         }
     }
 
-    void Georges::useCapacity() {
-        if (!revealed){
-            if (capacityUsed) return; // déjà utilisé
+    void Georges::useCapacity()
+    {
+
+        if (revealed)
+        {
+            if (capacityUsed)
+                return; // déjà utilisé
             capacityUsed = true;
 
-            int dmg = board->rollDice(ONLYD6);
-            Player* target = board->chooseTarget(*this);
-            if (target) target->receiveDamage(dmg);
+            // Fait par l'engine
+            // Player *target = engine->chooseTarget(*this);
+            // int dmg = board->rollDice(ONLYD6);
+            //: if (target)
+            // target->receiveDamage(dmg);
         }
     }
 
-    
-    bool Vampire::attackOther(Player& other){
-        if(!revealed){
+    bool Vampire::attackOther(Player &other)
+    {
+        if (!revealed)
+        {
             Player::attackOther(other);
         }
-        else{
-            
-            int damage =board->rollDice(DIFF);
-             // Calcul des dégâts après défense/équipement
-            int damage_supposed = other.getAttacked(*this,damage);
+        else
+        {
+            int damage = board->rollDice(DIFF);
+            // Calcul des dégâts après défense/équipement
+            int damage_supposed = other.getAttacked(*this, damage);
             // Si des dégâts ont effectivement été infligés → soin de 2
-            if (damage_supposed > 0){
+            if (damage_supposed > 0)
+            {
                 this->receiveDamage(-2);
                 int real_damage = damage_supposed;
-                return dealDamage(damage_supposed,other);
-            }else{
-                return  false;
+                return dealDamage(damage_supposed, other);
             }
-            
+            else
+            {
+                return false;
+            }
         }
     }
 
-
-    
-
-
-
+    int Werewolf::getAttacked(Player &source, int damage)
+    {
+        if (!revealed)
+        {
+            return Player::getAttacked(source, damage);
+        }
+        else
+        {
+            return Player::getAttacked(source, damage);
+            int counter = board->rollDice(DIFF);
+            return dealDamage(counter, source);
+        }
+    }
 }

@@ -23,7 +23,8 @@ namespace state
 
     int Player::getAttacked(Player& attacker,int damage)
     {
-        
+        // check if equipment reduce damage TODO
+        return damage; // par défaut, pas de défense
     }
 
     bool Player::dealDamage(int damage,Player& victim)
