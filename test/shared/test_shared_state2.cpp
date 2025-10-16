@@ -28,9 +28,24 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
 }
 
 BOOST_AUTO_TEST_CASE(TestStatePlayer) {
+    //Initialize variable
     Board bd;
-    Player ptest(&bd,14,SHADOW);
     Werewolf wf(&bd);
-    //BOOST_CHECK_EQUAL(wf.getHp(),14); 
-    //BOOST_CHE
+    Emi emi(&bd);
+
+
+    //Test Attributes
+    BOOST_CHECK_EQUAL(wf.wounds,0);
+    BOOST_CHECK_EQUAL(wf.isAlive,true);
+    BOOST_CHECK_EQUAL(wf.revealed,false);
+    BOOST_CHECK_EQUAL(wf.capacityUsed,false);
+    BOOST_CHECK_EQUAL(wf.position,OUTSIDE);
+
+
+    //Tests Functions
+    BOOST_CHECK_EQUAL(wf.receiveDamage(10),true);
+    BOOST_CHECK_EQUAL(wf.dealDamage(9,emi),true);
+    //Wait getAttacked to be implemented
+    //BOOST_CHECK_EQUAL(wf.attackOther(emi),false);
+    
 }
