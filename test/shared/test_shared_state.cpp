@@ -23,14 +23,31 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
     BOOST_CHECK_EQUAL(bd.drawDark(),DARK1);
     BOOST_CHECK_EQUAL(bd.drawWhite(),WHITE1);
     BOOST_CHECK_EQUAL(bd.drawHermit(),HERMIT1);
-    //BOOST_CHECK_EQUAL(bd.getNeighbours(*(playerPose[OUTSIDE][0])));
 
+    std::vector<Player*> supposed_neighbours = bd.playerPos[OUTSIDE];
+    supposed_neighbours.erase(supposed_neighbours.begin());
+    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[OUTSIDE][0])).size(), supposed_neighbours.size());
+
+    bd.playerPos[OUTSIDE][0]->receiveDamage(2);
+    std::cout << "Dealt " << bd.playerPos[OUTSIDE][0]->wounds << " damage to Werewolf in OUTSIDE" << std::endl;
+    bd.movePlayerTo(*(bd.playerPos[OUTSIDE][0]),GRAVEYARD);
+    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[GRAVEYARD][0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[OUTSIDE][0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.playerPos[OUTSIDE].size(),1);
+    BOOST_CHECK_EQUAL(bd.playerPos[GRAVEYARD].size(),1);
+    BOOST_CHECK_EQUAL(bd.playerPos[GRAVEYARD][0]->position,GRAVEYARD);
+
+    std::cout << static_cast<Cell>(bd.getOtherCellInSameZone(GRAVEYARD)) << std::endl;
+    std::cout << bd.playerPos[GRAVEYARD][0]->wounds << std::endl;
+    std::cout << bd.playerPos[OUTSIDE][0]->wounds << std::endl;
+    std::cout << "Werewolf in GRAVEYARD HAS " << bd.playerPos[GRAVEYARD][0]->wounds << " damages" << std::endl;
+    
 }
 
 BOOST_AUTO_TEST_CASE(TestStatePlayer) {
     Board bd;
     Player ptest(&bd,14,SHADOW);
     Werewolf wf(&bd);
-    //BOOST_CHECK_EQUAL(wf.getHp(),14); 
-    //BOOST_CHE
+    //BOOST_CHECK_EQUAL(wf.getHp(),14);
+    //BOOST_CHECK_EQUAL(wf.getType(),SHADOW);
 }
