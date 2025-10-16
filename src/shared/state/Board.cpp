@@ -135,4 +135,37 @@ namespace state
         // }      
         return neighbours;
     }
+
+    void Board::movePlayerTo(Player &player, Cell newPos)
+    {
+        Cell oldPos=player.position;
+        player.position=newPos;
+        //shift player to the end of the vector then pop the last element i.e the player
+        remove(playerPos[oldPos].begin(),playerPos[oldPos].end(),player);
+        playerPos[oldPos].pop_back();
+
+        playerPos[newPos].emplace_back(player);
+
+
+    }
+
+    Cell Board::getOtherCellInSameZone(Cell cell)
+    {
+        int Zone = cellToZone[cell];
+
+        Cell otherCell;
+        // get the other CEll in the same zone
+        for (std::map<Cell, int>::iterator iter = cellToZone.begin(); iter != cellToZone.end(); ++iter)
+        {
+            Cell k = iter->first;
+            // ignore value
+            int v = iter->second;
+            if (v = Zone and k != cell)
+            {
+                otherCell = k;
+            }
+        }
+        return otherCell;
+    }
+
 }
