@@ -40,7 +40,8 @@ namespace state {
     return topCard;
   }
 
-  void PackOfCards::discard () {
+  void PackOfCards::discard (Card card) {
+
   }
 
 };
