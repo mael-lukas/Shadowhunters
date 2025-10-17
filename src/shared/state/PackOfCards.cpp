@@ -33,7 +33,8 @@ namespace state {
 
   Card PackOfCards::draw () {
     if (listOfCards.empty()) {
-      throw std::out_of_range("No cards left to draw");
+      listOfCards = std::move(discardPile);
+      shuffle();
     }
     Card topCard = listOfCards.front();
     listOfCards.erase(listOfCards.begin());
@@ -41,7 +42,7 @@ namespace state {
   }
 
   void PackOfCards::discard (Card card) {
-
+    discardPile.push_back(card);
   }
 
 };
