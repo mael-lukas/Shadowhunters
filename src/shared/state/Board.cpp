@@ -27,8 +27,8 @@ namespace state
         std::shuffle(temp.begin(), temp.end(), g);
         for (int i = 0; i < 3; i++)
         {
-            cellToZone[temp[i]] = i;
-            cellToZone[temp[i + 1]] = i;
+            cellToZone[temp[2*i]] = i;
+            cellToZone[temp[2*i + 1]] = i;
         }
 
         playerList.emplace_back(new Werewolf(this));
@@ -140,12 +140,11 @@ namespace state
             Cell k = iter->first;
             // ignore value
             int v = iter->second;
-            if (v = Zone and k != cell)
+            if (v == Zone && k != cell)
             {
                 otherCell = k;
             }
         }
         return otherCell;
     }
-
 }

@@ -5,7 +5,7 @@
 
 namespace state {
 
-  PackOfCards::PackOfCards (int size,CardType type) : packSize(size), type(type) {
+  PackOfCards::PackOfCards (int size,CardType type) : type(type) {
     if (type == WHITE) {
       for (int i = 0; i < WHITECOUNT; i++) {
         Card c = static_cast<Card>(i);

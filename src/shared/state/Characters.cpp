@@ -48,8 +48,9 @@ namespace state{
 
         if (revealed)
         {
-            if (capacityUsed)
-                return; // déjà utilisé
+            if (capacityUsed) {
+                return;
+            }
             capacityUsed = true;
 
             // Fait par l'engine
@@ -65,8 +66,9 @@ namespace state{
 
         if (revealed)
         {
-            if (capacityUsed)
-                return; // déjà utilisé
+            if (capacityUsed) {
+                return;
+            }
             capacityUsed = true;
 
             // Fait par l'engine
@@ -79,9 +81,9 @@ namespace state{
 
     bool Vampire::attackOther(Player &other)
     {
-        if (!revealed)
+        if (revealed == false)
         {
-            Player::attackOther(other);
+            return Player::attackOther(other);
         }
         else
         {
@@ -104,15 +106,15 @@ namespace state{
 
     int Werewolf::getAttacked(Player &source, int damage)
     {
-        if (!revealed)
+        if (revealed == false)
         {
             return Player::getAttacked(source, damage);
         }
         else
         {
-            return Player::getAttacked(source, damage);
             int counter = board->rollDice(DIFF);
-            return dealDamage(counter, source);
+            dealDamage(counter, source);
+            return Player::getAttacked(source, damage);
         }
     }
 }
