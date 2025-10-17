@@ -62,13 +62,13 @@ Le plateau de jeu peut être vu en Figure 1.
 
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure1_shadowhunters_Original.png" alt="Shadow Hunter">
-  <figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
+  <br></br><figcaption><strong>Figure 1 :</strong> Shadow Hunter</figcaption>
 </figure></br>
 
 Exemple de rendue d'une partie:
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure2_partie.jpg" alt="Partie">
-  <figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
+  <br></br><figcaption><strong>Figure 2 :</strong> Représentation d'une partie</figcaption>
 </figure></br>
 
 
@@ -87,25 +87,25 @@ Le plateau visible à la Figure 3 trois parties :
 
 <br><figure style="text-align: center;">
   <img src="img_rapport/figure3_plateau.jpg" alt="Plateau de jeu">
-  <figcaption><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
+  <figcaption><br></br><strong>Figure 3 :</strong> Plateau de jeu</figcaption>
 </figure></br>
 
 Les cartes effets sont divisé en trois:
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure4_carte_vision.jpg" alt="Carte vision">
-        <figcaption><strong>Figure 4 :</strong> Carte Vision</figcaption>
+        <figcaption><br></br><strong>Figure 4 :</strong> Carte Vision</figcaption>
         </figure></br>
 - Les cartes Ténèbres doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés offensif et sabotage;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure5_carte_tenebre.jpg" alt="Carte tenebre">
-        <figcaption><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
+        <figcaption><br></br><strong>Figure 5 :</strong> Carte Ténèbre</figcaption>
         </figure></br>
 
 - Les cartes Lumières doivent être dévoiler aussitôt aux autres joueurs, ces derniers sont d'avantages tournés défensif et soutien.
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure6_carte_lumiere.jpg" alt="Carte lumière">
-        <figcaption><strong>Figure 6 :</strong> Carte Lumière</figcaption>
+        <figcaption><br></br><strong>Figure 6 :</strong> Carte Lumière</figcaption>
         </figure></br>
 
 Parmis les cartes ténèbres et lumières, il y a deux types de cartes:
@@ -159,8 +159,8 @@ Les paquets de cartes sont divisés en trois : les cartes visions qui vont appor
 #### 2.2.1 Classes Player
 <figure style="text-align: center;">
 <img src="img_rapport/figure7_class_Player.png" alt="Classes Player">
-<figcaption><strong>Figure 7 :</strong> Classes Player</figcaption>
-</figure>
+<br><figcaption><br></br><strong>Figure 7 :</strong> Classes Player</figcaption>
+</figure></br>
 La classe Player est ce qui va permettre de définir les différentes informations propres au statut du joueur basique, ce qui correspond à un personnage révélé. Par la suite, cette classe est héritée pour construire les différents rôles nécessitant des effets spécifiques. On peut ainsi observer sur la figure 7 les différents rôles hérités : en rouge ce sont les Shadows et en bleu les Hunters. Par la suite, il devrait potentiellement y avoir l’ajout des cartes Neutres qui auront des effets qui leur seront propres.
 La classe Player est reliée à un énumérateur contenant les différents rôles existants, pour l’instant il n’y a que les rôles Shadow et Hunter.
 Le Player a aussi accès aux informations sur les cartes en sa possession
@@ -180,8 +180,8 @@ Le Player a aussi accès aux informations sur les cartes en sa possession
 #### 2.2.2 Classes Board
 <figure style="text-align: center;">
 <img src="img_rapport/figure8_class_Board.png" alt="Classes Board">
-<figcaption><strong>Figure 8 :</strong> Classes Board</figcaption>
-</figure>
+<br><figcaption><br></br><strong>Figure 8 :</strong> Classes Board</figcaption>
+</figure></br>
 La classe Board va faire en sorte de garder les positions des différents joueurs, mais aussi de contenir les paquets de cartes.
 La classe est reliée à trois énumérations en vert : les types de cartes, les différents lieux et enfin les différents dés utilisés.
 
@@ -198,8 +198,8 @@ La classe est reliée à trois énumérations en vert : les types de cartes, les
 #### 2.2.3 Classes Pack of Card
 <figure style="text-align: center;">
 <img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
-<figcaption><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
-</figure>
+<br><figcaption><br></br><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
+</figure></br>
 La classe PackOfCard sert à la création des différents paquets de cartes.
 Cette classe est reliée à deux énumérations :
 
@@ -222,8 +222,8 @@ Cette classe est reliée à deux énumérations :
 
 <figure style="text-align: center;">
 <img src="img_rapport/figure10_dia_state.png" alt="Diagramme des classes état">
-<figcaption><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
-</figure>
+<br><figcaption><br></br><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
+</figure></br>
 On peut maintenant observer les différentes interactions entre les différents états, que ce soit entre le Player et le Board, où chacun d’entre eux a la nécessité de faire appel à l’autre pour effectuer certaines méthodes. Il en est de même pour PackOfCard et Board.
 
 
