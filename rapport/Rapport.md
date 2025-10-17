@@ -141,18 +141,19 @@ Etant donner que nous avons en notre possession le jeu, il est alors possible de
 L'objectif de cette section est une description très fine des états dans le projet. Plusieurs niveaux de descriptions sont attendus. Le premier doit être général, afin que le lecteur puisse comprendre les éléments et principes en jeux. Le niveau suivant est celui de la conception logicielle. Pour ce faire, on présente à la fois un diagramme des classes, ainsi qu'un commentaire détaillé de ce diagramme. Indiquer l'utilisation de patron de conception sera très apprécié. Notez bien que les règles de changement d'état ne sont pas attendues dans cette section, même s'il n'est pas interdit d'illustrer de temps à autre des états par leurs possibles changements.
 
 ### 2.1 Description des états
-L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restant sont controllés par des Intelligences Artificielle (ou d'autre joueur).
+L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restants sont contrôlés par des Intelligences Artificielles (ou d'autres joueurs). Le terrain, quant à lui, affiche la position des joueurs ainsi que leurs dégâts subis, mais aussi les différents paquets de cartes.
 
 #### 2.1.1 État du terrain
-Le terrain est constitué de trois parties, une partie indiquant les points de vie où les jeutons de chaques représenterons les dégats subit par chaque joueur.
-La seconde partie sera celle des lieux représentant la position des joueurs à l'instanté. Cela permet de savoir si il y a des joueurs dans la même zone, mais aussi connaitre les effet de chaque lieux.
-La troisième partie est la pioche, où il y a trois tas de cartes, vision, lumières et ténèbres.
+Le terrain est constitué de trois parties : une partie indiquant les points de vie où les jetons de chacun représenteront les dégâts subis par chaque joueur.
+La seconde partie sera celle des lieux représentant la position des joueurs à l’instant T. Cela permet de savoir s’il y a des joueurs dans la même zone, mais aussi de connaître les effets de chaque lieu.
+La troisième partie est la pioche, où il y a trois tas de cartes : vision, lumière et ténèbres.
+L’attribution et l’utilisation de ces différentes parties ne sont pas contrôlées directement par le joueur mais par les résultats de lancers de dé que ce dernier effectuera. L’analyse des lancers de dé n’est pas faite par le board mais par l’engine dont nous discuterons ultérieurement.
 
 #### 2.1.2 État du joueur
-Les joueurs ont accès au différentes informations propre à leurs rôles. Ils ont aussi la possibilité d'attaqué ou non un adversaire si ils ce trouvent au sein de la même zone. Le joueur a aussi la possibilité de ce révêler afin de pouvoir utiliser son effet.
+Les joueurs ont accès aux différentes informations propres à leurs rôles ainsi qu’à leurs équipements. Ils ont aussi la possibilité d’attaquer ou non un adversaire s’ils se trouvent au sein de la même zone. Le joueur a aussi la possibilité de se révéler afin de pouvoir utiliser son effet.
 
 #### 2.1.3 État du packet de carte
-Les packets de cartes sont divisé en trois les cartes visions qui vont apportés des informations aux joueurs concernant leurs adversaires, les cartes lumières donnent des effets au joueurs et les cartes ténèbres qui font de même.
+Les paquets de cartes sont divisés en trois : les cartes visions qui vont apporter des informations aux joueurs concernant leurs adversaires, les cartes lumières qui donnent des effets aux joueurs et les cartes ténèbres qui font de même.
 
 ### 2.2 Conception logicielle
 #### 2.2.1 Classes Player
@@ -160,24 +161,57 @@ Les packets de cartes sont divisé en trois les cartes visions qui vont apporté
 <img src="img_rapport/figure7_class_Player.png" alt="Classes Player">
 <figcaption><strong>Figure 7 :</strong> Classes Player</figcaption>
 </figure>
-La classe Player est ce qui va permettre de définir les différentes informations propres au statu du joueur basic, ce qui correspond à un personnages révélé. Par la suite cet classe risque d'être hérité pour contruire les différents rôles nécessitant des effets spécifiques.  
-La classe player est relié à un énumérateur contenat les différent rôle.
+La classe Player est ce qui va permettre de définir les différentes informations propres au statut du joueur basique, ce qui correspond à un personnage révélé. Par la suite, cette classe est héritée pour construire les différents rôles nécessitant des effets spécifiques. On peut ainsi observer sur la figure 7 les différents rôles hérités : en rouge ce sont les Shadows et en bleu les Hunters. Par la suite, il devrait potentiellement y avoir l’ajout des cartes Neutres qui auront des effets qui leur seront propres.
+La classe Player est reliée à un énumérateur contenant les différents rôles existants, pour l’instant il n’y a que les rôles Shadow et Hunter.
+Le Player a aussi accès aux informations sur les cartes en sa possession
+
+| Methode | Objectif |
+|--------|---------|
+| Player (Board* board, int maxHP, Role role) | Constructeur, sert à initialiser le joueur avec les spécificités de son rôle |
+| bool attackOther (Player& other) | Retourne si l’attaque contre l’autre joueur a été un succès |
+| int getAttacked (Player& source, int damage) | Vérifie si le joueur est attaqué et retourne les dégâts subis par ce dernier |
+| bool dealDamage (int damage, Player& targets) | Vérifie si le joueur visé prend les dégâts provenant de l’attaquant et retourne si la cible est toujours en vie |
+| bool receiveDamage (int damage) | Attribue les dégâts subis par le joueur et retourne si ce dernier est toujours en vie |
+|int getHP () | Récupère les PV max du joueur par rapport à son rôle |
+|Role getRole () | Retourne le rôle du joueur |
+|void useCapacity () | Effectue l’action liée à la capacité du rôle |
+
 
 #### 2.2.2 Classes Board
 <figure style="text-align: center;">
 <img src="img_rapport/figure8_class_Board.png" alt="Classes Board">
 <figcaption><strong>Figure 8 :</strong> Classes Board</figcaption>
 </figure>
-La classes Board va faire en sorte de garder les positions des différent joueur, mais aussi de contenir les packets de cartes.  
-La classe est relié à trois énumérations, que ce soit les types cartes, les différents lieux et enfin les différent dés utilisés.
+La classe Board va faire en sorte de garder les positions des différents joueurs, mais aussi de contenir les paquets de cartes.
+La classe est reliée à trois énumérations en vert : les types de cartes, les différents lieux et enfin les différents dés utilisés.
+
+| Methode | Objectif |
+|--------|---------|
+| Board() | Constructeur, sert à initialiser le board |
+| int rollDice(rule:RollRule) | Lance un dé en suivant les règles établies au sein de l’énumérateur RollRule et retourne la valeur obtenue |
+| Card drawDark() | Pioche une carte du paquet de cartes dark et retourne la carte |
+| Card drawWhite() | Pioche une carte du paquet de cartes white et retourne la carte |
+| Card drawHermite() | Pioche une carte du paquet de cartes hermite et retourne la carte |
+| vector<Player*> getNeighbours(player: Player&) | Retourne une liste de joueurs voisins au Player |
+| Cell getOtherCellInSameZone(cell: Cell) | Retourne la cellule se trouvant dans la même zone que la cellule choisie |
 
 #### 2.2.3 Classes Pack of Card
 <figure style="text-align: center;">
 <img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
 <figcaption><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
 </figure>
-La classe PackOfCard sert à la création des difféerents packet de cartes.  
-Cet classes est relié à deux énumération, l'énumérateur type card contenant les information propre au type de carte. Et l'énumérateur de card prennant en compte les différents spécificité propres au cartes.
+La classe PackOfCard sert à la création des différents paquets de cartes.
+Cette classe est reliée à deux énumérations :
+
+- l’énumérateur type card contenant les informations propres au type de carte,
+- l’énumérateur card prenant en compte les différentes spécificités propres aux cartes.
+
+| Methode | Objectif |
+|--------|---------|
+| PackOfCards(type:CarType) | Constructeur, sert à initialiser le paquet de cartes par rapport à son type de carte |
+| shuffle() | Mélange le paquet de cartes |
+| Card draw() | Pioche une carte du paquet de cartes et retourne la carte |
+| discard(card:Card) | Positionne la carte en bas du paquet |
 
 
 ### 2.3 Conception logicielle: extension pour le rendu
@@ -190,6 +224,8 @@ Cet classes est relié à deux énumération, l'énumérateur type card contenan
 <img src="img_rapport/figure10_dia_state.png" alt="Diagramme des classes état">
 <figcaption><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
 </figure>
+On peut maintenant observer les différentes interactions entre les différents états, que ce soit entre le Player et le Board, où chacun d’entre eux a la nécessité de faire appel à l’autre pour effectuer certaines méthodes. Il en est de même pour PackOfCard et Board.
+
 
 ## 3 Rendu: Stratégie et Conception
 Présentez ici la stratégie générale que vous comptez suivre pour rendre un état. Cela doit tenir compte des problématiques de synchronisation entre les changements d'états et la vitesse d'affichage à l'écran. Puis, lorsque vous serez rendu à la partie client/serveur, expliquez comment vous aller gérer les problèmes liés à la latence. Après cette description, présentez la conception logicielle. Pour celle-ci, il est fortement recommandé de former une première partie indépendante de toute librairie graphique, puis de présenter d'autres parties qui l'implémente pour une librairie particulière. Enfin, toutes les classes de la première partie doivent avoir pour unique dépendance les classes d'état de la section précédente.
