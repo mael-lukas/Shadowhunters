@@ -15,8 +15,5 @@ using namespace state;
 
 int main(int argc,char* argv[])
 {
-    Board testBoard;
-    cout << "Ta mère la " << endl;
-
     return 0;
 }
