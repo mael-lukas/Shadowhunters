@@ -1,7 +1,5 @@
 #include "Player.h"
 
-
-
 namespace state
 {
     Player::Player(Board* board,int maxHP,Role role) : board(board),maxHP(maxHP),role(role)
@@ -21,6 +19,7 @@ namespace state
             wounds = maxHP;
             isAlive = false;
         }
+        notifyObservers(StateEventID::PLAYER_CHANGED);
         return isAlive;
     }
 
