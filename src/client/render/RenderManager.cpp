@@ -13,37 +13,30 @@ namespace render {
         for (state::Player* player : board->playerPos[state::OUTSIDE]) {
             player->addObserver(this);
         }
-        window.create(sf::VideoMode(1200,600),"Shadowhunters");
+        window.create(sf::VideoMode(1200,700),"Shadowhunters");
         board_render.init();
         player_render.init();
         card_render.init();
     }
 
-    void RenderManager::handleEvent(const sf::Event& event) {
-        board_render.handleEvent(event);
-        player_render.handleEvent(event);
-        card_render.handleEvent(event);
+    void RenderManager::handleEvent(const sf::Event& event, client::Client* client) {
+        if (event.type == sf::Event::Closed) {
+            window.close();
+            return;
+        }
+        board_render.handleEvent(event, client);
+        player_render.handleEvent(event, client);
+        card_render.handleEvent(event, client);
     }
 
-    void RenderManager::run() {
-        init();
-        while(window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                }
-                handleEvent(event);
-            }
-            if (needsRedraw) {
-                window.clear();
-                board_render.draw();
-                player_render.draw();
-                card_render.draw();
-                window.display();
-                needsRedraw = false;
-            }
-            sf::sleep(sf::milliseconds(15));
+    void RenderManager::draw() {
+        if (needsRedraw) {
+            window.clear();
+            board_render.draw();
+            player_render.draw();
+            card_render.draw();
+            window.display();
+            needsRedraw = false;
         }
     }
 

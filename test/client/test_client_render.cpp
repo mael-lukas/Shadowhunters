@@ -2,11 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include "../../src/shared/state.h"
 #include "../../src/client/render.h"
+#include "../../src/client/client.h"
 
 using namespace state;
 using namespace render;
+using namespace client;
 
-BOOST_AUTO_TEST_CASE(TestRender)
+/*BOOST_AUTO_TEST_CASE(TestRender)
 {
   Board bd;
   RenderManager rm(&bd);
@@ -19,7 +21,7 @@ BOOST_AUTO_TEST_CASE(TestRender)
       if (event.type == sf::Event::Closed) {
         rm.window.close();
       }
-      rm.handleEvent(event);
+      //rm.handleEvent(event);
     }
     rm.window.clear();
     rm.board_render.draw();
@@ -43,5 +45,14 @@ BOOST_AUTO_TEST_CASE(TestRender)
     }
     sf::sleep(sf::milliseconds(15));
   }
+}*/
+
+BOOST_AUTO_TEST_CASE(TestRenderWithClient)
+{
+  Board bd;
+  RenderManager rm(&bd);
+  Client client(&bd, &rm);
+  client.run();
 }
+
 
