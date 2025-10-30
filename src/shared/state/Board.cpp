@@ -66,17 +66,23 @@ namespace state
 
     Card Board::drawDark()
     {
-        return darkPack.draw(); // TODO : implement
+        Card drawnCard = darkPack.draw();
+        notifyObservers(CARD_CHANGED);
+        return drawnCard;
     }
 
     Card Board::drawWhite()
     {
-        return whitePack.draw(); // TODO : implement
+        Card drawnCard = whitePack.draw();
+        notifyObservers(CARD_CHANGED);
+        return drawnCard;
     }
 
     Card Board::drawHermit()
     {
-        return hermitPack.draw(); // TODO : implement
+        Card drawnCard = hermitPack.draw();
+        notifyObservers(CARD_CHANGED);
+        return drawnCard;
     }
 
     /// @brief search for the players in the same zone as the player
@@ -125,8 +131,14 @@ namespace state
         playerPos[oldPos].pop_back();
 
         playerPos[newPos].emplace_back(&player);
+        notifyObservers(BOARD_CHANGED);
 
+    }
 
+    void Board::equipCard(Player &player, Card card)
+    {
+        player.equipCards.push_back(card);
+        notifyObservers(CARD_CHANGED);
     }
 
     Cell Board::getOtherCellInSameZone(Cell cell)

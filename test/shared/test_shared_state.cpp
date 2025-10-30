@@ -1,8 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include "../../src/shared/state.h"
 
-// tester les destructeurs
-
 using namespace state;
 
 BOOST_AUTO_TEST_CASE(TestState) {
