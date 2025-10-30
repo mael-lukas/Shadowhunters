@@ -215,32 +215,88 @@ Cette classe est reliée à deux énumérations :
 
 
 ### 2.3 Conception logicielle: extension pour le rendu
+<figure style="text-align: center;">
+<img src="img_rapport/figure10_state_render_extension.png" alt="Classes Observer">
+<br><figcaption><br></br><strong>Figure 10 :</strong> State, extension pour le rendu</figcaption>
+</figure></br>
+Le rendu doit être informé lors d'un changement du State pour afficher les modifications nécessaires. Pour cela le design pattern Observer est utilisé. Les classes Board et Player sont des sujets (Subject) connaissant tous leurs observateurs et pouvant les notifier d'un changement. Le rendu sera alors un observateur du State.
+
+<strong>Subject</strong>
+| Methode | Objectif |
+|--------|---------|
+| void addObserver(observer:IObserver*) | Ajoute un observateur à la liste des observateurs |
+| void removeObserver(observer:IObserver*) | Retire un observateur de la liste des observateurs |
+| void notifyObservers() | Notifie tous les observateurs d'un changement d'état |
+
+<strong>IObserver</strong>
+| Methode | Objectif |
+|--------|---------|
+| void getNotified(e:StateEventID) | Traite la notification reçue |
 
 ### 2.4 Conception logicielle: extension pour le moteur de jeu
 
 ### 2.5 Ressources
 
 <figure style="text-align: center;">
-<img src="img_rapport/figure10_dia_state.png" alt="Diagramme des classes état">
-<br><figcaption><br></br><strong>Figure 10 :</strong> Diagramme des classes d'état</figcaption>
+<img src="img_rapport/figure11_dia_state.png" alt="Diagramme des classes état">
+<br><figcaption><br></br><strong>Figure 11 :</strong> Diagramme des classes d'état</figcaption>
 </figure></br>
 On peut maintenant observer les différentes interactions entre les différents états, que ce soit entre le Player et le Board, où chacun d’entre eux a la nécessité de faire appel à l’autre pour effectuer certaines méthodes. Il en est de même pour PackOfCard et Board.
 
 
 ## 3 Rendu: Stratégie et Conception
-Présentez ici la stratégie générale que vous comptez suivre pour rendre un état. Cela doit tenir compte des problématiques de synchronisation entre les changements d'états et la vitesse d'affichage à l'écran. Puis, lorsque vous serez rendu à la partie client/serveur, expliquez comment vous aller gérer les problèmes liés à la latence. Après cette description, présentez la conception logicielle. Pour celle-ci, il est fortement recommandé de former une première partie indépendante de toute librairie graphique, puis de présenter d'autres parties qui l'implémente pour une librairie particulière. Enfin, toutes les classes de la première partie doivent avoir pour unique dépendance les classes d'état de la section précédente.
 
 ### 3.1 Stratégie de rendu d'un état
+Différents éléments doivent être rendus à l'écran pendant une partie de Shadowhunters. Cela inclu le plateau de jeu lui même, les cartes, les informations relatives aux joueurs. Plusieures classes sont alors créées, chacune responsable du rendu de certains éléments du jeu et de l'écoute des interactions utilisateur (clics, appuis de touches) avec ces éléments.  
+
+Une classe RenderManager est responsable de la coordination des différents rendus. Elle est un observer du State et est notifiée à chaque changement d'état. Elle demande alors aux différentes classes de rendu de mettre à jour leur affichage en fonction des nouvelles informations du State. Elle délègue également la capture des interactions utilisateur aux classes de rendu.  
+
+Le RenderManager est aussi en lien avec le client. Le client implémente un fonction run() qui s'exécute tant que la fenêtre de jeu est ouverte. Cette fonction appelle en boucle les méthodes handleEvent() et draw() du RenderManager. Le Client reçoit les informations des évènements utilisateur captés par le Render. Il les traite alors en fonction du type d'interaction avec des méthodes spécifiques, et modifie le State en conséquence.
+Pour l'instant le Client modifie directement le State, mais lorsque l'Engine sera implémenté, le Client devra traiter les évènements captés par le Render et retranscrire cela en Commandes envoyées à l'Engine.
 
 ### 3.2 Conception logicielle
+
+<strong>RenderManager</strong>
+<figure style="text-align: center;">
+<img src="img_rapport/figure12_classe_rendermanager.png" alt="Diagramme des classes de Render">
+<br><figcaption><br></br><strong>Figure 12 :</strong> Classe RenderManager</figcaption>
+</figure></br>
+
+| Methode | Objectif |
+|--------|---------|
+| void init() | Ajoute le RenderManager à la liste des observers du State, créé la fenêtre de jeu et initialise les différentes classes de rendu |
+| void handleEvent(event:const sf::Event&, client:client::Client) | Appelle les méthodes handleEvent des classes de rendu |
+| void draw() | Appelle les méthodes draw() des classes de rendu si le State a été mis à jour |
+| void getNotified(e:StateEventID) | Reçoit la notification d'un changement du State |
+
+<strong>Classes de rendu</strong>
+<figure style="text-align: center;">
+<img src="img_rapport/figure13_classes_de_rendu.png" alt="Diagramme des classes de Render">
+<br><figcaption><br></br><strong>Figure 13 :</strong> Classes de Rendu</figcaption>
+</figure></br>
+
+Comme dit plus haut, les différentes classes de rendu sont responsables de l'affichage de certains éléments du jeu (le plateau, les informations des joueurs, les cartes) et de la capture des interactions utilisateur avec ces éléments. Chaque classe de rendu implémente les même méthodes.
+
+| Methode | Objectif |
+|--------|---------|
+| void init() | Charge les ressources à afficher |
+| void handleEvent(event:const sf::Event&, client:client::Client) | Capture les évènements utilisateur (clics, appuis de touches) |
+| void draw() | Dessine les éléments dans la fenêtre |
+
 
 ### 3.3 Conception logicielle: extension pour les animations
 
 ### 3.4 Ressources
 
-### 3.5 Exemple de rendu
+<figure style="text-align: center;">
+<img src="img_rapport/figure14_dia_render.png" alt="Diagramme des classes de Render">
+<br><figcaption><br></br><strong>Figure 14 :</strong> Diagramme de classes de Render</figcaption>
+</figure></br>
 
-Illustration 2: Diagramme de classes pour le rendu
+<figure style="text-align: center;">
+<img src="img_rapport/figure15_dia_client.png" alt="Diagramme des classes de Client">
+<br><figcaption><br></br><strong>Figure 15 :</strong> Diagramme de classes de Client</figcaption>
+</figure></br>
 
 ## 4 Règles de changement d'états et moteur de jeu
 Dans cette section, il faut présenter les événements qui peuvent faire passer d'un état à un autre. Il faut également décrire les aspects liés au temps, comme la chronologie des événements et les aspects de synchronisation. Une fois ceci présenté, on propose une conception logicielle pour pouvoir mettre en œuvre ces règles, autrement dit le moteur de jeu.
