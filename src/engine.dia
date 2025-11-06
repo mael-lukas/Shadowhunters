@@ -88,8 +88,6 @@
       </dia:composite>
     </dia:attribute>
   </dia:diagramdata>
-  <dia:layer name="Arrière-plan" visible="true" connectable="false"/>
-  <dia:layer name="Arrière-plan" visible="true" connectable="false"/>
   <dia:layer name="Background" visible="true" connectable="true" active="true">
     <dia:object type="UML - LargePackage" version="0" id="O0">
       <dia:attribute name="obj_pos">
@@ -140,7 +138,7 @@
         <dia:point val="4.60048,14.6144"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="4.55048,14.5644;29.1205,30.8645"/>
+        <dia:rectangle val="4.55048,14.5644;29.1205,30.8644"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="4.60048,14.6144"/>
@@ -1978,8 +1976,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="43.1635,22.7157"/>
-        <dia:point val="45.0208,22.7157"/>
-        <dia:point val="45.0208,26.9954"/>
+        <dia:point val="45.0209,22.7157"/>
+        <dia:point val="45.0209,26.9954"/>
         <dia:point val="46.0782,26.9954"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -2029,8 +2027,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="43.1635,22.7157"/>
-        <dia:point val="45.0208,22.7157"/>
-        <dia:point val="45.0208,26.9954"/>
+        <dia:point val="45.0209,22.7157"/>
+        <dia:point val="45.0209,26.9954"/>
         <dia:point val="46.0782,26.9954"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -2175,7 +2173,7 @@
         <dia:point val="29.1209,22.7144"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="29.0709,21.9551;31.7977,23.5551"/>
+        <dia:rectangle val="29.0709,21.955;31.7977,23.555"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
