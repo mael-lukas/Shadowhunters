@@ -245,7 +245,7 @@
             <dia:string>#board#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Board#</dia:string>
+            <dia:string>#state::Board#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -268,7 +268,7 @@
             <dia:string>#players#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#vector&lt;State::Player&gt;#</dia:string>
+            <dia:string>#std::vector&lt;state::Player&gt;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -291,7 +291,7 @@
             <dia:string>#commands#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#vector&lt;Command*&gt;#</dia:string>
+            <dia:string>#std::vector&lt;Command*&gt;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -314,7 +314,7 @@
             <dia:string>#cardEffects#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#map&lt;State::Card,Command*&gt; #</dia:string>
+            <dia:string>#std::map&lt;state::Card,Command*&gt; #</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -671,7 +671,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Player&amp;#</dia:string>
+            <dia:string>#state::Player&amp;#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -701,7 +701,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Board&amp;#</dia:string>
+            <dia:string>#state::Board&amp;#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -757,7 +757,7 @@
                 <dia:string>#card#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#State::Card#</dia:string>
+                <dia:string>#state::Card#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -774,7 +774,7 @@
                 <dia:string>#target#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#State::Player&amp;#</dia:string>
+                <dia:string>#state::Player&amp;#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -822,7 +822,7 @@
                 <dia:string>#player#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#state:Player&amp;#</dia:string>
+                <dia:string>#state::Player&amp;#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -1118,7 +1118,7 @@
             <dia:string>#position#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Cell#</dia:string>
+            <dia:string>#state::Cell#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1141,7 +1141,7 @@
             <dia:string>#player#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Player&amp;#</dia:string>
+            <dia:string>#state::Player&amp;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1195,7 +1195,7 @@
                 <dia:string>#position#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#State::Cell#</dia:string>
+                <dia:string>#state::Cell#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -1212,7 +1212,7 @@
                 <dia:string>#player#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#State::Player&amp;#</dia:string>
+                <dia:string>#state::Player&amp;#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -1393,7 +1393,7 @@
             <dia:string>#attacker#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Player&amp;#</dia:string>
+            <dia:string>#state::Player&amp;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1416,7 +1416,7 @@
             <dia:string>#attacked#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Player&amp;#</dia:string>
+            <dia:string>#state::Player&amp;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1603,7 +1603,7 @@
             <dia:string>#cardType#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::CardType#</dia:string>
+            <dia:string>#state::CardType#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1790,7 +1790,7 @@
             <dia:string>#card#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#State::Card#</dia:string>
+            <dia:string>#state::Card#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1844,7 +1844,7 @@
                 <dia:string>#card#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#State::Card#</dia:string>
+                <dia:string>#state::Card#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -2020,57 +2020,6 @@
         <dia:point val="43.1635,22.7157"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="43.1135,21.8657;46.1282,27.0454"/>
-      </dia:attribute>
-      <dia:attribute name="meta">
-        <dia:composite type="dict"/>
-      </dia:attribute>
-      <dia:attribute name="orth_points">
-        <dia:point val="43.1635,22.7157"/>
-        <dia:point val="45.0209,22.7157"/>
-        <dia:point val="45.0209,26.9954"/>
-        <dia:point val="46.0782,26.9954"/>
-      </dia:attribute>
-      <dia:attribute name="orth_orient">
-        <dia:enum val="0"/>
-        <dia:enum val="1"/>
-        <dia:enum val="0"/>
-      </dia:attribute>
-      <dia:attribute name="orth_autoroute">
-        <dia:boolean val="true"/>
-      </dia:attribute>
-      <dia:attribute name="name">
-        <dia:string>##</dia:string>
-      </dia:attribute>
-      <dia:attribute name="stereotype">
-        <dia:string>##</dia:string>
-      </dia:attribute>
-      <dia:attribute name="text_font">
-        <dia:font family="monospace" style="0" name="Courier"/>
-      </dia:attribute>
-      <dia:attribute name="text_height">
-        <dia:real val="0.80000000000000004"/>
-      </dia:attribute>
-      <dia:attribute name="text_colour">
-        <dia:color val="#000000ff"/>
-      </dia:attribute>
-      <dia:attribute name="line_width">
-        <dia:real val="0.10000000000000001"/>
-      </dia:attribute>
-      <dia:attribute name="line_colour">
-        <dia:color val="#000000ff"/>
-      </dia:attribute>
-      <dia:connections>
-        <dia:connection handle="0" to="O2" connection="10"/>
-        <dia:connection handle="1" to="O5" connection="12"/>
-      </dia:connections>
-      <dia:childnode parent="O0"/>
-    </dia:object>
-    <dia:object type="UML - Realizes" version="1" id="O10">
-      <dia:attribute name="obj_pos">
-        <dia:point val="43.1635,22.7157"/>
-      </dia:attribute>
-      <dia:attribute name="obj_bb">
         <dia:rectangle val="43.1135,21.7992;46.074,23.5657"/>
       </dia:attribute>
       <dia:attribute name="meta">
@@ -2117,7 +2066,7 @@
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
-    <dia:object type="UML - Realizes" version="1" id="O11">
+    <dia:object type="UML - Realizes" version="1" id="O10">
       <dia:attribute name="obj_pos">
         <dia:point val="43.1635,22.7157"/>
       </dia:attribute>
@@ -2168,7 +2117,7 @@
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
-    <dia:object type="UML - Dependency" version="1" id="O12">
+    <dia:object type="UML - Dependency" version="1" id="O11">
       <dia:attribute name="obj_pos">
         <dia:point val="29.1209,22.7144"/>
       </dia:attribute>
@@ -2222,7 +2171,7 @@
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
-    <dia:object type="UML - LargePackage" version="0" id="O13">
+    <dia:object type="UML - LargePackage" version="0" id="O12">
       <dia:attribute name="obj_pos">
         <dia:point val="28.35,-1.15"/>
       </dia:attribute>
@@ -2242,7 +2191,7 @@
         <dia:real val="3.9500000000000011"/>
       </dia:attribute>
       <dia:attribute name="name">
-        <dia:string>#State#</dia:string>
+        <dia:string>#state#</dia:string>
       </dia:attribute>
       <dia:attribute name="stereotype">
         <dia:string>##</dia:string>
@@ -2266,7 +2215,7 @@
         <dia:color val="#ffffffff"/>
       </dia:attribute>
     </dia:object>
-    <dia:object type="UML - Class" version="0" id="O14">
+    <dia:object type="UML - Class" version="0" id="O13">
       <dia:attribute name="obj_pos">
         <dia:point val="30.6,-0.05"/>
       </dia:attribute>
@@ -2378,9 +2327,9 @@
         <dia:boolean val="false"/>
       </dia:attribute>
       <dia:attribute name="templates"/>
-      <dia:childnode parent="O13"/>
+      <dia:childnode parent="O12"/>
     </dia:object>
-    <dia:object type="UML - Class" version="0" id="O15">
+    <dia:object type="UML - Class" version="0" id="O14">
       <dia:attribute name="obj_pos">
         <dia:point val="36.35,0.15"/>
       </dia:attribute>
@@ -2492,7 +2441,7 @@
         <dia:boolean val="false"/>
       </dia:attribute>
       <dia:attribute name="templates"/>
-      <dia:childnode parent="O13"/>
+      <dia:childnode parent="O12"/>
     </dia:object>
   </dia:layer>
 </dia:diagram>
