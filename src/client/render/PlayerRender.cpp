@@ -12,7 +12,8 @@ namespace render {
         // TODO: load textures from player cards, pawns etc...
 
         ///// text based test /////
-        if (!test_font.loadFromFile("../../../res/arial.ttf")) {
+        std::string path = std::string(ASSET_PATH);
+        if (!test_font.loadFromFile(path + "/arial.ttf")) {
             std::cerr << "Error loading font" << std::endl;
         }
         test_text.setFont(test_font);

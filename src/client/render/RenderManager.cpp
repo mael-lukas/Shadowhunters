@@ -13,7 +13,7 @@ namespace render {
         for (state::Player* player : board->playerPos[state::OUTSIDE]) {
             player->addObserver(this);
         }
-        window.create(sf::VideoMode(1200,700),"Shadowhunters");
+        window.create(sf::VideoMode::getDesktopMode(),"Shadowhunters",sf::Style::Default);
         board_render.init();
         player_render.init();
         card_render.init();
@@ -23,6 +23,11 @@ namespace render {
         if (event.type == sf::Event::Closed) {
             window.close();
             return;
+        }
+        if (event.type == sf::Event::Resized) {
+            sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+            window.setView(sf::View(visibleArea));
+            needsRedraw = true;
         }
         board_render.handleEvent(event, client);
         player_render.handleEvent(event, client);

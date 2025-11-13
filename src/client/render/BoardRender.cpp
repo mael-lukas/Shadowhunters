@@ -12,9 +12,22 @@ namespace render {
         // TODO: load textures from board, load textures from cells in map
         
         ///// text based test /////
-        if (!test_font.loadFromFile("../../../res/arial.ttf")) {
+        std::string path = std::string(ASSET_PATH);
+        if (!test_font.loadFromFile(path + "/arial.ttf")) {
             std::cerr << "Error loading font" << std::endl;
         }
+        if (!boardTexture.loadFromFile(path + "/Board.jpg")) {
+            std::cerr << "Error loading board texture" << std::endl;
+        }
+
+        boardSprite.setTexture(boardTexture);
+        boardSprite.setScale(0.6f,0.6f);
+        //center image on screen
+        sf::FloatRect spriteRect = boardSprite.getLocalBounds();
+        boardSprite.setOrigin(spriteRect.left + spriteRect.width / 2.0f,
+                              spriteRect.top + spriteRect.height / 2.0f);
+        boardSprite.setPosition(920.f,520.f); //half of 1920x1080
+
         test_text.setFont(test_font);
         test_text.setCharacterSize(20);
         test_text.setFillColor(sf::Color::White);
@@ -61,6 +74,7 @@ namespace render {
             boardInfo += "Cell " + std::to_string(pair.first) + " is in zone " + std::to_string(pair.second) + "\n";
         }
         test_text.setString(boardInfo);
+        window->draw(boardSprite);
         window->draw(test_text);
         window->draw(test_button);
         window->draw(test_button_text);

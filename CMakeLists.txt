@@ -73,7 +73,9 @@ if(BUILD_CODE_COVERAGE)
   SETUP_TARGET_FOR_COVERAGE_GCOVR_XML(
     NAME code-coverage-gcov
     EXECUTABLE sh ${test_runner}
+    EXCLUDE ${COVER_GCOVR_EXCLUDES}
     DEPENDS ${test_runner}
+
     )
 endif()
 
@@ -111,6 +113,10 @@ find_library(
   NAMES microhttpd microhttpd-10 libmicrohttpd libmicrohttpd-dll
   DOC "microhttpd library"
 )
+
+# Define global asset path for resource loading
+set(ASSET_PATH "${CMAKE_SOURCE_DIR}/res")
+add_compile_definitions(ASSET_PATH="${ASSET_PATH}")
 
 # Add source subdirectories
 add_subdirectory(src/shared)
