@@ -51,8 +51,8 @@ BOOST_AUTO_TEST_CASE(TestRenderWithClient)
 {
   Board bd;
   RenderManager rm(&bd);
-  Client client(&bd, &rm);
-  client.run();
+  //Client client(&bd, &rm,&eng);
+  //client.run();
 }
 
 

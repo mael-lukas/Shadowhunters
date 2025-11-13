@@ -55,7 +55,10 @@ namespace render {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move test button clicked, simulating state change." << std::endl;
-                client->moveTestClicked();
+
+                /// Call of the location name at the clickPos for now it is will be defined as GRAVEYARD
+                /// for test purpose
+                client->moveTestClicked("GRAVEYARD");
             }
         }
     }
