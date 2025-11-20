@@ -58,7 +58,7 @@ namespace render {
 
                 /// Call of the location name at the clickPos for now it is will be defined as GRAVEYARD
                 /// for test purpose
-                client->moveTestClicked("GRAVEYARD");
+                client->moveClicked(state::GRAVEYARD);
             }
         }
     }
