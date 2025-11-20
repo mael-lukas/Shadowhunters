@@ -10,7 +10,7 @@ namespace render {
 
     void BoardRender::init() {
         // TODO: load textures from board, load textures from cells in map
-        
+
         ///// text based test /////
         std::string path = std::string(ASSET_PATH);
         if (!test_font.loadFromFile(path + "/arial.ttf")) {
