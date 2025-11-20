@@ -42,7 +42,7 @@ namespace render {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Damage test button clicked, simulating state change." << std::endl;
-                client->damageTestClicked();
+                client->damageClicked();
             }
         }
     }

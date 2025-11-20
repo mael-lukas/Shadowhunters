@@ -1,5 +1,6 @@
 #include "Client.h"
 #include "../../shared/engine/DrawCardCommand.h"
+#include "../../shared/engine/MoveCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -22,40 +23,22 @@ namespace client {
         }
     }
 
-    void Client::moveTestClicked(std::string newLocation) {
-        // Test for state update : player moved
-        std::cout << "Client received move test click callback." << std::endl;
-        board->movePlayerTo(*(board->playerPos[state::OUTSIDE][0]), state::GRAVEYARD);
+    void Client::moveClicked(state::Cell newLocation) {
+        cmd = new engine::MoveCommand(newLocation);
+        engineGame -> commands.push_back(cmd);
     }
 
-    void Client::damageTestClicked() {
+    void Client::damageClicked() {
         // Test for state update : first player in GRAVEYARD takes 3 damage
         std::cout << "Client received damage test click callback." << std::endl;
-
 
         if (board->playerPos[state::GRAVEYARD].size() > 0) {
             board->playerPos[state::GRAVEYARD][0]->receiveDamage(3);
         }
     }
 
-    void Client::drawTestClicked(std::string cardDraw) {
-        // Test for state update : draw card & equip it to first player in GRAVEYARD if any
-        std::cout << "Client received draw test click callback." << std::endl;
-        engine::Command* cmd ;
-
-        if(cardDraw == "darkCard")
-        {
-            cmd =  new engine::DrawCardCommand(state::CardType::DARK);
-        }
-        else if(cardDraw == "whiteCard")
-        {
-            cmd =  new engine::DrawCardCommand(state::CardType::WHITE);
-        }
-        else if(cardDraw == "hermitCard")
-        {
-            cmd =  new engine::DrawCardCommand(state::CardType::HERMIT);
-        }
-        
+    void Client::drawClicked(state::CardType cardDraw) {
+        cmd = new engine::DrawCardCommand(cardDraw);
         engineGame -> commands.push_back(cmd);
     }
 
