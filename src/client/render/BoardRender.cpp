@@ -19,6 +19,15 @@ namespace render {
         if (!boardTexture.loadFromFile(path + "/Board.jpg")) {
             std::cerr << "Error loading board texture" << std::endl;
         }
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            state::Cell cell = static_cast<state::Cell>(i);
+            sf::Texture texture;
+            std::string cellPath = path + "/sh_card_textures/sh_area/area0" + std::to_string(i) + ".jpg";
+            if (!texture.loadFromFile(cellPath)) {
+                std::cerr << "Error loading texture for cell " << i << std::endl;
+            }
+            cellTextures[cell] = texture;
+        }
 
         boardSprite.setTexture(boardTexture);
         boardSprite.setScale(0.6f,0.6f);
@@ -27,6 +36,20 @@ namespace render {
         boardSprite.setOrigin(spriteRect.left + spriteRect.width / 2.0f,
                               spriteRect.top + spriteRect.height / 2.0f);
         boardSprite.setPosition(920.f,520.f); //half of 1920x1080
+
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            state::Cell cell = static_cast<state::Cell>(i);
+            sf::Sprite cellSprite;
+            cellSprite.setTexture(cellTextures[cell]);
+            cellSprite.setScale(0.15f,0.15f);
+            sf::FloatRect spriteRect = boardSprite.getLocalBounds();
+            boardSprite.setOrigin(spriteRect.left + spriteRect.width / 2.0f,
+                              spriteRect.top + spriteRect.height / 2.0f);
+            cellSprite.setPosition(i*100.f,i*100.f);
+            cellSprites[cell] = cellSprite;
+        }
+
+        cellSprites[state::CHURCH].setRotation(55.f);
 
         test_text.setFont(test_font);
         test_text.setCharacterSize(20);
@@ -53,6 +76,8 @@ namespace render {
     void BoardRender::handleEvent(const sf::Event& event, client::Client* client) {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+            std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
+
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move test button clicked, simulating state change." << std::endl;
 
@@ -81,5 +106,9 @@ namespace render {
         window->draw(test_text);
         window->draw(test_button);
         window->draw(test_button_text);
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            state::Cell cell = static_cast<state::Cell>(i);
+            window->draw(cellSprites[cell]);
+        }
     }
 }

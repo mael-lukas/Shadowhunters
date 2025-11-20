@@ -1,5 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include "../../src/shared/state.h"
+#include <iostream>
 
 using namespace state;
 
@@ -10,7 +11,7 @@ BOOST_AUTO_TEST_CASE(TestState) {
     BOOST_CHECK_EQUAL(darkPack.listOfCards[0]->name,DARK1);
     hermitPack.shuffle();
     CardClass* drawnHermit = hermitPack.draw();
-    std::cout << static_cast<Card>(drawnHermit->name) << std::endl;
+    std::cout << std::to_string(static_cast<Card>(drawnHermit->name)) << std::endl;
     BOOST_CHECK_EQUAL(whitePack.listOfCards.size(), 2);
     BOOST_CHECK_EQUAL(whitePack.discardPile.size(), 0);
     BOOST_CHECK_EQUAL(whitePack.type, WHITE);
