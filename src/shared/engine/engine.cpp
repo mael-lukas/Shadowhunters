@@ -4,6 +4,9 @@
 
 namespace engine {
 
+    Engine::Engine(state::Board* board): board(board)
+    {}
+
 void Engine::playerMove(state::Player& player)
 {
     // 1) Lancer les dés (somme)
