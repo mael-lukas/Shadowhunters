@@ -30,22 +30,22 @@ namespace state {
     std::shuffle(listOfCards.begin(), listOfCards.end(), g);
   }
 
-  CardClass& PackOfCards::draw () {
+  CardClass* PackOfCards::draw () {
     // NOT IMPLEMENTED : if deck is empty, reshuffle discard pile into deck
     if (listOfCards.size() > 0) {
       CardClass* topCard = listOfCards.front();
       listOfCards.erase(listOfCards.begin());
-      return *topCard;
+      return topCard;
     }
     else {
       CardClass* topCard = new CardClass(NONE,WHITE);
-      return *topCard;
+      return topCard;
     }
   }
 
-  void PackOfCards::discard (CardClass card) {
+  void PackOfCards::discard (CardClass* card) {
     // NOT IMPLEMENTED
-    discardPile.push_back(&card);
+    discardPile.push_back(card);
   }
 
 };

@@ -10,13 +10,13 @@ namespace engine {
 void Engine::playerMove(state::Player& player)
 {
     // 1) Lancer les dés (somme)
-    int roll = board.rollDice(state::SUM);
+    int roll = board->rollDice(state::SUM);
 
     // 2) Trouver la case associée
-    state::Cell destination = board.dieToCell[roll];
+    state::Cell destination = board->dieToCell[roll];
 
     // 3) Déplacer dans Board
-    board.movePlayerToCell(player, destination);
+    board->movePlayerTo(player, destination);
 
     // 4) Mettre à jour le Player
     player.position = destination;

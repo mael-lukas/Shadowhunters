@@ -2,13 +2,12 @@
 
 namespace engine {
 
-MoveCommand::MoveCommand(state::Player& player)
-    : player(player)
+MoveCommand::MoveCommand(state::Cell position) : position(position)
 {}
 
 void MoveCommand::execute(Engine& engine)
 {
-    engine.playerMove(player);
+    //engine.playerMove(player);
 }
 
 }

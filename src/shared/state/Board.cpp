@@ -64,23 +64,23 @@ namespace state
             return 0; // TODO : implement
     }
 
-    Card Board::drawDark()
+    CardClass* Board::drawDark()
     {
-        Card drawnCard = darkPack.draw();
+        CardClass* drawnCard = darkPack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
 
-    Card Board::drawWhite()
+    CardClass* Board::drawWhite()
     {
-        Card drawnCard = whitePack.draw();
+        CardClass* drawnCard = whitePack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
 
-    Card Board::drawHermit()
+    CardClass* Board::drawHermit()
     {
-        Card drawnCard = hermitPack.draw();
+        CardClass* drawnCard = hermitPack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
