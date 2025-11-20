@@ -9,17 +9,17 @@ namespace state {
     if (type == WHITE) {
       for (int i = 0; i < WHITECOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(c);
+        listOfCards.push_back(new CardClass(c,WHITE));
       }
     } else if (type == DARK) {
       for (int i = WHITECOUNT+1; i < DARKCOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(c);
+        listOfCards.push_back(new CardClass(c,DARK));
       }
     } else if (type == HERMIT) {
       for (int i = DARKCOUNT+1 ; i < HERMITCOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(c);
+        listOfCards.push_back(new CardClass(c,HERMIT));
       }
     }
   }
@@ -30,21 +30,22 @@ namespace state {
     std::shuffle(listOfCards.begin(), listOfCards.end(), g);
   }
 
-  Card PackOfCards::draw () {
+  CardClass& PackOfCards::draw () {
     // NOT IMPLEMENTED : if deck is empty, reshuffle discard pile into deck
     if (listOfCards.size() > 0) {
-      Card topCard = listOfCards.front();
+      CardClass* topCard = listOfCards.front();
       listOfCards.erase(listOfCards.begin());
-      return topCard;
+      return *topCard;
     }
     else {
-      return Card::NONE;
+      CardClass* topCard = new CardClass(NONE,WHITE);
+      return *topCard;
     }
   }
 
-  void PackOfCards::discard (Card card) {
+  void PackOfCards::discard (CardClass card) {
     // NOT IMPLEMENTED
-    discardPile.push_back(card);
+    discardPile.push_back(&card);
   }
 
 };
