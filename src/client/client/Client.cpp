@@ -35,6 +35,11 @@ namespace client {
         if (board->playerPos[state::GRAVEYARD].size() > 0) {
             board->playerPos[state::GRAVEYARD][0]->receiveDamage(3);
         }
+
+        /*
+        cmd = new engine::AttackCommand(int id_AttackedPlayer);
+        engineGame -> commands.push_back(cmd);
+        */
     }
 
     void Client::drawClicked(state::CardType cardDraw) {
