@@ -54,6 +54,9 @@ BOOST_AUTO_TEST_CASE(TestRenderWithClient)
   Engine eng(&bd);
   RenderManager rm(&bd);
   Client client(&bd, &rm, &eng);
+  for (state::Cell cell : bd.listOfCells) {
+      std::cout << "Cell in board: " << static_cast<int>(cell) << std::endl;
+  }
   client.run();
 }
 

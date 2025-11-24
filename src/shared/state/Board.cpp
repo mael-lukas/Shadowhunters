@@ -27,9 +27,12 @@ namespace state
         std::shuffle(temp.begin(), temp.end(), g);
         for (int i = 0; i < 3; i++)
         {
+            listOfCells.push_back(temp[2*i]);
+            listOfCells.push_back(temp[2*i + 1]);
             cellToZone[temp[2*i]] = i;
             cellToZone[temp[2*i + 1]] = i;
         }
+        listOfCells.push_back(OUTSIDE);
 
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
