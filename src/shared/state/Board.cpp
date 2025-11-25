@@ -159,4 +159,26 @@ namespace state
         }
         return otherCell;
     }
+
+
+    /**
+     * @brief define the order of the players in the game
+     * by modifying the id of the player
+     * @param playerList the list of players
+     */
+    void defineGameOrder (std::vector<std::unique_ptr<Player>> playerList)
+    {
+        int nbPlayer=playerList.size();
+        std::vector<int> assignedIDs;
+
+        for(int i=1;i<=nbPlayer;i++){
+            assignedIDs.push_back(i);
+        }
+        
+        for(int i=0;i<nbPlayer;i++){
+            int randNb=std::rand() % assignedIDs.size() + 1;
+            playerList[i]->idPlayer=assignedIDs[randNb-1];
+            assignedIDs.erase(assignedIDs.begin()+randNb-1);            
+        }
+    }
 }
