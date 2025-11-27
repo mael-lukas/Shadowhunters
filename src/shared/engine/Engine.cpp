@@ -25,6 +25,7 @@ namespace engine
     {
         currentPlayerIndex = 0;
         commands.clear();
+        runGameLoop();
     }
 
     // ==========================
@@ -50,6 +51,7 @@ namespace engine
     {
         commands.clear();
         // Tu peux aussi notifier le client que c’est le tour de getCurrentPlayer()
+        
     }
 
     void Engine::processPlayerAction(Command &cmd)
