@@ -13,10 +13,10 @@ void Engine::playerMove(state::Player& player)
     int roll = board->rollDice(state::SUM);
 
     // 2) Trouver la case associée
-    state::Cell destination = board->dieToCell[roll];
+    state::CellClass destination = board->dieToCell(roll);
 
     // 3) Déplacer dans Board
-    board->movePlayerTo(player, destination);
+    board->movePlayerTo(&player, destination);
 
     // 4) Mettre à jour le Player
     player.position = destination;

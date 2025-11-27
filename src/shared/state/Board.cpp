@@ -12,22 +12,13 @@ namespace state
 {
     Board::Board() : whitePack(WHITECOUNT, WHITE), darkPack(DARKCOUNT - WHITECOUNT - 1, DARK), hermitPack(HERMITCOUNT - DARKCOUNT - 1, HERMIT)
     {
-        CellClass Hermitzone = CellClass(HERMITZONE);
-        CellClass Gate = CellClass(GATE);
-        CellClass Church = CellClass(CHURCH);
-        CellClass Graveyard = CellClass(GRAVEYARD);
-        CellClass Woods = CellClass(WOODS);
-        CellClass Altar = CellClass(ALTAR);
-        CellClass Out = CellClass(OUTSIDE);
-
-        dieToCell[2] = Hermitzone;
-        dieToCell[3] = Hermitzone;
-        dieToCell[4] = Gate;
-        dieToCell[5] = Gate;
-        dieToCell[6] = Church;
-        dieToCell[8] = Graveyard;
-        dieToCell[9] = Woods;
-        dieToCell[10] = Altar;
+        CellClass Hermitzone = CellClass(HERMITZONE, std::vector<int>{2, 3});
+        CellClass Gate = CellClass(GATE, std::vector<int>{4, 5});
+        CellClass Church = CellClass(CHURCH, std::vector<int>{6});
+        CellClass Graveyard = CellClass(GRAVEYARD, std::vector<int>{8});
+        CellClass Woods = CellClass(WOODS, std::vector<int>{9});
+        CellClass Altar = CellClass(ALTAR, std::vector<int>{10});
+        CellClass Out = CellClass(OUTSIDE, std::vector<int>{0});
 
         cellList = {Graveyard, Altar, Hermitzone, Woods, Gate, Church};
         std::random_device rd;
@@ -88,9 +79,9 @@ namespace state
         return drawnCard;
     }
 
-    std::vector<Player *> Board::getNeighbours(Player &player)
+    std::vector<Player *> Board::getNeighbours(Player *player)
     {
-        CellClass pos1 = player.position;
+        CellClass pos1 = player->position;
 
         CellClass pos2 = getOtherCellInSameZone(pos1);
 
@@ -104,7 +95,7 @@ namespace state
         // check if they are neighbour or the player itself
         for (Player *neighbour : temp)
         {
-            if (neighbour != &player)
+            if (neighbour != player)
             {
                 neighbours.emplace_back(neighbour);
             }
@@ -118,14 +109,14 @@ namespace state
         return neighbours;
     }
 
-    void Board::movePlayerTo(Player &player, CellClass newPos)
+    void Board::movePlayerTo(Player *player, CellClass newPos)
     {
-        CellClass oldPos = player.position;
-        player.position = newPos;
+        CellClass oldPos = player->position;
+        player->position = newPos;
 
         oldPos.playersInCell.erase(std::find(oldPos.playersInCell.begin(), oldPos.playersInCell.end(), player));
 
-        newPos.playersInCell.emplace_back(&player);
+        newPos.playersInCell.emplace_back(player);
         notifyObservers(BOARD_CHANGED);
     }
 
@@ -133,6 +124,18 @@ namespace state
     {
         player.equipCards.push_back(card);
         notifyObservers(CARD_CHANGED);
+    }
+
+    CellClass Board::dieToCell(int die)
+    {
+        const auto it = std::find_if(cellList.begin(), cellList.end(),
+                                     [die]( CellClass &c)
+                                     { return (c.isDieToThisCell(die) == 1); });
+        if (it != cellList.end())
+        {
+            return *it;
+        }
+        return cellList.back();
     }
 
     CellClass Board::getOtherCellInSameZone(CellClass cell)
@@ -147,5 +150,6 @@ namespace state
         {
             return *it;
         }
+        return cell;
     }
 }
