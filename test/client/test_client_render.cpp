@@ -7,6 +7,7 @@
 using namespace state;
 using namespace render;
 using namespace client;
+using namespace engine;
 
 /*BOOST_AUTO_TEST_CASE(TestRender)
 {
@@ -50,8 +51,9 @@ using namespace client;
 BOOST_AUTO_TEST_CASE(TestRenderWithClient)
 {
   Board bd;
+  Engine eng(&bd);
   RenderManager rm(&bd);
-  Client client(&bd, &rm);
+  Client client(&bd, &rm, &eng);
   client.run();
 }
 

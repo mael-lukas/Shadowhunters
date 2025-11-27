@@ -12,40 +12,40 @@ namespace state
 {
     Board::Board() : whitePack(WHITECOUNT, WHITE), darkPack(DARKCOUNT - WHITECOUNT - 1, DARK), hermitPack(HERMITCOUNT - DARKCOUNT - 1, HERMIT)
     {
-        dieToCell[2] = HERMITZONE;
-        dieToCell[3] = HERMITZONE;
-        dieToCell[4] = GATE;
-        dieToCell[5] = GATE;
-        dieToCell[6] = CHURCH;
-        dieToCell[8] = GRAVEYARD;
-        dieToCell[9] = WOODS;
-        dieToCell[10] = ALTAR;
+        CellClass Hermitzone = CellClass(HERMITZONE, std::vector<int>{2, 3});
+        CellClass Gate = CellClass(GATE, std::vector<int>{4, 5});
+        CellClass Church = CellClass(CHURCH, std::vector<int>{6});
+        CellClass Graveyard = CellClass(GRAVEYARD, std::vector<int>{8});
+        CellClass Woods = CellClass(WOODS, std::vector<int>{9});
+        CellClass Altar = CellClass(ALTAR, std::vector<int>{10});
+        CellClass Out = CellClass(OUTSIDE, std::vector<int>{0});
 
-        std::vector<Cell> temp = {GRAVEYARD, ALTAR, HERMITZONE, WOODS, GATE, CHURCH};
+        cellList = {Graveyard, Altar, Hermitzone, Woods, Gate, Church};
         std::random_device rd;
         std::mt19937 g(rd());
-        std::shuffle(temp.begin(), temp.end(), g);
+        std::shuffle(cellList.begin(), cellList.end(), g);
         for (int i = 0; i < 3; i++)
         {
-            cellToZone[temp[2*i]] = i;
-            cellToZone[temp[2*i + 1]] = i;
+            cellList[2 * i].setZone(i);
+            cellList[2 * i + 1].setZone(i);
         }
 
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
         playerList.emplace_back(new Vampire(this));
         playerList.emplace_back(new Georges(this));
+        for (auto& playerList_ptr : playerList) {
+            playerList_ptr->position = Out;
+        }
+        playerList[0]->id = 0;
+        playerList[1]->id = 1;
+        playerList[2]->id = 2;
+        playerList[3]->id = 3;
+        
 
+        Out.playersInCell = {playerList[0].get(), playerList[1].get()};
+        cellList.emplace_back(Out);
         defineGameOrder (playerList);
-
-        playerPos[GRAVEYARD] = {};
-        playerPos[ALTAR] = {};
-        playerPos[HERMITZONE] = {};
-        playerPos[WOODS] = {};
-        playerPos[GATE] = {};
-        playerPos[CHURCH] = {};
-
-        playerPos[OUTSIDE] = {playerList[0].get(), playerList[1].get(),playerList[2].get(), playerList[3].get()};
     }
 
     int Board::rollDice(RollRule rule)
@@ -69,75 +69,66 @@ namespace state
             return 0; // TODO : implement
     }
 
-    Card Board::drawDark()
+    CardClass *Board::drawDark()
     {
-        Card drawnCard = darkPack.draw();
+        CardClass *drawnCard = darkPack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
 
-    Card Board::drawWhite()
+    CardClass *Board::drawWhite()
     {
-        Card drawnCard = whitePack.draw();
+        CardClass *drawnCard = whitePack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
 
-    Card Board::drawHermit()
+    CardClass *Board::drawHermit()
     {
-        Card drawnCard = hermitPack.draw();
+        CardClass *drawnCard = hermitPack.draw();
         notifyObservers(CARD_CHANGED);
         return drawnCard;
     }
 
-    /// @brief search for the players in the same zone as the player
-    /// @param player the player of which we want the neighbouring players, the  player shouldn't be on OUTSIDE
-    /// @return the list possibly empty of the neighbours of the player
-    std::vector<Player *> Board::getNeighbours(Player &player)
+    std::vector<Player *> Board::getNeighbours(Player *player)
     {
-        // Get player pos
-        Cell pos = player.position;
-        // other pos in zone
-        Cell pos2;
-        pos2=getOtherCellInSameZone(pos);
+        CellClass pos1 = player->position;
+
+        CellClass pos2 = getOtherCellInSameZone(pos1);
 
         // list of players in the same zone
         std::vector<Player *> neighbours = {};
 
-        // Get players in zone
+        std::find(pos1.playersInCell.begin(), pos1.playersInCell.end(), player);
 
-        // all players in pos
-        std::vector<Player *> temp = playerPos[pos];
-        // all players in pos2
-        std::vector<Player *> temp2 = playerPos[pos2];
+        std::vector<Player *> temp = pos1.playersInCell;
+        std::vector<Player *> temp2 = pos2.playersInCell;
         // check if they are neighbour or the player itself
         for (Player *neighbour : temp)
         {
-            if (neighbour != &player)
+            if (neighbour != player)
             {
                 neighbours.emplace_back(neighbour);
             }
         }
-        // not used as the player should normally be in only one place
-        // for(Player* neighbour:temp2){
-        //     if (neighbour!=&player){
-        //         neighbours.emplace_back(neighbour);
-        //     }
-        // }
+
+        for (Player *neighbour : temp2)
+        {
+
+            neighbours.emplace_back(neighbour);
+        }
         return neighbours;
     }
 
-    void Board::movePlayerTo(Player &player, Cell newPos)
+    void Board::movePlayerTo(Player *player, CellClass newPos)
     {
-        Cell oldPos=player.position;
-        player.position=newPos;
-        //shift player to the end of the vector then pop the last element i.e the player
-        remove(playerPos[oldPos].begin(),playerPos[oldPos].end(),&player);
-        playerPos[oldPos].pop_back();
+        CellClass oldPos = player->position;
+        player->position = newPos;
 
-        playerPos[newPos].emplace_back(&player);
+        oldPos.playersInCell.erase(std::find(oldPos.playersInCell.begin(), oldPos.playersInCell.end(), player));
+
+        newPos.playersInCell.emplace_back(player);
         notifyObservers(BOARD_CHANGED);
-
     }
 
     void Board::equipCard(Player &player, Card card)
@@ -146,23 +137,31 @@ namespace state
         notifyObservers(CARD_CHANGED);
     }
 
-    Cell Board::getOtherCellInSameZone(Cell cell)
+    CellClass Board::dieToCell(int die)
     {
-        int Zone = cellToZone[cell];
-
-        Cell otherCell;
-        // get the other CEll in the same zone
-        for (std::map<Cell, int>::iterator iter = cellToZone.begin(); iter != cellToZone.end(); ++iter)
+        const auto it = std::find_if(cellList.begin(), cellList.end(),
+                                     [die]( CellClass &c)
+                                     { return (c.isDieToThisCell(die) == 1); });
+        if (it != cellList.end())
         {
-            Cell k = iter->first;
-            // ignore value
-            int v = iter->second;
-            if (v == Zone && k != cell)
-            {
-                otherCell = k;
-            }
+            return *it;
         }
-        return otherCell;
+        return cellList.back();
+    }
+
+    CellClass Board::getOtherCellInSameZone(CellClass cell)
+    {
+        int Zone = cell.zone;
+
+        // get the other CEll in the same zone
+        const auto it = std::find_if(cellList.begin(), cellList.end(),
+                                     [Zone, cell](const CellClass &c)
+                                     { return ((c.zone == Zone) and (c.cell != cell.cell)); });
+        if (it != cellList.end())
+        {
+            return *it;
+        }
+        return cell;
     }
 
 

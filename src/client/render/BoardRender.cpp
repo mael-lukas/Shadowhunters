@@ -2,6 +2,8 @@
 #include <iostream>
 #include "state/Board.h"
 #include "client/Client.h"
+#include <cmath>
+
 
 namespace render {
     BoardRender::BoardRender(state::Board* board, sf::RenderWindow* win) :
@@ -12,9 +14,71 @@ namespace render {
         // TODO: load textures from board, load textures from cells in map
 
         ///// text based test /////
-        if (!test_font.loadFromFile("../res/arial.ttf")) {
+        std::string path = std::string(ASSET_PATH);
+        if (!test_font.loadFromFile(path + "/arial.ttf")) {
             std::cerr << "Error loading font" << std::endl;
         }
+        if (!boardTexture.loadFromFile(path + "/Board.jpg")) {
+            std::cerr << "Error loading board texture" << std::endl;
+        }
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            sf::Texture texture;
+            std::string cellPath = path + "/sh_card_textures/sh_area/area0" + std::to_string(i) + ".jpg";
+            if (!texture.loadFromFile(cellPath)) {
+                std::cerr << "Error loading texture for cell " << i << std::endl;
+            }
+            cellTextures[static_cast<state::Cell>(i)] = texture;
+        }
+
+        boardSprite.setTexture(boardTexture);
+        boardSprite.setScale(0.6f,0.6f);
+        //center image on screen
+        sf::FloatRect spriteRect = boardSprite.getLocalBounds();
+        boardSprite.setOrigin(spriteRect.left + spriteRect.width / 2.0f,
+                              spriteRect.top + spriteRect.height / 2.0f);
+        boardSprite.setPosition(920.f,520.f); //half of 1920x1080
+
+        sf::Vector2f center(1001,524);
+        float radius = 109.f;
+        float angleOffsetDeg = 30.f;
+
+        for (int zone = 0; zone < 3; zone++) {
+            float angleDeg = zone * 120.f + angleOffsetDeg;
+            float angleRad = angleDeg * 3.14159265f / 180.f;
+
+            sf::Vector2f positionOfZone(
+                center.x + radius * std::cos(angleRad),
+                center.y + radius * std::sin(angleRad)
+            );
+
+            sf::Vector2f tangentDirection(
+                -std::sin(angleRad),
+                std::cos(angleRad)
+            );
+
+            sf::Vector2f radialDirection(
+                std::cos(angleRad),
+                std::sin(angleRad)
+            );
+
+            for (int i = 0; i < 2; i++) {
+                state::CellClass cellClass = board->cellList[2 * zone + i];
+                state::Cell cell = cellClass.cell;
+                sf::Sprite cellSprite;
+                cellSprite.setTexture(cellTextures[cell]);
+                cellSprite.setScale(0.13f,0.13f);
+                cellSprite.setOrigin(cellSprite.getLocalBounds().width / 2.0f,
+                                     cellSprite.getLocalBounds().height / 2.0f);
+                float tangentOffset = (i == 0) ? -74.f : 74.f;
+                float radialOffset = cellSprite.getGlobalBounds().height / 2.0f;
+
+                sf::Vector2f finalOffset = tangentDirection * tangentOffset + radialDirection * radialOffset;
+                cellSprite.setPosition(positionOfZone + finalOffset);
+                cellSprite.setRotation(angleDeg + 90);
+                cellSprites[cell] = cellSprite;
+            }
+        }
+
         test_text.setFont(test_font);
         test_text.setCharacterSize(20);
         test_text.setFillColor(sf::Color::White);
@@ -40,9 +104,39 @@ namespace render {
     void BoardRender::handleEvent(const sf::Event& event, client::Client* client) {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+            std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
+
+            handleClickOnCell(event, client);
+
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move test button clicked, simulating state change." << std::endl;
-                client->moveTestClicked();
+
+                /// Call of the location name at the clickPos for now it is will be defined as GRAVEYARD
+                /// for test purpose
+                client->moveClicked(board->cellList[0]);
+            }
+        }
+    }
+
+    void BoardRender::handleClickOnCell(const sf::Event& event, client::Client* client) {
+        sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+
+        // for (int i = 0; i < state::OUTSIDE; i++) {
+        //     state::Cell cell = static_cast<state::Cell>(i);
+        //     sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
+        //     if (cellBounds.contains(clickPos)) {
+        //         std::cout << "Cell " << i << " clicked." << std::endl;
+        //         client->moveClicked(cell);
+        //         return;
+        //     }
+        // }
+        for (state::CellClass cc : board->cellList) {
+            state::Cell cell = cc.cell;
+            sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
+            if (cellBounds.contains(clickPos)) {
+                std::cout << "Cell " << cell << " clicked." << std::endl;
+                client->moveClicked(cc);
+                return;
             }
         }
     }
@@ -50,19 +144,18 @@ namespace render {
     void BoardRender::draw() {
         ///// text based test /////
         std::string boardInfo = "State render info \n";
-        boardInfo += "Player count outside the board: " + std::to_string(board->playerPos[state::OUTSIDE].size()) + "\n";
-        boardInfo += "Player count in the Graveyard: " + std::to_string(board->playerPos[state::GRAVEYARD].size()) + "\n";
-        boardInfo += "Player count in the Altar: " + std::to_string(board->playerPos[state::ALTAR].size()) + "\n";
-        boardInfo += "Player count in the Hermit zone: " + std::to_string(board->playerPos[state::HERMITZONE].size()) + "\n";
-        boardInfo += "Player count in the Woods: " + std::to_string(board->playerPos[state::WOODS].size()) + "\n";
-        boardInfo += "Player count in the Gate: " + std::to_string(board->playerPos[state::GATE].size()) + "\n";
-        boardInfo += "Player count in the Church: " + std::to_string(board->playerPos[state::CHURCH].size()) + "\n";
-        for (const auto& pair : board->cellToZone) {
-            boardInfo += "Cell " + std::to_string(pair.first) + " is in zone " + std::to_string(pair.second) + "\n";
+        for (state::CellClass cc : board->cellList) {
+            boardInfo += "Cell " + std::to_string(cc.cell) + " in zone " + std::to_string(cc.zone) + " containes " + std::to_string(cc.playersInCell.size()) + " players.\n";
+            boardInfo += "\n";
         }
         test_text.setString(boardInfo);
+        window->draw(boardSprite);
         window->draw(test_text);
         window->draw(test_button);
         window->draw(test_button_text);
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            state::Cell cell = static_cast<state::Cell>(i);
+            window->draw(cellSprites[cell]);
+        }
     }
 }
