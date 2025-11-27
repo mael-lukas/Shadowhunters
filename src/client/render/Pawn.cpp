@@ -3,10 +3,10 @@
 
 namespace render {
 
-    Pawn::Pawn(PawnType type, state::Player* owner, sf::CircleShape shape, int cellId) :
+    Pawn::Pawn(PawnType type, state::Player* owner, sf::CircleShape* shape, int cellId) :
     type(type),
     owner(owner),
-    shape(std::make_unique<sf::CircleShape>(shape)),
+    shape(shape),
     cellId(cellId) {}
 
-};
+}

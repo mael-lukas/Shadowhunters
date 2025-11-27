@@ -36,6 +36,13 @@ namespace state
 
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
+        playerList.emplace_back(new Vampire(this));
+        playerList.emplace_back(new Georges(this));
+        playerList[0]->id = 0;
+        playerList[1]->id = 1;
+        playerList[2]->id = 2;
+        playerList[3]->id = 3;
+        
 
         playerPos[GRAVEYARD] = {};
         playerPos[ALTAR] = {};

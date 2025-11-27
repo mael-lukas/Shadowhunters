@@ -69,7 +69,7 @@ namespace render {
         }
         test_text.setString(cardInfo);
         window->draw(test_text);
-        window->draw(test_button);
-        window->draw(test_button_text);
+        //window->draw(test_button);
+        //window->draw(test_button_text);
     }
 }

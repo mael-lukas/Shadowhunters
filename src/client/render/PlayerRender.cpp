@@ -2,6 +2,7 @@
 #include <iostream>
 #include "state/Board.h"
 #include "client/Client.h"
+#include "render/Pawn.h"
 
 namespace render {
     PlayerRender::PlayerRender(state::Board* board, sf::RenderWindow* win) :
@@ -36,10 +37,37 @@ namespace render {
         test_button_text.setPosition(test_button.getPosition().x + test_button.getSize().x / 2.0f,
                                      test_button.getPosition().y + test_button.getSize().y / 2.0f);
 
+
+        std::vector<sf::Color> pawnColors = {
+            sf::Color::Blue,
+            sf::Color::Green,
+            sf::Color::Yellow,
+            sf::Color::Red
+        };
+
         for (std::unique_ptr<state::Player>& player : board->playerList) {
-            //Pawn* pawn = new Pawn(PawnType::POSITION, player.get());
-            //listOfPawns.push_back(pawn);
+            sf::CircleShape* shape_wounds = new sf::CircleShape(15.f);
+            sf::CircleShape* shape_position = new sf::CircleShape(15.f);
+            shape_wounds->setFillColor(pawnColors[player->id]);
+            shape_position->setFillColor(pawnColors[player->id]);
+            // shape_wounds->setOutlineColor(sf::Color::Black);
+            // shape_position->setOutlineColor(sf::Color::Black);
+            // shape_wounds->setOutlineThickness(3.f);
+            // shape_position->setOutlineThickness(3.f);
+            shape_wounds->setOrigin(15.f,15.f);
+            shape_position->setOrigin(15.f,15.f);
+            Pawn* pawn_wounds = new Pawn(PawnType::WOUNDS, player.get(), shape_wounds, player->wounds);
+            Pawn* pawn_position = new Pawn(PawnType::POSITION, player.get(), shape_position, player->position);
+            listOfPawns.push_back(pawn_wounds);
+            listOfPawns.push_back(pawn_position);
         }
+
+        wounds_coordinates = {{sf::Vector2f(569.f,770.f), sf::Vector2f(618.f,794.f), sf::Vector2f(629.f,744.f), sf::Vector2f(678.f,762.f)},
+        {sf::Vector2f(542.f,689.f), sf::Vector2f(584.f,672.f), sf::Vector2f(628.f,631.f), sf::Vector2f(642.f,665.f)},
+        };
+
+        cell_coordinates[state::OUTSIDE] = {sf::Vector2f(959.f,548.f), sf::Vector2f(1019.f,548.f), sf::Vector2f(1039.f,493.f), sf::Vector2f(979.f,493.f)};
+        
     }
 
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
@@ -65,5 +93,16 @@ namespace render {
         window->draw(test_text);
         window->draw(test_button);
         window->draw(test_button_text);
+
+        for (Pawn* pawn : listOfPawns) {
+            if (pawn->type == PawnType::POSITION) {
+                state::Cell cell = pawn->owner->position;
+                pawn->shape->setPosition(cell_coordinates[cell][pawn->owner->id]);
+            } else if (pawn->type == PawnType::WOUNDS) {
+                int wounds = pawn->owner->wounds;
+                pawn->shape->setPosition(wounds_coordinates[wounds][pawn->owner->id]);
+            }
+            window->draw(*pawn->shape);
+        }
     }
 }
