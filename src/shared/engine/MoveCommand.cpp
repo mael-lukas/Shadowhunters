@@ -19,7 +19,9 @@ void MoveCommand::execute(Engine& engine)
     // Pour éviter un warning "unused", on fait :
     (void)position;
 
-    
+    // L'objectif sera de modifier le joueur courant pour lui
+    // assigner une nouvelle position.
+    //engine.playerMove(player);
 }
 
 }

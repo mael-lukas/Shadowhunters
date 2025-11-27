@@ -33,6 +33,10 @@ namespace state
 
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
+        playerList.emplace_back(new Vampire(this));
+        playerList.emplace_back(new Georges(this));
+
+        defineGameOrder (playerList);
 
         playerPos[GRAVEYARD] = {};
         playerPos[ALTAR] = {};
@@ -40,7 +44,8 @@ namespace state
         playerPos[WOODS] = {};
         playerPos[GATE] = {};
         playerPos[CHURCH] = {};
-        playerPos[OUTSIDE] = {playerList[0].get(), playerList[1].get()};
+
+        playerPos[OUTSIDE] = {playerList[0].get(), playerList[1].get(),playerList[2].get(), playerList[3].get()};
     }
 
     int Board::rollDice(RollRule rule)
@@ -166,19 +171,24 @@ namespace state
      * by modifying the id of the player
      * @param playerList the list of players
      */
-    void defineGameOrder (std::vector<std::unique_ptr<Player>> playerList)
+    void Board::defineGameOrder(std::vector<std::unique_ptr<Player>>& playerList)
     {
-        int nbPlayer=playerList.size();
+        int nbPlayer = playerList.size();
         std::vector<int> assignedIDs;
 
-        for(int i=1;i<=nbPlayer;i++){
+        for(int i=1 ; i <= nbPlayer; i++){
             assignedIDs.push_back(i);
         }
         
         for(int i=0;i<nbPlayer;i++){
-            int randNb=std::rand() % assignedIDs.size() + 1;
-            playerList[i]->idPlayer=assignedIDs[randNb-1];
-            assignedIDs.erase(assignedIDs.begin()+randNb-1);            
+            int randNb = std::rand() % assignedIDs.size();
+            playerList[i]->idPlayer =assignedIDs[randNb];
+            assignedIDs.erase(assignedIDs.begin()+randNb);            
         }
+
+        std::sort(playerList.begin(), playerList.end(),
+        [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
+            return a->idPlayer < b->idPlayer;
+        });
     }
 }
