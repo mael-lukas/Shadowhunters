@@ -35,6 +35,11 @@ namespace render {
                                    buttonRect.top + buttonRect.height / 2.0f);
         test_button_text.setPosition(test_button.getPosition().x + test_button.getSize().x / 2.0f,
                                      test_button.getPosition().y + test_button.getSize().y / 2.0f);
+
+        for (std::unique_ptr<state::Player>& player : board->playerList) {
+            //Pawn* pawn = new Pawn(PawnType::POSITION, player.get());
+            //listOfPawns.push_back(pawn);
+        }
     }
 
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
