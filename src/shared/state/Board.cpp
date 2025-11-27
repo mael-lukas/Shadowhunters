@@ -29,12 +29,14 @@ namespace state
             cellList[2 * i].setZone(i);
             cellList[2 * i + 1].setZone(i);
         }
-        listOfCells.push_back(OUTSIDE);
 
         playerList.emplace_back(new Werewolf(this));
         playerList.emplace_back(new Franklin(this));
         playerList.emplace_back(new Vampire(this));
         playerList.emplace_back(new Georges(this));
+        for (auto& playerList_ptr : playerList) {
+            playerList_ptr->position = Out;
+        }
         playerList[0]->id = 0;
         playerList[1]->id = 1;
         playerList[2]->id = 2;

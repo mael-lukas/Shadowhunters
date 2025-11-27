@@ -44,23 +44,23 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
     BOOST_CHECK_EQUAL(bd.drawWhite()->name,WHITE1);
     BOOST_CHECK_EQUAL(bd.drawHermit()->name,HERMIT1);
 
-    std::vector<Player*> supposed_neighbours = bd.playerPos[OUTSIDE];
+    std::vector<Player*> supposed_neighbours = bd.cellList[OUTSIDE].playersInCell;
     supposed_neighbours.erase(supposed_neighbours.begin());
-    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[OUTSIDE][0])).size(), supposed_neighbours.size());
+    BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[OUTSIDE].playersInCell[0])).size(), supposed_neighbours.size());
 
-    bd.playerPos[OUTSIDE][0]->receiveDamage(2);
-    std::cout << "Dealt " << bd.playerPos[OUTSIDE][0]->wounds << " damage to Werewolf in OUTSIDE" << std::endl;
-    bd.movePlayerTo(*(bd.playerPos[OUTSIDE][0]),GRAVEYARD);
-    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[GRAVEYARD][0])).size(), 0);
-    BOOST_CHECK_EQUAL(bd.getNeighbours(*(bd.playerPos[OUTSIDE][0])).size(), 0);
-    BOOST_CHECK_EQUAL(bd.playerPos[OUTSIDE].size(),1);
-    BOOST_CHECK_EQUAL(bd.playerPos[GRAVEYARD].size(),1);
-    BOOST_CHECK_EQUAL(bd.playerPos[GRAVEYARD][0]->position,GRAVEYARD);
+    bd.cellList[OUTSIDE].playersInCell[0]->receiveDamage(2);
+    std::cout << "Dealt " << bd.cellList[OUTSIDE].playersInCell[0]->wounds << " damage to Werewolf in OUTSIDE" << std::endl;
+    bd.movePlayerTo((bd.cellList[OUTSIDE].playersInCell[0]),bd.cellList[0]);
+    BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[0].playersInCell[0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[OUTSIDE].playersInCell[0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.cellList[OUTSIDE].playersInCell.size(),1);
+    BOOST_CHECK_EQUAL(bd.cellList[0].playersInCell.size(),1);
+    BOOST_CHECK_EQUAL(bd.cellList[0].playersInCell[0]->position.cell,bd.cellList[0].cell);
 
-    std::cout << static_cast<Cell>(bd.getOtherCellInSameZone(GRAVEYARD)) << std::endl;
-    std::cout << bd.playerPos[GRAVEYARD][0]->wounds << std::endl;
-    std::cout << bd.playerPos[OUTSIDE][0]->wounds << std::endl;
-    std::cout << "Werewolf in GRAVEYARD HAS " << bd.playerPos[GRAVEYARD][0]->wounds << " damages" << std::endl;
+    std::cout << static_cast<Cell>(bd.getOtherCellInSameZone(bd.cellList[0]).cell) << std::endl;
+    std::cout << bd.cellList[0].playersInCell[0]->wounds << std::endl;
+    std::cout << bd.cellList[OUTSIDE].playersInCell[0]->wounds << std::endl;
+    std::cout << "Werewolf in t'inquiète HAS " << bd.cellList[0].playersInCell[0]->wounds << " damages" << std::endl;
     
 }
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(TestStatePlayer) {
     BOOST_CHECK_EQUAL(wf.isAlive,true);
     BOOST_CHECK_EQUAL(wf.revealed,false);
     BOOST_CHECK_EQUAL(wf.capacityUsed,false);
-    BOOST_CHECK_EQUAL(wf.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(wf.position.cell,bd.cellList[OUTSIDE].cell);
 
 
     //Tests Functions
@@ -99,42 +99,42 @@ BOOST_AUTO_TEST_CASE(TestStateCharacters) {
     BOOST_CHECK_EQUAL(wf.isAlive,true);
     BOOST_CHECK_EQUAL(wf.revealed,false);
     BOOST_CHECK_EQUAL(wf.capacityUsed,false);
-    BOOST_CHECK_EQUAL(wf.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(wf.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(wf.equipCards.size(),0);
 
     BOOST_CHECK_EQUAL(emi.wounds,0);
     BOOST_CHECK_EQUAL(emi.isAlive,true);
     BOOST_CHECK_EQUAL(emi.revealed,false);
     BOOST_CHECK_EQUAL(emi.capacityUsed,false);
-    BOOST_CHECK_EQUAL(emi.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(emi.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(emi.equipCards.size(),0);
 
     BOOST_CHECK_EQUAL(franklin.wounds,0);
     BOOST_CHECK_EQUAL(franklin.isAlive,true);
     BOOST_CHECK_EQUAL(franklin.revealed,false);
     BOOST_CHECK_EQUAL(franklin.capacityUsed,false);
-    BOOST_CHECK_EQUAL(franklin.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(franklin.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(franklin.equipCards.size(),0);
 
     BOOST_CHECK_EQUAL(georges.wounds,0);
     BOOST_CHECK_EQUAL(georges.isAlive,true);
     BOOST_CHECK_EQUAL(georges.revealed,false);
     BOOST_CHECK_EQUAL(georges.capacityUsed,false);
-    BOOST_CHECK_EQUAL(georges.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(georges.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(georges.equipCards.size(),0);
 
     BOOST_CHECK_EQUAL(unknown.wounds,0);
     BOOST_CHECK_EQUAL(unknown.isAlive,true);
     BOOST_CHECK_EQUAL(unknown.revealed,false);
     BOOST_CHECK_EQUAL(unknown.capacityUsed,false);
-    BOOST_CHECK_EQUAL(unknown.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(unknown.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(unknown.equipCards.size(),0);
 
     BOOST_CHECK_EQUAL(vampire.wounds,0);
     BOOST_CHECK_EQUAL(vampire.isAlive,true);
     BOOST_CHECK_EQUAL(vampire.revealed,false);
     BOOST_CHECK_EQUAL(vampire.capacityUsed,false);
-    BOOST_CHECK_EQUAL(vampire.position,OUTSIDE);
+    BOOST_CHECK_EQUAL(vampire.position.cell,bd.cellList[OUTSIDE].cell);
     BOOST_CHECK_EQUAL(vampire.equipCards.size(),0);
 
     vampire.receiveDamage(3);
@@ -150,12 +150,12 @@ BOOST_AUTO_TEST_CASE(TestStateCharacters) {
     vampire.receiveDamage(15);
     BOOST_CHECK_EQUAL(vampire.isAlive,false);
 
-    bd.movePlayerTo(emi,GATE);
-    std::cout << "Emi is in Cell " << static_cast<Cell>(emi.position) << std::endl;
-    std::cout << "Next to Cell " << static_cast<Cell>(emi.position) << " is the Cell " << bd.getOtherCellInSameZone(emi.position) << std::endl;
+    bd.movePlayerTo(&emi,bd.cellList[1]);
+    std::cout << "Emi is in Cell " << static_cast<Cell>(emi.position.cell) << std::endl;
+    std::cout << "Next to Cell " << static_cast<Cell>(emi.position.cell) << " is the Cell " << bd.getOtherCellInSameZone(emi.position).cell << std::endl;
     emi.revealed = true;
     emi.useCapacity();
-    std::cout << "Emi is in Cell " << static_cast<Cell>(emi.position) << std::endl;
+    std::cout << "Emi is in Cell " << static_cast<Cell>(emi.position.cell) << std::endl;
 
     franklin.useCapacity();
     BOOST_CHECK_EQUAL(franklin.capacityUsed,false);

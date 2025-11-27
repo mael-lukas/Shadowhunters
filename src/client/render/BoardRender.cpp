@@ -62,7 +62,8 @@ namespace render {
             );
 
             for (int i = 0; i < 2; i++) {
-                state::Cell cell = board->listOfCells[2 * zone + i];
+                state::CellClass cellClass = board->cellList[2 * zone + i];
+                state::Cell cell = cellClass.cell;
                 sf::Sprite cellSprite;
                 cellSprite.setTexture(cellTextures[cell]);
                 cellSprite.setScale(0.13f,0.13f);
@@ -112,7 +113,7 @@ namespace render {
 
                 /// Call of the location name at the clickPos for now it is will be defined as GRAVEYARD
                 /// for test purpose
-                client->moveClicked(state::GRAVEYARD);
+                client->moveClicked(board->cellList[0]);
             }
         }
     }
@@ -120,12 +121,21 @@ namespace render {
     void BoardRender::handleClickOnCell(const sf::Event& event, client::Client* client) {
         sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
 
-        for (int i = 0; i < state::OUTSIDE; i++) {
-            state::Cell cell = static_cast<state::Cell>(i);
+        // for (int i = 0; i < state::OUTSIDE; i++) {
+        //     state::Cell cell = static_cast<state::Cell>(i);
+        //     sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
+        //     if (cellBounds.contains(clickPos)) {
+        //         std::cout << "Cell " << i << " clicked." << std::endl;
+        //         client->moveClicked(cell);
+        //         return;
+        //     }
+        // }
+        for (state::CellClass cc : board->cellList) {
+            state::Cell cell = cc.cell;
             sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
             if (cellBounds.contains(clickPos)) {
-                std::cout << "Cell " << i << " clicked." << std::endl;
-                client->moveClicked(cell);
+                std::cout << "Cell " << cell << " clicked." << std::endl;
+                client->moveClicked(cc);
                 return;
             }
         }
@@ -134,15 +144,9 @@ namespace render {
     void BoardRender::draw() {
         ///// text based test /////
         std::string boardInfo = "State render info \n";
-        boardInfo += "Player count outside the board: " + std::to_string(board->playerPos[state::OUTSIDE].size()) + "\n";
-        boardInfo += "Player count in the Graveyard: " + std::to_string(board->playerPos[state::GRAVEYARD].size()) + "\n";
-        boardInfo += "Player count in the Altar: " + std::to_string(board->playerPos[state::ALTAR].size()) + "\n";
-        boardInfo += "Player count in the Hermit zone: " + std::to_string(board->playerPos[state::HERMITZONE].size()) + "\n";
-        boardInfo += "Player count in the Woods: " + std::to_string(board->playerPos[state::WOODS].size()) + "\n";
-        boardInfo += "Player count in the Gate: " + std::to_string(board->playerPos[state::GATE].size()) + "\n";
-        boardInfo += "Player count in the Church: " + std::to_string(board->playerPos[state::CHURCH].size()) + "\n";
-        for (const auto& pair : board->cellToZone) {
-            boardInfo += "Cell " + std::to_string(pair.first) + " is in zone " + std::to_string(pair.second) + "\n";
+        for (state::CellClass cc : board->cellList) {
+            boardInfo += "Cell " + std::to_string(cc.cell) + " in zone " + std::to_string(cc.zone) + " containes " + std::to_string(cc.playersInCell.size()) + " players.\n";
+            boardInfo += "\n";
         }
         test_text.setString(boardInfo);
         window->draw(boardSprite);

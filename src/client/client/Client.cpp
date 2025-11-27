@@ -12,18 +12,20 @@ namespace client {
 
     void Client::run() {
         renderMan->init();
+        std::cout << "Client entering main loop." << std::endl;
         while (renderMan->window.isOpen()) {
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
                 renderMan->handleEvent(event, this);
             }
+            std::cout << "Client event poll completed." << std::endl;
 
             renderMan->draw();
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
 
-    void Client::moveClicked(state::Cell newLocation) {
+    void Client::moveClicked(state::CellClass newLocation) {
         cmd = new engine::MoveCommand(newLocation);
         engineGame -> commands.push_back(cmd);
     }
@@ -31,10 +33,6 @@ namespace client {
     void Client::damageClicked() {
         // Test for state update : first player in GRAVEYARD takes 3 damage
         std::cout << "Client received damage test click callback." << std::endl;
-
-        if (board->playerPos[state::GRAVEYARD].size() > 0) {
-            board->playerPos[state::GRAVEYARD][0]->receiveDamage(3);
-        }
 
         /*
         cmd = new engine::AttackCommand(int id_AttackedPlayer);

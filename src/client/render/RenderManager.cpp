@@ -1,4 +1,5 @@
 #include "RenderManager.h"
+#include <iostream>
 
 namespace render {
     RenderManager::RenderManager(state::Board* board) : 
@@ -10,7 +11,7 @@ namespace render {
 
     void RenderManager::init() {
         board->addObserver(this);
-        for (state::Player* player : board->playerPos[state::OUTSIDE]) {
+        for (auto& player : board->playerList) {
             player->addObserver(this);
         }
         window.create(sf::VideoMode::getDesktopMode(),"Shadowhunters",sf::Style::Default);
@@ -38,8 +39,11 @@ namespace render {
         if (needsRedraw) {
             window.clear();
             board_render.draw();
+            std::cout << "Board rendered." << std::endl;
             player_render.draw();
+            std::cout << "Players rendered." << std::endl;
             card_render.draw();
+            std::cout << "Cards rendered." << std::endl;
             window.display();
             needsRedraw = false;
         }

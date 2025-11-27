@@ -56,15 +56,13 @@ namespace render {
         cardInfo += "The black deck contains " + std::to_string(board->darkPack.listOfCards.size()) + " cards.\n";
         cardInfo += "The white deck contains " + std::to_string(board->whitePack.listOfCards.size()) + " cards.\n";
         cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
-        for (auto& pair : board->playerPos) {
-            for (state::Player* player : pair.second) {
-                if (player->equipCards.size() > 0) {
-                    cardInfo += "Player in Cell " + std::to_string(player->position) + " has equipped cards: ";
-                    for (state::Card card : player->equipCards) {
-                        cardInfo += std::to_string(card) + " ";
-                    }
-                    cardInfo += "\n";
+        for (auto& player : board->playerList) {
+            if (player->equipCards.size() > 0) {
+                cardInfo += "Player in Cell " + std::to_string(player->position.cell) + " has equipped cards: ";
+                for (state::Card card : player->equipCards) {
+                    cardInfo += std::to_string(card) + " ";
                 }
+                cardInfo += "\n";
             }
         }
         test_text.setString(cardInfo);
