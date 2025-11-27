@@ -31,14 +31,14 @@ namespace state{
         if (revealed)
         {
             // Récupère la cellule actuelle d'Emi
-            Cell currentCell = position;
+            CellClass currentCell = position;
 
-            Cell otherCell = board->getOtherCellInSameZone(currentCell);
+            CellClass otherCell = board->getOtherCellInSameZone(currentCell);
 
             // Si une autre cellule a bien été trouvée (différente)
-            if (otherCell != currentCell)
+            if (otherCell.cell != currentCell.cell)
             {
-                board->movePlayerTo(*this, otherCell);
+                board->movePlayerTo(this, otherCell);
             }
         }
     }
