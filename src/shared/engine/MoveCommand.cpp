@@ -19,7 +19,7 @@ void MoveCommand::execute(Engine& engine)
     // Pour éviter un warning "unused", on fait :
     (void)position;
 
-    engine.playerMove(player);
+    
 }
 
 }

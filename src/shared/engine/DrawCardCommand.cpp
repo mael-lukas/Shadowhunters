@@ -10,10 +10,10 @@ namespace engine
     void DrawCardCommand::execute(Engine &engine)
     {
         if (cardType == state::WHITE)
-            engine.getCurrentPlayer().equipCards.push_back(engine.board.drawWhite());
+            engine.getCurrentPlayer().equipCards.push_back(engine.board->drawWhite());
         if (cardType == state::DARK)
-            engine.getCurrentPlayer().equipCards.push_back(engine.board.drawDark());
+            engine.getCurrentPlayer().equipCards.push_back(engine.board->drawDark());
         if (cardType == state::HERMIT)
-            engine.getCurrentPlayer().equipCards.push_back(engine.board.drawHermit());
+            engine.getCurrentPlayer().equipCards.push_back(engine.board->drawHermit());
     }
 }

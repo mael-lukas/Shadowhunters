@@ -7,6 +7,7 @@
 
 namespace engine {
 
+ 
     // ==========================
     //  Constructeur
     // ==========================
@@ -82,12 +83,12 @@ namespace engine {
     }
 
     // ==========================
-    //  Accesseurs
+    //  Getters
     // ==========================
     state::Player& Engine::getCurrentPlayer()
     {
         // ⚠️ Précondition : players ne doit pas être vide
-        return players[currentPlayerIndex];
+        return *board->playerList[currentPlayerIndex];
     }
 
     state::Board& Engine::getBoard()
