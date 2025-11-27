@@ -4,19 +4,18 @@
 #include <random>
 #include <algorithm>
 
-
-namespace engine {
+namespace engine
+{
 
     // ==========================
     //  Constructeur
     // ==========================
-    Engine::Engine(state::Board* board)
-        : board(board)
-        , commands()
-        , cardEffects()
-        , currentPlayerIndex(0)
+    Engine::Engine(state::Board *board)
+        : board(board), commands(), cardEffects(), currentPlayerIndex(0)
     {
         // Tu pourras appeler initGame(numPlayers) ailleurs si besoin
+        int numPlayers = 4; // Exemple : initialisation avec 4 joueurs
+        initGame(numPlayers);
     }
 
     // ==========================
@@ -26,7 +25,6 @@ namespace engine {
     {
         currentPlayerIndex = 0;
         commands.clear();
-        (void)numPlayers; // pour l’instant, on ne s’en sert pas
     }
 
     // ==========================
@@ -34,7 +32,8 @@ namespace engine {
     // ==========================
     void Engine::runGameLoop()
     {
-        while (!isGameOver()) {
+        while (!isGameOver())
+        {
             startTurn();
 
             // Ici, en pratique, le client créera des Command
@@ -53,7 +52,7 @@ namespace engine {
         // Tu peux aussi notifier le client que c’est le tour de getCurrentPlayer()
     }
 
-    void Engine::processPlayerAction(Command& cmd)
+    void Engine::processPlayerAction(Command &cmd)
     {
         // Exécute la commande sur le moteur
         cmd.execute(*this);
@@ -64,7 +63,8 @@ namespace engine {
 
     void Engine::endTurn()
     {
-        if (!board->playerList.empty()) {
+        if (!board->playerList.empty())
+        {
             currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
         }
     }
@@ -78,21 +78,20 @@ namespace engine {
     void Engine::checkVictory()
     {
         // TODO : calculer les vainqueurs en fonction des rôles / HP restants
-        
     }
 
     // ==========================
     //  Accesseurs
     // ==========================
-    state::Player& Engine::getCurrentPlayer()
+    state::Player &Engine::getCurrentPlayer()
     {
-        // ⚠️ Précondition : players ne doit pas être vide
-        return players[currentPlayerIndex];
+        // Précondition : players ne doit pas être vide
+        return *board->playerList[currentPlayerIndex].get();
     }
 
-    state::Board& Engine::getBoard()
+    state::Board &Engine::getBoard()
     {
-        // ⚠️ Précondition : board != nullptr
+        //Précondition : board != nullptr
         return *board;
     }
 
