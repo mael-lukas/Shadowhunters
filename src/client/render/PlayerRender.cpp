@@ -92,12 +92,10 @@ namespace render {
         window->draw(test_button);
         window->draw(test_button_text);
 
-        std::cout << "Test buttons rendered." << std::endl;
-
         for (Pawn* pawn : listOfPawns) {
             if (pawn->type == PawnType::POSITION) {
                 state::Cell cell = pawn->owner->position.cell;
-                pawn->shape->setPosition(cell_coordinates[cell][pawn->owner->id]);
+                pawn->shape->setPosition((cell_coordinates[cell])[pawn->owner->id]);
             } else if (pawn->type == PawnType::WOUNDS) {
                 int wounds = pawn->owner->wounds;
                 pawn->shape->setPosition(wounds_coordinates[wounds][pawn->owner->id]);

@@ -51,13 +51,9 @@ using namespace engine;
 BOOST_AUTO_TEST_CASE(TestRenderWithClient)
 {
   Board bd;
-  std::cout << "Board created" << std::endl;
   Engine eng(&bd);
-  std::cout << "Engine created" << std::endl;
   RenderManager rm(&bd);
-  std::cout << "RenderManager created" << std::endl;
   Client client(&bd, &rm, &eng);
-  std::cout << "Client created" << std::endl;
   client.run();
 }
 

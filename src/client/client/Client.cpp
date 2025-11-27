@@ -12,13 +12,11 @@ namespace client {
 
     void Client::run() {
         renderMan->init();
-        std::cout << "Client entering main loop." << std::endl;
         while (renderMan->window.isOpen()) {
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
                 renderMan->handleEvent(event, this);
             }
-            std::cout << "Client event poll completed." << std::endl;
 
             renderMan->draw();
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
