@@ -185,6 +185,12 @@ Le Player a aussi accès aux informations sur les cartes en sa possession
 La classe Board va faire en sorte de garder les positions des différents joueurs, mais aussi de contenir les paquets de cartes.
 La classe est reliée à trois énumérations en vert : les types de cartes, les différents lieux et enfin les différents dés utilisés.
 
+<figure style="text-align: center;">
+<img src="img_rapport/figure8_1_class_Board.png" alt="Classes Board">
+<br><figcaption><br></br><strong>Figure 9 :</strong> Nouvelle classe Board</figcaption>
+</figure></br>
+
+Les différents lieux ont été modifiés pour être maintenant des classes contenant l'enumeration des lieux mais aussi un vecteur de player contenant les joueurs sur la case,un vecteur d'int contenant les jets de dés permettant d'aller sur cette case ainsi qu'un int pour savoir dans quelle zone la case se situe.
 | Methode | Objectif |
 |--------|---------|
 | Board() | Constructeur, sert à initialiser le board |
@@ -193,25 +199,33 @@ La classe est reliée à trois énumérations en vert : les types de cartes, les
 | Card drawWhite() | Pioche une carte du paquet de cartes white et retourne la carte |
 | Card drawHermite() | Pioche une carte du paquet de cartes hermite et retourne la carte |
 | vector<Player*> getNeighbours(player: Player&) | Retourne une liste de joueurs voisins au Player |
-| Cell getOtherCellInSameZone(cell: Cell) | Retourne la cellule se trouvant dans la même zone que la cellule choisie |
+| CellClass getOtherCellInSameZone(CellClass: Cell) | Retourne la cellule se trouvant dans la même zone que la cellule choisie |
+|CellClass dieToCell(int die) | Retourne la cellule correspondant au jet de dés
 
 #### 2.2.3 Classes Pack of Card
 <figure style="text-align: center;">
 <img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
 <br><figcaption><br></br><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
 </figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure9_1_class_PackOfCards.png_Class_PackOfCards.png" alt="Classes Pack of Card new">
+<br><figcaption><br></br><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
+</figure></br>
+
 La classe PackOfCard sert à la création des différents paquets de cartes.
 Cette classe est reliée à deux énumérations :
 
 - l’énumérateur type card contenant les informations propres au type de carte,
 - l’énumérateur card prenant en compte les différentes spécificités propres aux cartes.
+- Après reflexion dans le projet, il a été décidé de changer l'énumérateur Card en un classe CardClass contenant elle un name de type Card ainsi qu'un type de type CardType.
 
 | Methode | Objectif |
 |--------|---------|
 | PackOfCards(type:CarType) | Constructeur, sert à initialiser le paquet de cartes par rapport à son type de carte |
 | shuffle() | Mélange le paquet de cartes |
-| Card draw() | Pioche une carte du paquet de cartes et retourne la carte |
-| discard(card:Card) | Positionne la carte en bas du paquet |
+| CardClass draw() | Pioche une carte du paquet de cartes et retourne la carte |
+| discard(card:Card) | Positionne la carte dans la discard pile |
 
 
 ### 2.3 Conception logicielle: extension pour le rendu
@@ -298,10 +312,18 @@ Comme dit plus haut, les différentes classes de rendu sont responsables de l'af
 <br><figcaption><br></br><strong>Figure 15 :</strong> Diagramme de classes de Client</figcaption>
 </figure></br>
 
+<figure style="text-align: center;">
+<img src="img_rapport/test_render.png" alt="Render actuel du jeu">
+<br><figcaption><br></br><strong>Figure 16 :</strong> Render actuel du jeu</figcaption>
+</figure></br>
+
+
 ## 4 Règles de changement d'états et moteur de jeu
 Dans cette section, il faut présenter les événements qui peuvent faire passer d'un état à un autre. Il faut également décrire les aspects liés au temps, comme la chronologie des événements et les aspects de synchronisation. Une fois ceci présenté, on propose une conception logicielle pour pouvoir mettre en œuvre ces règles, autrement dit le moteur de jeu.
 
 ### 4.1 Horloge globale
+
+
 
 ### 4.2 Changements extérieurs
 
