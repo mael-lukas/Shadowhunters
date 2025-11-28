@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <random>
 #include <algorithm>
+#include <iostream>
 #include "Franklin.h"
 #include "Emi.h"
 #include "Georges.h"
@@ -34,17 +35,17 @@ namespace state
         playerList.emplace_back(new Franklin(this));
         playerList.emplace_back(new Vampire(this));
         playerList.emplace_back(new Georges(this));
-        for (auto& playerList_ptr : playerList) {
-            playerList_ptr->position = Out;
+        for (auto& player : playerList) {
+            player->position = Out;
         }
         playerList[0]->id = 0;
         playerList[1]->id = 1;
         playerList[2]->id = 2;
         playerList[3]->id = 3;
-        
 
         Out.playersInCell = {playerList[0].get(), playerList[1].get()};
         cellList.emplace_back(Out);
+
     }
 
     int Board::rollDice(RollRule rule)
