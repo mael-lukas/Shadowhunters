@@ -62,7 +62,25 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
     // std::cout << bd.cellList[0].playersInCell[0]->wounds << std::endl;
     // std::cout << bd.cellList[OUTSIDE].playersInCell[0]->wounds << std::endl;
     // std::cout << "Werewolf in t'inquiète HAS " << bd.cellList[0].playersInCell[0]->wounds << " damages" << std::endl;
+     
     
+    //===================================================
+    //Test of defineGameOrder
+    std::cout << "Player order after defineGameOrder: " << std::endl;
+    for (const auto& player : bd.playerList) {
+        std::cout << "Player Name: " << player->getRole() << ", ";
+        std::cout << "Player ID: " << player->id << std::endl;  
+    }
+
+    bd.defineGameOrder(bd.playerList);
+
+    std::cout << "Player order after defineGameOrder: " << std::endl;
+    for (const auto& player : bd.playerList) {
+        std::cout << "Player Name: " << player->getRole() << ", ";
+        std::cout << "Player ID: " << player->id << std::endl;  
+    }
+    //===================================================
+
 }
 
 BOOST_AUTO_TEST_CASE(TestStatePlayer) {
