@@ -181,13 +181,13 @@ namespace state
         
         for(int i=0;i<nbPlayer;i++){
             int randNb = std::rand() % assignedIDs.size();
-            playerList[i]->idPlayer =assignedIDs[randNb];
+            playerList[i]->id =assignedIDs[randNb];
             assignedIDs.erase(assignedIDs.begin()+randNb);            
         }
 
         std::sort(playerList.begin(), playerList.end(),
         [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
-            return a->idPlayer < b->idPlayer;
+            return a->id < b->id;
         });
     }
 }
