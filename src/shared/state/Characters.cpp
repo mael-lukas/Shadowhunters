@@ -30,13 +30,11 @@ namespace state{
     {
         if (revealed)
         {
-            // Récupère la cellule actuelle d'Emi
-            CellClass currentCell = position;
+            CellClass* currentCell = position;
 
-            CellClass otherCell = board->getOtherCellInSameZone(currentCell);
+            CellClass* otherCell = board->getOtherCellInSameZone(currentCell);
 
-            // Si une autre cellule a bien été trouvée (différente)
-            if (otherCell.cell != currentCell.cell)
+            if (otherCell->cell != currentCell->cell)
             {
                 board->movePlayerTo(this, otherCell);
             }

@@ -62,8 +62,8 @@ namespace render {
             );
 
             for (int i = 0; i < 2; i++) {
-                state::CellClass cellClass = board->cellList[2 * zone + i];
-                state::Cell cell = cellClass.cell;
+                state::CellClass *cellClass = board->cellList[2 * zone + i];
+                state::Cell cell = cellClass->cell;
                 sf::Sprite cellSprite;
                 cellSprite.setTexture(cellTextures[cell]);
                 cellSprite.setScale(0.13f,0.13f);
@@ -86,7 +86,7 @@ namespace render {
 
         test_button.setSize(sf::Vector2f(250.f,140.f));
         test_button.setFillColor(sf::Color::White);
-        test_button.setPosition(450.f,300.f);
+        test_button.setPosition(26.f,395.f);
 
         test_button_text.setFont(test_font);
         test_button_text.setCharacterSize(20);
@@ -110,9 +110,6 @@ namespace render {
 
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move test button clicked, simulating state change." << std::endl;
-
-                /// Call of the location name at the clickPos for now it is will be defined as GRAVEYARD
-                /// for test purpose
                 client->moveClicked(board->cellList[0]);
             }
         }
@@ -120,18 +117,8 @@ namespace render {
 
     void BoardRender::handleClickOnCell(const sf::Event& event, client::Client* client) {
         sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-
-        // for (int i = 0; i < state::OUTSIDE; i++) {
-        //     state::Cell cell = static_cast<state::Cell>(i);
-        //     sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
-        //     if (cellBounds.contains(clickPos)) {
-        //         std::cout << "Cell " << i << " clicked." << std::endl;
-        //         client->moveClicked(cell);
-        //         return;
-        //     }
-        // }
-        for (state::CellClass cc : board->cellList) {
-            state::Cell cell = cc.cell;
+        for (state::CellClass* cc : board->cellList) {
+            state::Cell cell = cc->cell;
             sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
             if (cellBounds.contains(clickPos)) {
                 std::cout << "Cell " << cell << " clicked." << std::endl;
@@ -144,8 +131,8 @@ namespace render {
     void BoardRender::draw() {
         ///// text based test /////
         std::string boardInfo = "State render info \n";
-        for (state::CellClass cc : board->cellList) {
-            boardInfo += "Cell " + std::to_string(cc.cell) + " in zone " + std::to_string(cc.zone) + " containes " + std::to_string(cc.playersInCell.size()) + " players.\n";
+        for (state::CellClass* cc : board->cellList) {
+            boardInfo += "Cell " + std::to_string(cc->cell) + " in zone " + std::to_string(cc->zone) + " containes " + std::to_string(cc->playersInCell.size()) + " players.\n";
             boardInfo += "\n";
         }
         test_text.setString(boardInfo);

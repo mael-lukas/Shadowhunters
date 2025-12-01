@@ -58,7 +58,7 @@ namespace render {
         cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
         for (auto& player : board->playerList) {
             if (player->equipCards.size() > 0) {
-                cardInfo += "Player in Cell " + std::to_string(player->position.cell) + " has equipped cards: ";
+                cardInfo += "Player in Cell " + std::to_string(player->position->cell) + " has equipped cards: ";
                 for (state::Card card : player->equipCards) {
                     cardInfo += std::to_string(card) + " ";
                 }
