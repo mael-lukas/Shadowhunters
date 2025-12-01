@@ -105,8 +105,6 @@ namespace state
 
         std::vector<Player *> temp = pos1->playersInCell;
         std::vector<Player *> temp2 = pos2->playersInCell;
-        std::cout << temp.size() << " players in the same cell as player " << player->id << std::endl;
-        std::cout << temp2.size() << " players in the other cell of the same zone as player " << player->id << std::endl;
         // check if they are neighbour or the player itself
         for (Player *neighbour : temp)
         {
