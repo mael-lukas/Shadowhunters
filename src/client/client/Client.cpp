@@ -5,6 +5,7 @@
 #include <thread>
 #include <chrono>
 
+
 namespace client {
     Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame) : 
     board(board), 
@@ -23,19 +24,25 @@ namespace client {
         }
     }
 
-    void Client::moveClicked(state::CellClass newLocation) {
+    void Client::moveClicked(state::CellClass* newLocation) {
         cmd = new engine::MoveCommand(newLocation);
         engineGame -> commands.push_back(cmd);
+
+        // test with test button and direct link to board (to be removed when engine is functional) //
+        int pos = rand() % 6;
+        int pl = rand() % 4;
+        board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
     }
 
     void Client::damageClicked() {
-        // Test for state update : first player in GRAVEYARD takes 3 damage
-        std::cout << "Client received damage test click callback." << std::endl;
-
         /*
         cmd = new engine::AttackCommand(int id_AttackedPlayer);
         engineGame -> commands.push_back(cmd);
         */
+
+        // test with test button and direct link to board (to be removed when engine is functional) //
+        int pl = rand() % 4;
+        board->playerList[pl]->receiveDamage(1);
     }
 
     void Client::drawClicked(state::CardType cardDraw) {

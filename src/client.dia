@@ -489,7 +489,7 @@
                 <dia:string>#newLocation#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#state::CellClass#</dia:string>
+                <dia:string>#state::CellClass*#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>

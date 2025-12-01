@@ -4,10 +4,8 @@
 
 namespace engine {
 
-    MoveCommand::MoveCommand(state::CellClass position)
-        : position(position)
-    {
-    }
+MoveCommand::MoveCommand(state::CellClass* position) : position(position)
+{}
 
     void MoveCommand::execute(Engine& engine)
     {
