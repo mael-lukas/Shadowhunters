@@ -46,4 +46,8 @@ namespace state
     // Par défaut : rien
     }
 
+    Role Player::getRole() {
+        return role;
+    }
+
 }

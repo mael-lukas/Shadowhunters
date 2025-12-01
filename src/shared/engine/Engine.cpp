@@ -34,18 +34,15 @@ namespace engine
     // ==========================
     void Engine::runGameLoop()
     {
-        while (!isGameOver())
-        {
-            startTurn();
+        // while (!isGameOver())
+        // {
+        //     startTurn();
 
-            // Ici, en pratique, le client créera des Command
-            // (MoveCommand, AttackCommand, UsecardCommand, etc.)
-            // et les passera à processPlayerAction(cmd).
 
-            endTurn();
-        }
+        //     endTurn();
+        // }
 
-        checkVictory();
+        // checkVictory();
     }
 
     void Engine::startTurn()
@@ -78,7 +75,7 @@ namespace engine
 
         for (auto &p_uptr : board->playerList)
         {
-            state::Player *p = p_uptr.get(); // 🔥 conversion unique_ptr → Player*
+            state::Player *p = p_uptr.get();
             if (!p->isAlive)
                 continue;
 

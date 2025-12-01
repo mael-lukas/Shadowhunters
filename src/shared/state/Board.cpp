@@ -47,7 +47,7 @@ namespace state
         cellList.emplace_back(Out);
         Out->setZone(-1);
 
-        defineGameOrder (playerList);
+        defineGameOrder(playerList);
     }
 
     int Board::rollDice(RollRule rule)
@@ -175,22 +175,30 @@ namespace state
      */
     void Board::defineGameOrder(std::vector<std::unique_ptr<Player>>& playerList)
     {
-        int nbPlayer = playerList.size();
-        std::vector<int> assignedIDs;
+        // int nbPlayer = playerList.size();
+        // std::vector<int> assignedIDs;
 
-        for(int i=1 ; i <= nbPlayer; i++){
-            assignedIDs.push_back(i);
-        }
+        // for(int i=0 ; i < nbPlayer; i++){
+        //     assignedIDs.push_back(i);
+        // }
         
-        for(int i=0;i<nbPlayer;i++){
-            int randNb = std::rand() % assignedIDs.size();
-            playerList[i]->id =assignedIDs[randNb];
-            assignedIDs.erase(assignedIDs.begin()+randNb);            
-        }
+        // for(int i=0;i<nbPlayer;i++){
+        //     int randNb = std::rand() % assignedIDs.size();
+        //     playerList[i]->id =assignedIDs[randNb];
+        //     assignedIDs.erase(assignedIDs.begin()+randNb);            
+        // }
 
-        std::sort(playerList.begin(), playerList.end(),
-        [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
-            return a->id < b->id;
-        });
+        // std::sort(playerList.begin(), playerList.end(),
+        // [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
+        //     return a->id < b->id;
+        // });
+        
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(playerList.begin(), playerList.end(), g);
+        for (int i = 0; i < playerList.size(); i++)
+        {
+            playerList[i]->id = i;
+        }
     }
 }
