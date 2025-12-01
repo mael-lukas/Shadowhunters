@@ -57,7 +57,7 @@ namespace render {
             shape_wounds->setOrigin(15.f,15.f);
             shape_position->setOrigin(15.f,15.f);
             Pawn* pawn_wounds = new Pawn(PawnType::WOUNDS, player.get(), shape_wounds, player->wounds);
-            Pawn* pawn_position = new Pawn(PawnType::POSITION, player.get(), shape_position, player->position.cell);
+            Pawn* pawn_position = new Pawn(PawnType::POSITION, player.get(), shape_position, player->position->cell);
             listOfPawns.push_back(pawn_wounds);
             listOfPawns.push_back(pawn_position);
         }
@@ -80,12 +80,12 @@ namespace render {
         };
 
         cell_coordinates[state::OUTSIDE] = {sf::Vector2f(959.f,548.f), sf::Vector2f(1019.f,548.f), sf::Vector2f(1039.f,493.f), sf::Vector2f(979.f,493.f)};
-        cell_coordinates[board->cellList[0].cell] = {sf::Vector2f(1253.f,621.f), sf::Vector2f(1217.f,598.f), sf::Vector2f(1248.f,542.f), sf::Vector2f(1284.f,562.f)};
-        cell_coordinates[board->cellList[1].cell] = {sf::Vector2f(1176.f,669.f), sf::Vector2f(1213.f,691.f), sf::Vector2f(1180.f,748.f), sf::Vector2f(1143.f,730.f)};
-        cell_coordinates[board->cellList[2].cell] = {sf::Vector2f(796.f,687.f), sf::Vector2f(825.f,745.f), sf::Vector2f(867.f,726.f), sf::Vector2f(834.f,668.f)};
-        cell_coordinates[board->cellList[3].cell] = {sf::Vector2f(727.f,559.f), sf::Vector2f(756.f,617.f), sf::Vector2f(767.f,538.f), sf::Vector2f(796.f,598.f)};
-        cell_coordinates[board->cellList[4].cell] = {sf::Vector2f(897.f,257.f), sf::Vector2f(897.f,303.f), sf::Vector2f(963.f,257.f), sf::Vector2f(963.f,303.f)};
-        cell_coordinates[board->cellList[5].cell] = {sf::Vector2f(1045.f,257.f), sf::Vector2f(1045.f,307.f), sf::Vector2f(1109.f,257.f), sf::Vector2f(1109.f,307.f)};
+        cell_coordinates[board->cellList[0]->cell] = {sf::Vector2f(1253.f,621.f), sf::Vector2f(1217.f,598.f), sf::Vector2f(1248.f,542.f), sf::Vector2f(1284.f,562.f)};
+        cell_coordinates[board->cellList[1]->cell] = {sf::Vector2f(1176.f,669.f), sf::Vector2f(1213.f,691.f), sf::Vector2f(1180.f,748.f), sf::Vector2f(1143.f,730.f)};
+        cell_coordinates[board->cellList[2]->cell] = {sf::Vector2f(796.f,687.f), sf::Vector2f(825.f,745.f), sf::Vector2f(867.f,726.f), sf::Vector2f(834.f,668.f)};
+        cell_coordinates[board->cellList[3]->cell] = {sf::Vector2f(727.f,559.f), sf::Vector2f(756.f,617.f), sf::Vector2f(767.f,538.f), sf::Vector2f(796.f,598.f)};
+        cell_coordinates[board->cellList[4]->cell] = {sf::Vector2f(897.f,257.f), sf::Vector2f(897.f,303.f), sf::Vector2f(963.f,257.f), sf::Vector2f(963.f,303.f)};
+        cell_coordinates[board->cellList[5]->cell] = {sf::Vector2f(1045.f,257.f), sf::Vector2f(1045.f,307.f), sf::Vector2f(1109.f,257.f), sf::Vector2f(1109.f,307.f)};
     }
 
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
@@ -102,7 +102,7 @@ namespace render {
         ///// text based test /////
         std::string playerInfo = "Player render info \n";
         for (auto& player : board->playerList) {
-            playerInfo += "There is a player in Cell " + std::to_string(player->position.cell) + ". He has " + std::to_string(player->wounds) + " wounds"
+            playerInfo += "There is a player in Cell " + std::to_string(player->position->cell) + ". He has " + std::to_string(player->wounds) + " wounds"
             + ", " + std::to_string(player->equipCards.size()) + " equipped cards and is " + (player->isAlive ? "alive" : "dead") + "\n";
         }
         test_text.setString(playerInfo);
@@ -112,7 +112,7 @@ namespace render {
 
         for (Pawn* pawn : listOfPawns) {
             if (pawn->type == PawnType::POSITION) {
-                state::Cell cell = pawn->owner->position.cell;
+                state::Cell cell = pawn->owner->position->cell;
                 pawn->shape->setPosition((cell_coordinates[cell])[pawn->owner->id]);
             } else if (pawn->type == PawnType::WOUNDS) {
                 int wounds = pawn->owner->wounds;

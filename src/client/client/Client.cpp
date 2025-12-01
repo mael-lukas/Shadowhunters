@@ -24,7 +24,7 @@ namespace client {
         }
     }
 
-    void Client::moveClicked(state::CellClass newLocation) {
+    void Client::moveClicked(state::CellClass* newLocation) {
         cmd = new engine::MoveCommand(newLocation);
         engineGame -> commands.push_back(cmd);
 
