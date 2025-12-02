@@ -8,17 +8,23 @@
 
 namespace client {
     Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame) : 
-    board(board), 
-    renderMan(renderMan), engineGame(engineGame) {}
+    board(board), renderMan(renderMan), engineGame(engineGame) {}
 
     void Client::run() {
         renderMan->init();
         while (renderMan->window.isOpen()) {
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
-                renderMan->handleEvent(event, this);
+                if (event.type == sf::Event::Closed) {
+                    renderMan->window.close();
+                }
+                if (!engineGame->isBusy) {
+                    renderMan->handleEvent(event, this);
+                }
             }
-
+            if (!engineGame->isBusy) {
+                engineGame->processOneCommand();
+            }
             renderMan->draw();
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }

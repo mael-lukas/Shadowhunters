@@ -7,58 +7,42 @@
 
 namespace engine
 {
+    Engine::Engine(state::Board *board): board(board), isBusy(false), currentPlayerIndex(0) {
+        int numPlayers = 4;
 
-    // ==========================
-    //  Constructeur
-    // ==========================
-    Engine::Engine(state::Board *board)
-        : board(board), commands(), cardEffects(), currentPlayerIndex(0)
-    {
-        // Tu pourras appeler initGame(numPlayers) ailleurs si besoin
-        int numPlayers = 4; // Exemple : initialisation avec 4 joueurs
-        initGame(numPlayers);
     }
 
-    // ==========================
-    //  Initialisation de partie
-    // ==========================
-    void Engine::initGame(int numPlayers)
-    {
-        currentPlayerIndex = 0;
-        commands.clear();
-        runGameLoop();
+    state::Player& Engine::getCurrentPlayer() {
+        return *board->playerList[currentPlayerIndex];
     }
 
-    // ==========================
-    //  Boucle de jeu (squelette)
-    // ==========================
-    void Engine::runGameLoop()
-    {
-        // while (!isGameOver())
-        // {
-        //     startTurn();
-
-
-        //     endTurn();
-        // }
-
-        // checkVictory();
+    void Engine::goToNextPlayer() {
+        if (!board->playerList.empty()) {
+            currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
+        }
     }
 
-    void Engine::startTurn()
-    {
+    void Engine::processOneCommand() {
+        if (commands.empty()) {
+            return;
+        }
+        if (isBusy) {
+            return;
+        }
+        isBusy = true;
+        Command* cmd = commands.front();
+        commands.erase(commands.begin());
+        cmd->execute(*this);
+        delete cmd;
+        isBusy = false;
+    }
+
+
+    void Engine::startTurn() {
         commands.clear();
         // Tu peux aussi notifier le client que c’est le tour de getCurrentPlayer()
     }
 
-    void Engine::processPlayerAction(Command &cmd)
-    {
-        // Exécute la commande sur le moteur
-        cmd.execute(*this);
-
-        // Si tu veux garder un historique :
-        // commands.push_back(&cmd); // attention à la durée de vie
-    }
 
     void Engine::endTurn()
     {
@@ -159,14 +143,6 @@ namespace engine
         }
     }
 
-    // ==========================
-    //  Getters
-    // ==========================
-    state::Player &Engine::getCurrentPlayer()
-    {
-        // Précondition : players ne doit pas être vide
-        return *board->playerList[currentPlayerIndex].get();
-    }
 
     state::Board &Engine::getBoard()
     {
