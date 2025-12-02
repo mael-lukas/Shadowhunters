@@ -49,20 +49,38 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
     std::cout << "There are " << supposed_neighbours.size() << " neighbours in OUTSIDE cell" << std::endl;
     std::cout << "There are " << bd.getNeighbours((bd.cellList[OUTSIDE]->playersInCell[0])).size() << " neighbours found by getNeighbours()" << std::endl;
     BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[OUTSIDE]->playersInCell[0])).size(), supposed_neighbours.size());
-    // bd.cellList[OUTSIDE].playersInCell[0]->receiveDamage(2);
-    // std::cout << "Dealt " << bd.cellList[OUTSIDE].playersInCell[0]->wounds << " damage to Werewolf in OUTSIDE" << std::endl;
-    // bd.movePlayerTo((bd.cellList[OUTSIDE].playersInCell[0]),bd.cellList[0]);
-    // BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[0].playersInCell[0])).size(), 0);
-    // BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[OUTSIDE].playersInCell[0])).size(), 0);
-    // BOOST_CHECK_EQUAL(bd.cellList[OUTSIDE].playersInCell.size(),1);
-    // BOOST_CHECK_EQUAL(bd.cellList[0].playersInCell.size(),1);
-    // BOOST_CHECK_EQUAL(bd.cellList[0].playersInCell[0]->position.cell,bd.cellList[0].cell);
+    bd.cellList[OUTSIDE]->playersInCell[0]->receiveDamage(2);
+    std::cout << "Dealt " << bd.cellList[OUTSIDE]->playersInCell[0]->wounds << " damage to Werewolf in OUTSIDE" << std::endl;
+    bd.movePlayerTo((bd.cellList[OUTSIDE]->playersInCell[0]),bd.cellList[0]);
+    BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[0]->playersInCell[0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.getNeighbours((bd.cellList[OUTSIDE]->playersInCell[0])).size(), 0);
+    BOOST_CHECK_EQUAL(bd.cellList[OUTSIDE]->playersInCell.size(),1);
+    BOOST_CHECK_EQUAL(bd.cellList[0]->playersInCell.size(),1);
+    BOOST_CHECK_EQUAL(bd.cellList[0]->playersInCell[0]->position->cell,bd.cellList[0]->cell);
 
-    // std::cout << static_cast<Cell>(bd.getOtherCellInSameZone(bd.cellList[0]).cell) << std::endl;
-    // std::cout << bd.cellList[0].playersInCell[0]->wounds << std::endl;
-    // std::cout << bd.cellList[OUTSIDE].playersInCell[0]->wounds << std::endl;
-    // std::cout << "Werewolf in t'inquiète HAS " << bd.cellList[0].playersInCell[0]->wounds << " damages" << std::endl;
+    std::cout << static_cast<Cell>(bd.getOtherCellInSameZone(bd.cellList[0])->cell) << std::endl;
+    std::cout << bd.cellList[0]->playersInCell[0]->wounds << std::endl;
+    std::cout << bd.cellList[OUTSIDE]->playersInCell[0]->wounds << std::endl;
+    std::cout << "Werewolf in t'inquiète HAS " << bd.cellList[0]->playersInCell[0]->wounds << " damages" << std::endl;
+     
     
+    //===================================================
+    //Test of defineGameOrder
+    std::cout << "Player order after defineGameOrder: " << std::endl;
+    for (const auto& player : bd.playerList) {
+        std::cout << "Player Name: " << player->getRole() << ", ";
+        std::cout << "Player ID: " << player->id << std::endl;  
+    }
+
+    bd.defineGameOrder(bd.playerList);
+
+    std::cout << "Player order after defineGameOrder: " << std::endl;
+    for (const auto& player : bd.playerList) {
+        std::cout << "Player Name: " << player->getRole() << ", ";
+        std::cout << "Player ID: " << player->id << std::endl;  
+    }
+    //===================================================
+
 }
 
 BOOST_AUTO_TEST_CASE(TestStatePlayer) {

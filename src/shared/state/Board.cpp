@@ -47,6 +47,7 @@ namespace state
         cellList.emplace_back(Out);
         Out->setZone(-1);
 
+        defineGameOrder(playerList);
     }
 
     int Board::rollDice(RollRule rule)
@@ -104,8 +105,6 @@ namespace state
 
         std::vector<Player *> temp = pos1->playersInCell;
         std::vector<Player *> temp2 = pos2->playersInCell;
-        std::cout << temp.size() << " players in the same cell as player " << player->id << std::endl;
-        std::cout << temp2.size() << " players in the other cell of the same zone as player " << player->id << std::endl;
         // check if they are neighbour or the player itself
         for (Player *neighbour : temp)
         {
@@ -164,5 +163,40 @@ namespace state
             return *it;
         }
         return cell;
+    }
+
+
+    /**
+     * @brief define the order of the players in the game
+     * by modifying the id of the player
+     * @param playerList the list of players
+     */
+    void Board::defineGameOrder(std::vector<std::unique_ptr<Player>>& playerList)
+    {
+        // int nbPlayer = playerList.size();
+        // std::vector<int> assignedIDs;
+
+        // for(int i=0 ; i < nbPlayer; i++){
+        //     assignedIDs.push_back(i);
+        // }
+        
+        // for(int i=0;i<nbPlayer;i++){
+        //     int randNb = std::rand() % assignedIDs.size();
+        //     playerList[i]->id =assignedIDs[randNb];
+        //     assignedIDs.erase(assignedIDs.begin()+randNb);            
+        // }
+
+        // std::sort(playerList.begin(), playerList.end(),
+        // [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
+        //     return a->id < b->id;
+        // });
+        
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(playerList.begin(), playerList.end(), g);
+        for (int i = 0; i < playerList.size(); i++)
+        {
+            playerList[i]->id = i;
+        }
     }
 }
