@@ -4,6 +4,7 @@
 #include "Georges.h"
 #include "Werewolf.h"
 #include "Vampire.h"
+#include <iostream>
 
 namespace state{
     // Define the different characters and overwrite some function
@@ -46,7 +47,8 @@ namespace state{
 
         if (revealed)
         {
-            if (capacityUsed) {
+            if (capacityUsed)
+            {
                 return;
             }
             capacityUsed = true;
@@ -106,10 +108,12 @@ namespace state{
     {
         if (revealed == false)
         {
+            std::cout << "[CAPACITY] Werewolf not revealed, normal damage" << std::endl;
             return Player::getAttacked(source, damage);
         }
         else
         {
+            std::cout << "[CAPACITY] Werewolf counter attacks" << std::endl;
             int counter = board->rollDice(DIFF);
             dealDamage(counter, source);
             return Player::getAttacked(source, damage);

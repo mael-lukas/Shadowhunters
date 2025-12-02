@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
+#include "../../shared/engine/AttackCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -41,14 +42,14 @@ namespace client {
     }
 
     void Client::damageClicked() {
-        /*
-        cmd = new engine::AttackCommand(int id_AttackedPlayer);
+        
+        cmd = new engine::AttackCommand(engineGame->getCurrentPlayer(), engineGame->getCurrentPlayer());
         engineGame -> commands.push_back(cmd);
-        */
+        
 
-        // test with test button and direct link to board (to be removed when engine is functional) //
-        int pl = rand() % 4;
-        board->playerList[pl]->receiveDamage(1);
+        // // test with test button and direct link to board (to be removed when engine is functional) //
+        // int pl = rand() % 4;
+        // board->playerList[pl]->receiveDamage(1);
     }
 
     void Client::drawClicked(state::CardType cardDraw) {

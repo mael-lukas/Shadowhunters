@@ -622,7 +622,7 @@
             <dia:boolean val="false"/>
           </dia:attribute>
           <dia:attribute name="inheritance_type">
-            <dia:enum val="2"/>
+            <dia:enum val="1"/>
           </dia:attribute>
           <dia:attribute name="query">
             <dia:boolean val="false"/>
@@ -2705,17 +2705,17 @@
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O10">
       <dia:attribute name="obj_pos">
-        <dia:point val="32.656,24.8057"/>
+        <dia:point val="32.9462,24.8057"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="17.0303,14.3602;33.4587,25.6084"/>
+        <dia:rectangle val="17.0303,14.3602;33.7209,25.6057"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="32.656,24.8057"/>
-        <dia:point val="32.0253,16.177"/>
+        <dia:point val="32.9462,24.8057"/>
+        <dia:point val="32.656,16.177"/>
         <dia:point val="17.0803,16.177"/>
         <dia:point val="17.0803,14.4102"/>
       </dia:attribute>

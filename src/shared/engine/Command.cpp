@@ -1,7 +1,5 @@
 #include "Command.h"
+#include <iostream>
 
 namespace engine {
-    
-    void Command::execute(Engine &engine) {}
-
 };

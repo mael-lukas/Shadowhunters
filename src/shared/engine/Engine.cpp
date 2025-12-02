@@ -9,7 +9,6 @@ namespace engine
 {
     Engine::Engine(state::Board *board): board(board), isBusy(false), currentPlayerIndex(0) {
         int numPlayers = 4;
-
     }
 
     state::Player& Engine::getCurrentPlayer() {
@@ -32,6 +31,7 @@ namespace engine
         isBusy = true;
         Command* cmd = commands.front();
         commands.erase(commands.begin());
+        std::cout << "[ENGINE] Processing command...\n";
         cmd->execute(*this);
         delete cmd;
         isBusy = false;
