@@ -23,17 +23,17 @@ namespace client {
                     renderMan->handleEvent(event, this);
                 }
             }
-            if (!engineGame->isBusy) {
-                engineGame->processOneCommand();
-            }
+            engineGame->processOneCommand();
             renderMan->draw();
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
 
     void Client::moveClicked(state::CellClass* newLocation) {
-        cmd = new engine::MoveCommand(newLocation);
-        engineGame -> commands.push_back(cmd);
+        // cmd = new engine::MoveCommand(newLocation);
+        // if (engineGame->isBusy == false) {
+        //     engineGame -> commands.push_back(cmd);
+        // }
 
         // test with test button and direct link to board (to be removed when engine is functional) //
         int pos = rand() % 6;
@@ -42,19 +42,21 @@ namespace client {
     }
 
     void Client::damageClicked() {
-        
-        cmd = new engine::AttackCommand(engineGame->getCurrentPlayer(), engineGame->getCurrentPlayer());
-        engineGame -> commands.push_back(cmd);
-        
-
+        if (engineGame->isBusy == false) {
+            cmd = new engine::AttackCommand(engineGame->getCurrentPlayer(), engineGame->getCurrentPlayer());
+            engineGame -> commands.push_back(cmd);
+        }
         // // test with test button and direct link to board (to be removed when engine is functional) //
         // int pl = rand() % 4;
         // board->playerList[pl]->receiveDamage(1);
     }
 
     void Client::drawClicked(state::CardType cardDraw) {
-        cmd = new engine::DrawCardCommand(cardDraw);
-        engineGame -> commands.push_back(cmd);
+        if (engineGame->isBusy == false) {
+            cmd = new engine::DrawCardCommand(cardDraw);
+            engineGame -> commands.push_back(cmd);
+        }
+
     }
 
     void Client::revealedClicked(){

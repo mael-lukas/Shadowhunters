@@ -11,13 +11,17 @@ namespace engine {
 
     void AttackCommand::execute(Engine& engine)
     {
-        // // Pour l’instant, on n’utilise pas directement l’engine
-        // (void)engine; // évite un warning “unused parameter”
-
-        // // Toute la logique d’attaque est dans Player::attackOther
-        // attacker.attackOther(attacked);
+        // if (isWaitingForTarget) {
+        //     engine.isWaitingForPrompt = true;
+        //     return;
+        // }
+        // else {
+        //     attacker.attackOther(attacked);
+        //     engine.isWaitingForPrompt = false;
+        //     isDone = true;
+        // }
         int pl = rand() % 4;
         engine.board->playerList[pl]->receiveDamage(1);
+        isDone = true;
     }
-
 }

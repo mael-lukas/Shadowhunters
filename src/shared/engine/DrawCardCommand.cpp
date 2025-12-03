@@ -15,5 +15,6 @@ namespace engine
         //     engine.getCurrentPlayer().equipCards.push_back(engine.board->drawDark());
         // if (cardType == state::HERMIT)
         //     engine.getCurrentPlayer().equipCards.push_back(engine.board->drawHermit());
+        isDone = true;
     }
 }
