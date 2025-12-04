@@ -13,13 +13,13 @@ namespace state
 {
     Board::Board() : whitePack(WHITECOUNT, WHITE), darkPack(DARKCOUNT - WHITECOUNT - 1, DARK), hermitPack(HERMITCOUNT - DARKCOUNT - 1, HERMIT)
     {
-        CellClass* Hermitzone = new CellClass(HERMITZONE, std::vector<int>{2, 3});
-        CellClass* Gate = new CellClass(GATE, std::vector<int>{4, 5});
-        CellClass* Church = new CellClass(CHURCH, std::vector<int>{6});
-        CellClass* Graveyard = new CellClass(GRAVEYARD, std::vector<int>{8});
-        CellClass* Woods = new CellClass(WOODS, std::vector<int>{9});
-        CellClass* Altar = new CellClass(ALTAR, std::vector<int>{10});
-        CellClass* Out = new CellClass(OUTSIDE, std::vector<int>{0});
+        CellClass *Hermitzone = new CellClass(HERMITZONE, std::vector<int>{2, 3});
+        CellClass *Gate = new CellClass(GATE, std::vector<int>{4, 5});
+        CellClass *Church = new CellClass(CHURCH, std::vector<int>{6});
+        CellClass *Graveyard = new CellClass(GRAVEYARD, std::vector<int>{8});
+        CellClass *Woods = new CellClass(WOODS, std::vector<int>{9});
+        CellClass *Altar = new CellClass(ALTAR, std::vector<int>{10});
+        CellClass *Out = new CellClass(OUTSIDE, std::vector<int>{0});
 
         cellList = {Graveyard, Altar, Hermitzone, Woods, Gate, Church};
         std::random_device rd;
@@ -35,7 +35,8 @@ namespace state
         playerList.emplace_back(new Franklin(this));
         playerList.emplace_back(new Vampire(this));
         playerList.emplace_back(new Georges(this));
-        for (auto& player : playerList) {
+        for (auto &player : playerList)
+        {
             player->position = Out;
         }
         playerList[0]->id = 0;
@@ -103,21 +104,23 @@ namespace state
 
         std::find(pos1->playersInCell.begin(), pos1->playersInCell.end(), player);
 
-        std::vector<Player *> temp = pos1->playersInCell;
+        std::vector<Player *> temp1 = pos1->playersInCell;
         std::vector<Player *> temp2 = pos2->playersInCell;
         // check if they are neighbour or the player itself
-        for (Player *neighbour : temp)
+        for (Player *neighbour : temp1)
         {
             if (neighbour != player)
             {
                 neighbours.emplace_back(neighbour);
             }
         }
-
-        for (Player *neighbour : temp2)
+        if (pos1->cell != OUTSIDE)
         {
-            neighbours.emplace_back(neighbour);
-        }   
+            for (Player *neighbour : temp2)
+            {
+                neighbours.emplace_back(neighbour);
+            }
+        }
         return neighbours;
     }
 
@@ -138,10 +141,11 @@ namespace state
         notifyObservers(CARD_CHANGED);
     }
 
-    CellClass* Board::dieToCell(int die)
+    CellClass *Board::dieToCell(int die)
     {
+        //die must be different fromm 7
         const auto it = std::find_if(cellList.begin(), cellList.end(),
-                                     [die]( CellClass *c)
+                                     [die](CellClass *c)
                                      { return (c->isDieToThisCell(die) == 1); });
         if (it != cellList.end())
         {
@@ -150,7 +154,7 @@ namespace state
         return cellList.back();
     }
 
-    CellClass* Board::getOtherCellInSameZone(CellClass* cell)
+    CellClass *Board::getOtherCellInSameZone(CellClass *cell)
     {
         int Zone = cell->zone;
 
@@ -165,13 +169,12 @@ namespace state
         return cell;
     }
 
-
     /**
      * @brief define the order of the players in the game
      * by modifying the id of the player
      * @param playerList the list of players
      */
-    void Board::defineGameOrder(std::vector<std::unique_ptr<Player>>& playerList)
+    void Board::defineGameOrder(std::vector<std::unique_ptr<Player>> &playerList)
     {
         // int nbPlayer = playerList.size();
         // std::vector<int> assignedIDs;
@@ -179,18 +182,18 @@ namespace state
         // for(int i=0 ; i < nbPlayer; i++){
         //     assignedIDs.push_back(i);
         // }
-        
+
         // for(int i=0;i<nbPlayer;i++){
         //     int randNb = std::rand() % assignedIDs.size();
         //     playerList[i]->id =assignedIDs[randNb];
-        //     assignedIDs.erase(assignedIDs.begin()+randNb);            
+        //     assignedIDs.erase(assignedIDs.begin()+randNb);
         // }
 
         // std::sort(playerList.begin(), playerList.end(),
         // [](const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
         //     return a->id < b->id;
         // });
-        
+
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(playerList.begin(), playerList.end(), g);

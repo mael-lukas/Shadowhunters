@@ -11,7 +11,7 @@ UsecardCommand::UsecardCommand(state::Card card)
 
 void UsecardCommand::execute(Engine& engine)
 {
-    // On récupère le joueur actif (à adapter si ton Engine fonctionne différemment)
+    // On récupère le joueur actif 
     state::Player& currentPlayer = engine.getCurrentPlayer();
 
     
