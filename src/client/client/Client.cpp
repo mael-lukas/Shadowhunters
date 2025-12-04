@@ -31,10 +31,11 @@ namespace client {
     }
 
     void Client::moveClicked(state::CellClass* newLocation) {
-        // cmd = new engine::MoveCommand(newLocation);
-        // if (engineGame->isBusy == false) {
-        //     engineGame -> commands.push_back(cmd);
-        // }
+        if (!engineGame->isBusy)
+        {
+            cmd = new engine::MoveCommand(newLocation);
+            engineGame->commands.push_back(cmd);
+        }
 
         // test with test button and direct link to board (to be removed when engine is functional) //
         // int pos = rand() % 6;
