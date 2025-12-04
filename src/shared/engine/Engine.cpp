@@ -26,14 +26,12 @@ namespace engine
         }
         isBusy = true;
         Command* cmd = commands.front();
-        std::cout << "[ENGINE] Processing command...\n";
         cmd->execute(*this);
         if (cmd->isDone) {
             delete cmd;
             commands.erase(commands.begin());
             isBusy = false;
         }
-
     }
 
 

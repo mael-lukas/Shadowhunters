@@ -103,21 +103,23 @@ namespace state
 
         std::find(pos1->playersInCell.begin(), pos1->playersInCell.end(), player);
 
-        std::vector<Player *> temp = pos1->playersInCell;
+        std::vector<Player *> temp1 = pos1->playersInCell;
         std::vector<Player *> temp2 = pos2->playersInCell;
         // check if they are neighbour or the player itself
-        for (Player *neighbour : temp)
+        for (Player *neighbour : temp1)
         {
             if (neighbour != player)
             {
                 neighbours.emplace_back(neighbour);
             }
         }
-
-        for (Player *neighbour : temp2)
+        if (pos1->cell != OUTSIDE)
         {
-            neighbours.emplace_back(neighbour);
-        }   
+            for (Player *neighbour : temp2)
+            {
+                neighbours.emplace_back(neighbour);
+            }
+        }
         return neighbours;
     }
 

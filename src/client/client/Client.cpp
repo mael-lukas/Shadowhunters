@@ -19,12 +19,13 @@ namespace client {
                 if (event.type == sf::Event::Closed) {
                     renderMan->window.close();
                 }
-                if (!engineGame->isBusy) {
-                    renderMan->handleEvent(event, this);
-                }
+                renderMan->handleEvent(event, this);
             }
             engineGame->processOneCommand();
             renderMan->draw();
+            if (engineGame->isWaitingForTargetPrompt) {
+                renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
@@ -36,9 +37,9 @@ namespace client {
         // }
 
         // test with test button and direct link to board (to be removed when engine is functional) //
-        int pos = rand() % 6;
-        int pl = rand() % 4;
-        board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
+        // int pos = rand() % 6;
+        // int pl = rand() % 4;
+        // board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
     }
 
     void Client::damageClicked() {

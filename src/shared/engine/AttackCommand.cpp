@@ -11,17 +11,15 @@ namespace engine {
 
     void AttackCommand::execute(Engine& engine)
     {
-        // if (isWaitingForTarget) {
-        //     engine.isWaitingForPrompt = true;
-        //     return;
-        // }
-        // else {
-        //     attacker.attackOther(attacked);
-        //     engine.isWaitingForPrompt = false;
-        //     isDone = true;
-        // }
-        int pl = rand() % 4;
-        engine.board->playerList[pl]->receiveDamage(1);
-        isDone = true;
+        if (isWaitingForTarget) {
+            engine.isWaitingForTargetPrompt = true;
+            return;
+        }
+        else {
+            attacker.attackOther(attacked);
+            engine.isWaitingForTargetPrompt = false;
+            isDone = true;
+        }
+        
     }
 }
