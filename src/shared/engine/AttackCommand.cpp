@@ -11,13 +11,18 @@ namespace engine {
 
     void AttackCommand::execute()
     {
+        if (isAttackCancelled) {
+            engine.isWaitingForTargetPrompt = false;
+            engine.goToNextPlayer();
+            isDone = true;
+            return;
+        }
         if (isWaitingForTarget) {
             engine.isWaitingForTargetPrompt = true;
             engine.waitingCommand = this;
             return;
         }
         else {
-            std::cout << "[ENGINE] Executing AttackCommand: Player " << attacker->id << " attacks Player " << attacked->id << std::endl;
             attacker->attackOther(*attacked);
             engine.isWaitingForTargetPrompt = false;
             engine.goToNextPlayer();
@@ -29,14 +34,19 @@ namespace engine {
     void AttackCommand::receivePromptAnswer(void* answer)
     {
         int targetID = *static_cast<int*>(answer);
-        attacker = &engine.getCurrentPlayer();
-        std::cout << "current player ID: " << engine.getCurrentPlayer().id << std::endl;
-        std::cout << "attacker player ID: " << attacker->id << std::endl;
-        attacked = engine.board->playerList[targetID].get();
-        std::cout << "[ENGINE] AttackCommand received target ID: " << attacked->id << std::endl;
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForTargetPrompt = false;
-        isWaitingForTarget = false;
+        if (targetID == -1) {
+            isAttackCancelled = true;
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForTargetPrompt = false;
+        }
+        else {
+            attacker = &engine.getCurrentPlayer();
+            attacked = engine.board->playerList[targetID].get();
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForTargetPrompt = false;
+            isWaitingForTarget = false;
+        }
+
 
     }
 }
