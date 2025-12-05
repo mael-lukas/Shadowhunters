@@ -3,6 +3,6 @@
 
 namespace state {
 
-    CardClass::CardClass(Card name, CardType type) : name(name), type(type){
+    CardClass::CardClass(Card name, CardType type, CardEffectTime effectTimer) : name(name), type(type), effectTimer(effectTimer){
     }
 }
