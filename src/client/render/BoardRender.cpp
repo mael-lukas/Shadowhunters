@@ -11,7 +11,6 @@ namespace render {
     window(win) {}
 
     void BoardRender::init() {
-        // TODO: load textures from board, load textures from cells in map
 
         ///// text based test /////
         std::string path = std::string(ASSET_PATH);

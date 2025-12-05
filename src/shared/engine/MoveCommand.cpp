@@ -1,24 +1,35 @@
 #include "MoveCommand.h"
 #include "Engine.h"
+#include "state/Board.h"
 #include "state/Player.h"
+#include "state/CellClass.h"
+#include "state/RollRule.h"
 
 namespace engine {
 
-MoveCommand::MoveCommand(state::CellClass* position) : position(position)
+MoveCommand::MoveCommand(Engine& engine, state::CellClass* position)
+    : engine(engine), position(position)
 {}
 
-    void MoveCommand::execute(Engine& engine)
-    {
-        // Pour l’instant, on laisse le moteur gérer entièrement
-        // la logique de déplacement (lancer de dés, etc.).
-        //
-        // 'position' est stocké dans la commande et pourra servir plus tard.
-        // Pour éviter un warning "unused", on fait :
-        (void)position;
+void MoveCommand::execute()
+{
+    state::Player& player = engine.getCurrentPlayer();
+    state::Board& board = engine.getBoard();
 
-        // L'objectif sera de modifier le joueur courant pour lui
-        // assigner une nouvelle position.
-        //engine.playerMove(player);
+    state::CellClass *oldPos = player.position;
+    state::CellClass *newPos = oldPos;
+
+
+    while (newPos == oldPos)
+    {
+        int die = board.rollDice(state::RollRule::SUM);
+        newPos = board.dieToCell(die);
+
     }
+
+    board.movePlayerTo(&player, newPos);
+
+    isDone = true;
+}
 
 }

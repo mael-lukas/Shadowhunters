@@ -19,42 +19,54 @@ namespace client {
                 if (event.type == sf::Event::Closed) {
                     renderMan->window.close();
                 }
-                if (!engineGame->isBusy) {
-                    renderMan->handleEvent(event, this);
-                }
+                renderMan->handleEvent(event, this);
             }
-            if (!engineGame->isBusy) {
-                engineGame->processOneCommand();
-            }
+            engineGame->processOneCommand();
             renderMan->draw();
+            if (engineGame->isWaitingForTargetPrompt) {
+                renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
 
     void Client::moveClicked(state::CellClass* newLocation) {
-        cmd = new engine::MoveCommand(newLocation);
-        engineGame -> commands.push_back(cmd);
+        if (!engineGame->isBusy)
+        {
+            cmd = new engine::MoveCommand(*engineGame, newLocation);
+            engineGame->commands.push_back(cmd);
+        }
 
         // test with test button and direct link to board (to be removed when engine is functional) //
-        int pos = rand() % 6;
-        int pl = rand() % 4;
-        board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
+        // int pos = rand() % 6;
+        // int pl = rand() % 4;
+        // board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
     }
 
     void Client::damageClicked() {
-        
-        cmd = new engine::AttackCommand(engineGame->getCurrentPlayer(), engineGame->getCurrentPlayer());
-        engineGame -> commands.push_back(cmd);
-        
-
+        if (engineGame->isBusy == false) {
+            cmd = new engine::AttackCommand(*engineGame, &engineGame->getCurrentPlayer());
+            engineGame -> commands.push_back(cmd);
+        }
         // // test with test button and direct link to board (to be removed when engine is functional) //
         // int pl = rand() % 4;
         // board->playerList[pl]->receiveDamage(1);
     }
 
     void Client::drawClicked(state::CardType cardDraw) {
-        cmd = new engine::DrawCardCommand(cardDraw);
-        engineGame -> commands.push_back(cmd);
+        if (engineGame->isBusy == false) {
+            cmd = new engine::DrawCardCommand(*engineGame, cardDraw);
+            engineGame -> commands.push_back(cmd);
+        }
+
+    }
+
+    void Client::chosenAttackTarget(int targetID) {
+        std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
     }
 
     void Client::revealedClicked(){

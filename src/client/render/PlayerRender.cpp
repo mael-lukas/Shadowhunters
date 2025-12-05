@@ -89,7 +89,7 @@ namespace render {
     }
 
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
-            if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             if (test_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Damage test button clicked, simulating state change." << std::endl;

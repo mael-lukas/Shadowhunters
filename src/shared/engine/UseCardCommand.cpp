@@ -1,18 +1,17 @@
-#include "UsecardCommand.h"
+#include "UseCardCommand.h"
 #include "Engine.h"
 
 using namespace engine;
 using namespace state;
 
-UsecardCommand::UsecardCommand(state::Card card)
-    : card(card)
+UseCardCommand::UseCardCommand(Engine& engine, state::Card card)
+    : engine(engine), card(card)
 {
 }
 
-void UsecardCommand::execute(Engine& engine)
+void UseCardCommand::execute()
 {
     // On récupère le joueur actif 
     state::Player& currentPlayer = engine.getCurrentPlayer();
-
-    
+    isDone = true;
 }

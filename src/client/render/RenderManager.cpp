@@ -7,6 +7,7 @@ namespace render {
     board_render(board,&window),
     player_render(board,&window),
     card_render(board,&window),
+    prompt_render(board,&window),
     needsRedraw(true) {}
 
     void RenderManager::init() {
@@ -18,6 +19,7 @@ namespace render {
         board_render.init();
         player_render.init();
         card_render.init();
+        prompt_render.init();
     }
 
     void RenderManager::handleEvent(const sf::Event& event, client::Client* client) {
@@ -33,6 +35,7 @@ namespace render {
         board_render.handleEvent(event, client);
         player_render.handleEvent(event, client);
         card_render.handleEvent(event, client);
+        prompt_render.handleEvent(event, client);
     }
 
     void RenderManager::draw() {
@@ -41,12 +44,19 @@ namespace render {
             board_render.draw();
             player_render.draw();
             card_render.draw();
+            prompt_render.draw();
             window.display();
             needsRedraw = false;
         }
     }
 
     void RenderManager::getNotified(state::StateEventID e) {
+        needsRedraw = true;
+    }
+
+    void RenderManager::openTargetPrompt(std::vector<state::Player*> targets) {
+        prompt_render.activePromptType = ATTACK_TARGET;
+        prompt_render.targetPlayers = targets;
         needsRedraw = true;
     }
 }
