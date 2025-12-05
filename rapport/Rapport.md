@@ -187,7 +187,7 @@ La classe est reliée à trois énumérations en vert : les types de cartes, les
 
 <figure style="text-align: center;">
 <img src="img_rapport/figure8_1_class_Board.png" alt="Classes Board">
-<br><figcaption><br></br><strong>Figure 9 :</strong> Nouvelle classe Board</figcaption>
+<br><figcaption><br></br><strong>Figure 8 V2 :</strong> Nouvelle classe Board</figcaption>
 </figure></br>
 
 Les différents lieux ont été modifiés pour être maintenant des classes contenant l'enumeration des lieux mais aussi un vecteur de player contenant les joueurs sur la case,un vecteur d'int contenant les jets de dés permettant d'aller sur cette case ainsi qu'un int pour savoir dans quelle zone la case se situe.
@@ -210,7 +210,7 @@ Les différents lieux ont été modifiés pour être maintenant des classes cont
 
 <figure style="text-align: center;">
 <img src="img_rapport/figure9_1_class_PackOfCards.png_Class_PackOfCards.png" alt="Classes Pack of Card new">
-<br><figcaption><br></br><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
+<br><figcaption><br></br><strong>Figure 9 V2:</strong> Classes PackOfCards</figcaption>
 </figure></br>
 
 La classe PackOfCard sert à la création des différents paquets de cartes.
@@ -316,6 +316,12 @@ Comme dit plus haut, les différentes classes de rendu sont responsables de l'af
 <img src="img_rapport/test_render.png" alt="Render actuel du jeu">
 <br><figcaption><br></br><strong>Figure 16 :</strong> Render actuel du jeu</figcaption>
 </figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/Design_Render.png" alt="Render futur du jeu">
+<br><figcaption><br></br><strong>Figure 17 :</strong> Render futur du jeu</figcaption>
+</figure></br>
+Le rendue risque de changer au cours du projet mais l'objectif final du rendue devrait être similaire à ce dernier.
 
 
 ## 4 Règles de changement d'états et moteur de jeu

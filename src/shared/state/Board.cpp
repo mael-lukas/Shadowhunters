@@ -48,6 +48,10 @@ namespace state
         Out->setZone(-1);
 
         defineGameOrder(playerList);
+
+        darkPack.shuffle();
+        whitePack.shuffle();
+        hermitPack.shuffle();
     }
 
     int Board::rollDice(RollRule rule)
@@ -134,7 +138,7 @@ namespace state
         notifyObservers(BOARD_CHANGED);
     }
 
-    void Board::equipCard(Player &player, Card card)
+    void Board::equipCard(Player &player, CardClass* card)
     {
         player.equipCards.push_back(card);
         notifyObservers(CARD_CHANGED);

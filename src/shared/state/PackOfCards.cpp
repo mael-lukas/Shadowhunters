@@ -2,6 +2,7 @@
 #include <random>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 namespace state {
 
@@ -9,17 +10,17 @@ namespace state {
     if (type == WHITE) {
       for (int i = 0; i < WHITECOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(new CardClass(c,WHITE));
+        listOfCards.push_back(new CardClass(c,WHITE, ONELOOP));
       }
     } else if (type == DARK) {
       for (int i = WHITECOUNT+1; i < DARKCOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(new CardClass(c,DARK));
+        listOfCards.push_back(new CardClass(c,DARK, PERMANENT));
       }
     } else if (type == HERMIT) {
       for (int i = DARKCOUNT+1 ; i < HERMITCOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(new CardClass(c,HERMIT));
+        listOfCards.push_back(new CardClass(c,HERMIT, INSTANT));
       }
     }
   }
@@ -35,16 +36,23 @@ namespace state {
     if (listOfCards.size() > 0) {
       CardClass* topCard = listOfCards.front();
       listOfCards.erase(listOfCards.begin());
+      std::cout << "In the pack"<<std::endl;
       return topCard;
     }
     else {
-      CardClass* topCard = new CardClass(NONE,WHITE);
+      //CardClass* topCard = new CardClass(NONE,WHITE);
+      std::vector<CardClass*>  temp = listOfCards;
+      listOfCards = discardPile;
+      discardPile = temp;
+      std::cout << "ReFill"<<std::endl;
+      shuffle();
+      CardClass* topCard = listOfCards.front();
+      listOfCards.erase(listOfCards.begin());
       return topCard;
     }
   }
 
   void PackOfCards::discard (CardClass* card) {
-    // NOT IMPLEMENTED
     discardPile.push_back(card);
   }
 
