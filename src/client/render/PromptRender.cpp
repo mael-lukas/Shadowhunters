@@ -17,7 +17,7 @@ namespace render {
         overlay.setFillColor(sf::Color(0,0,0,200));
         overlay.setPosition(500.f,200.f);
 
-        for (int i = 0; i < board->playerList.size()-1; i++) {
+        for (int i = 0; i < board->playerList.size(); i++) {
             target_players_buttons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
             target_players_buttons[i].setPosition(sf::Vector2f(600.f,250.f + i*120.f));
             target_players_buttons[i].setFillColor(sf::Color(150,150,150,255));
@@ -36,9 +36,11 @@ namespace render {
                 sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
                 for (int i = 0; i < targetPlayers.size(); i++) {
                     if (target_players_buttons[i].getGlobalBounds().contains(clickPos)) {
-                        std::cout << "[PROMPT] Target player " << targetPlayers[i]->id << " selected." << std::endl;
                         client->chosenAttackTarget(targetPlayers[i]->id);
                     }
+                }
+                if (target_players_buttons.back().getGlobalBounds().contains(clickPos)) {
+                    client->chosenAttackTarget(-1);
                 }
             }
         }
@@ -54,6 +56,8 @@ namespace render {
                 target_players_buttons[i].setFillColor(buttonColors[targetPlayers[i]->id]);
                 window->draw(target_players_buttons[i]);
             }
+            window->draw(target_players_buttons.back());
+
         }
     }
 }
