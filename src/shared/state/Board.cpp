@@ -206,4 +206,21 @@ namespace state
             playerList[i]->id = i;
         }
     }
+
+    void Board::discardCard(CardClass* card){
+        switch (card->type)
+        {
+        case HERMIT:
+            hermitPack.discard(card);
+            break;
+        case WHITE:
+            whitePack.discard(card);
+            break;
+        case DARK:
+            darkPack.discard(card);
+        default:
+        std::cout<<"error discarding"<<std::endl;
+            break;
+        }
+    }
 }
