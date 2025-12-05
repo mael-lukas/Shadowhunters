@@ -7,11 +7,11 @@
 
 namespace engine {
 
-MoveCommand::MoveCommand(state::CellClass* position)
-    : position(position)
+MoveCommand::MoveCommand(Engine& engine, state::CellClass* position)
+    : engine(engine), position(position)
 {}
 
-void MoveCommand::execute(Engine& engine)
+void MoveCommand::execute()
 {
     state::Player& player = engine.getCurrentPlayer();
     state::Board& board = engine.getBoard();

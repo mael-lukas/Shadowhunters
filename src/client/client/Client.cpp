@@ -33,7 +33,7 @@ namespace client {
     void Client::moveClicked(state::CellClass* newLocation) {
         if (!engineGame->isBusy)
         {
-            cmd = new engine::MoveCommand(newLocation);
+            cmd = new engine::MoveCommand(*engineGame, newLocation);
             engineGame->commands.push_back(cmd);
         }
 
@@ -45,7 +45,7 @@ namespace client {
 
     void Client::damageClicked() {
         if (engineGame->isBusy == false) {
-            cmd = new engine::AttackCommand(engineGame->getCurrentPlayer(), engineGame->getCurrentPlayer());
+            cmd = new engine::AttackCommand(*engineGame, &engineGame->getCurrentPlayer());
             engineGame -> commands.push_back(cmd);
         }
         // // test with test button and direct link to board (to be removed when engine is functional) //
@@ -55,10 +55,18 @@ namespace client {
 
     void Client::drawClicked(state::CardType cardDraw) {
         if (engineGame->isBusy == false) {
-            cmd = new engine::DrawCardCommand(cardDraw);
+            cmd = new engine::DrawCardCommand(*engineGame, cardDraw);
             engineGame -> commands.push_back(cmd);
         }
 
+    }
+
+    void Client::chosenAttackTarget(int targetID) {
+        std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
     }
 
     void Client::revealedClicked(){

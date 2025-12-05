@@ -1,6 +1,7 @@
 #include "PromptRender.h"
 #include <iostream>
 #include "state/Board.h"
+#include "client/Client.h"
 
 namespace render {
     PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win) :
@@ -36,6 +37,7 @@ namespace render {
                 for (int i = 0; i < targetPlayers.size(); i++) {
                     if (target_players_buttons[i].getGlobalBounds().contains(clickPos)) {
                         std::cout << "[PROMPT] Target player " << targetPlayers[i]->id << " selected." << std::endl;
+                        client->chosenAttackTarget(targetPlayers[i]->id);
                     }
                 }
             }

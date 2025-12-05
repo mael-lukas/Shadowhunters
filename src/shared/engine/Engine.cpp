@@ -26,9 +26,8 @@ namespace engine
         }
         isBusy = true;
         Command* cmd = commands.front();
-        cmd->execute(*this);
+        cmd->execute();
         if (cmd->isDone) {
-            delete cmd;
             commands.erase(commands.begin());
             isBusy = false;
         }
