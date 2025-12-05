@@ -45,7 +45,7 @@ namespace render {
 
                 /// Call of the location name at the clickPos for now it is will be defined as 
                 /// for test purpose
-                client->drawClicked(state::DARK);
+                client->drawClicked(state::HERMIT);
             }
         }
     }
@@ -59,15 +59,15 @@ namespace render {
         for (auto& player : board->playerList) {
             if (player->equipCards.size() > 0) {
                 cardInfo += "Player in Cell " + std::to_string(player->position->cell) + " has equipped cards: ";
-                for (state::Card card : player->equipCards) {
-                    cardInfo += std::to_string(card) + " ";
+                for (state::CardClass* card : player->equipCards) {
+                    cardInfo += std::to_string(card->name) + " ";
                 }
                 cardInfo += "\n";
             }
         }
         test_text.setString(cardInfo);
         window->draw(test_text);
-        //window->draw(test_button);
-        //window->draw(test_button_text);
+        window->draw(test_button);
+        window->draw(test_button_text);
     }
 }

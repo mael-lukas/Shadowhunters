@@ -2,6 +2,7 @@
 #include <random>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 namespace state {
 
@@ -35,16 +36,23 @@ namespace state {
     if (listOfCards.size() > 0) {
       CardClass* topCard = listOfCards.front();
       listOfCards.erase(listOfCards.begin());
+      std::cout << "In the pack"<<std::endl;
       return topCard;
     }
     else {
-      CardClass* topCard = new CardClass(NONE,WHITE);
+      //CardClass* topCard = new CardClass(NONE,WHITE);
+      std::vector<CardClass*>  temp = listOfCards;
+      listOfCards = discardPile;
+      discardPile = temp;
+      std::cout << "ReFill"<<std::endl;
+      shuffle();
+      CardClass* topCard = listOfCards.front();
+      listOfCards.erase(listOfCards.begin());
       return topCard;
     }
   }
 
   void PackOfCards::discard (CardClass* card) {
-    // NOT IMPLEMENTED
     discardPile.push_back(card);
   }
 
