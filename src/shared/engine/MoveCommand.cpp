@@ -7,8 +7,8 @@
 
 namespace engine {
 
-MoveCommand::MoveCommand(Engine& engine, state::CellClass* position)
-    : engine(engine), position(position)
+MoveCommand::MoveCommand(Engine& engine)
+    : engine(engine)
 {}
 
 void MoveCommand::execute()
@@ -20,15 +20,13 @@ void MoveCommand::execute()
     state::CellClass *newPos = oldPos;
 
 
-    while (newPos == oldPos)
-    {
+    while (newPos == oldPos) {
         int die = board.rollDice(state::RollRule::SUM);
         newPos = board.dieToCell(die);
-
     }
 
+    engine.currentTurnPhase = BATTLE_PHASE;
     board.movePlayerTo(&player, newPos);
-
     isDone = true;
 }
 

@@ -14,9 +14,6 @@ namespace render {
 
         ///// text based test /////
         std::string path = std::string(ASSET_PATH);
-        if (!test_font.loadFromFile(path + "/arial.ttf")) {
-            std::cerr << "Error loading font" << std::endl;
-        }
         if (!boardTexture.loadFromFile(path + "/Board.jpg")) {
             std::cerr << "Error loading board texture" << std::endl;
         }
@@ -77,68 +74,15 @@ namespace render {
                 cellSprites[cell] = cellSprite;
             }
         }
-
-        test_text.setFont(test_font);
-        test_text.setCharacterSize(20);
-        test_text.setFillColor(sf::Color::White);
-        test_text.setPosition(20.f,20.f);
-
-        test_button.setSize(sf::Vector2f(250.f,140.f));
-        test_button.setFillColor(sf::Color::White);
-        test_button.setPosition(26.f,395.f);
-
-        test_button_text.setFont(test_font);
-        test_button_text.setCharacterSize(20);
-        test_button_text.setFillColor(sf::Color::Black);
-        test_button_text.setString("Move test button");
-
-        sf::FloatRect buttonRect = test_button_text.getLocalBounds();
-        test_button_text.setOrigin(buttonRect.left + buttonRect.width / 2.0f,
-                                   buttonRect.top + buttonRect.height / 2.0f);
-        test_button_text.setPosition(test_button.getPosition().x + test_button.getSize().x / 2.0f,
-                                     test_button.getPosition().y + test_button.getSize().y / 2.0f);
-
+        
     }
 
     void BoardRender::handleEvent(const sf::Event& event, client::Client* client) {
-        if (event.type == sf::Event::MouseButtonPressed) {
-            sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-            std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
-
-            handleClickOnCell(event, client);
-
-            if (test_button.getGlobalBounds().contains(clickPos)) {
-                std::cout << "Move test button clicked, simulating state change." << std::endl;
-                client->moveClicked(board->cellList[0]);
-            }
-        }
     }
 
-    void BoardRender::handleClickOnCell(const sf::Event& event, client::Client* client) {
-        sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-        for (state::CellClass* cc : board->cellList) {
-            state::Cell cell = cc->cell;
-            sf::FloatRect cellBounds = cellSprites[cell].getGlobalBounds();
-            if (cellBounds.contains(clickPos)) {
-                std::cout << "Cell " << cell << " clicked." << std::endl;
-                client->moveClicked(cc);
-                return;
-            }
-        }
-    }
 
     void BoardRender::draw() {
-        ///// text based test /////
-        std::string boardInfo = "State render info \n";
-        for (state::CellClass* cc : board->cellList) {
-            boardInfo += "Cell " + std::to_string(cc->cell) + " in zone " + std::to_string(cc->zone) + " containes " + std::to_string(cc->playersInCell.size()) + " players.\n";
-            boardInfo += "\n";
-        }
-        test_text.setString(boardInfo);
         window->draw(boardSprite);
-        window->draw(test_text);
-        window->draw(test_button);
-        window->draw(test_button_text);
         for (int i = 0; i < state::OUTSIDE; i++) {
             state::Cell cell = static_cast<state::Cell>(i);
             window->draw(cellSprites[cell]);
