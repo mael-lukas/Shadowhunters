@@ -8,6 +8,7 @@
 namespace engine
 {
     Engine::Engine(state::Board *board): board(board), isBusy(false), currentPlayerIndex(0) {
+        currentTurnPhase = MOVE_PHASE;
     }
 
     state::Player& Engine::getCurrentPlayer() {
@@ -32,7 +33,6 @@ namespace engine
             isBusy = false;
         }
     }
-
 
     void Engine::startTurn() {
         commands.clear();

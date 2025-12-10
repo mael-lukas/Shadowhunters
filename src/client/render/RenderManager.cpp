@@ -8,6 +8,7 @@ namespace render {
     player_render(board,&window),
     card_render(board,&window),
     prompt_render(board,&window),
+    ui_render(&window),
     needsRedraw(true) {}
 
     void RenderManager::init() {
@@ -20,6 +21,7 @@ namespace render {
         player_render.init();
         card_render.init();
         prompt_render.init();
+        ui_render.init();
     }
 
     void RenderManager::handleEvent(const sf::Event& event, client::Client* client) {
@@ -36,6 +38,7 @@ namespace render {
         player_render.handleEvent(event, client);
         card_render.handleEvent(event, client);
         prompt_render.handleEvent(event, client);
+        ui_render.handleEvent(event, client);
     }
 
     void RenderManager::draw() {
@@ -45,6 +48,7 @@ namespace render {
             player_render.draw();
             card_render.draw();
             prompt_render.draw();
+            ui_render.draw();
             window.display();
             needsRedraw = false;
         }
