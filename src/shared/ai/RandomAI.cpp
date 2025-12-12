@@ -1,33 +1,57 @@
 #include "RandomAI.h"
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
-#include "../../shared/engine/AttackCommand.h"
+#include "../../shared/engine/AttackCommandAI.h"
+
+#include <random>
+#include <algorithm>
+#include <iostream>
 
 namespace ai
 {
-    AI::AI(state::Board* board, engine::Engine* engine)
-    : board(board), engine(engine) {}
+    RandomAI::RandomAI(state::Board* board, engine::Engine* engine)
+    : AI::AI(board,engine) {}
 
-    AI::~AI() {}
+    RandomAI::~RandomAI() {}
 
-    void AI::playTurn() {
-        // Implementation of AI turn logic
+    void RandomAI::playerTurn() {
+        move();
+        drawCard();
     }
 
-    void AI::drawCard() {
-        // Implementation of AI drawing a card
+    void RandomAI::drawCard() {
+        state::CardType cardType = state::CardType(randomChoice(3));
+        if (engine->isBusy == false) {
+            cmd = new engine::DrawCardCommand(*engine,cardType);
+            engine -> commands.push_back(cmd);
+        }
     }
 
-    void AI::move() {
+    void RandomAI::move() {
         if (!engine->isBusy)
         {
-            cmd = new engine::MoveCommand(*engine, newLocation);
+            cmd = new engine::MoveCommand(*engine);
             engine->commands.push_back(cmd);
         }
     }
 
-    void AI::attackTarget(int targetID) {
-        // Implementation of AI attacking a target
+    void RandomAI::attackTarget(int targetID) {
+        if (engine->isBusy == false) {
+            state::Player* attacker = &engine->getCurrentPlayer();
+            if(attacker->id == targetID) {
+                state::Player* attacked = engine->board->playerList[targetID].get();
+                cmd = new engine::AttackCommandAI(*engine, attacker, attacked);
+                engine -> commands.push_back(cmd);
+            }
+            
+        }
+    }
+
+    int RandomAI::randomChoice (int numberOfChoices) {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::uniform_int_distribution<int> dist(0, numberOfChoices - 1);
+        return dist(g);
     }
 
 };
