@@ -19,11 +19,11 @@ namespace render {
         test_text.setFont(test_font);
         test_text.setCharacterSize(20);
         test_text.setFillColor(sf::Color::Blue);
-        test_text.setPosition(400.f,100.f);
+        test_text.setPosition(20.f,20.f);
 
         test_button.setSize(sf::Vector2f(250.f,140.f));
         test_button.setFillColor(sf::Color::Blue);
-        test_button.setPosition(550.f,500.f);
+        test_button.setPosition(20.f,150.f);
 
         test_button_text.setFont(test_font);
         test_button_text.setCharacterSize(20);

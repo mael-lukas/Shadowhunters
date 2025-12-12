@@ -4,11 +4,16 @@
 #include <random>
 #include <algorithm>
 #include <iostream>
+#include "engine/DrawCardCommand.h"
 
 namespace engine
 {
     Engine::Engine(state::Board *board): board(board), isBusy(false), currentPlayerIndex(0) {
         currentTurnPhase = MOVE_PHASE;
+        cellEffects[state::GRAVEYARD] = new DrawCardCommand(*this, state::DARK);
+        cellEffects[state::CHURCH] = new DrawCardCommand(*this, state::WHITE);
+        cellEffects[state::HERMITZONE] = new DrawCardCommand(*this, state::HERMIT);
+        
     }
 
     state::Player& Engine::getCurrentPlayer() {
