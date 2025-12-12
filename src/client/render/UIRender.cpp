@@ -31,7 +31,7 @@ namespace render {
         attack_button.setFillColor(sf::Color::Red);
         attack_button.setPosition(26.f,570.f);
         attack_button_text.setFont(font);
-        attack_button_text.setCharacterSize(20);
+        attack_button_text.setCharacterSize(25);
         attack_button_text.setFillColor(sf::Color::White);
         attack_button_text.setString("Conduct attack");
         sf::FloatRect buttonRect2 = attack_button_text.getLocalBounds();
