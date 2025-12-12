@@ -25,6 +25,8 @@ namespace render {
 
         buttonColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
 
+        yes_button.setPosition(sf::Vector2f(600.f,370.f));
+        no_button.setPosition(sf::Vector2f(900.f,370.f));
     }
 
     void PromptRender::handleEvent(const sf::Event& event, client::Client* client) {
@@ -47,6 +49,17 @@ namespace render {
         if (activePromptType == WOODS_PROMPT) {
             
         }
+        else if (activePromptType == YES_NO){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                if(yes_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(true);
+                }
+                else if (no_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(false);
+                }
+            }
+        }
     }
 
     void PromptRender::draw() {
@@ -63,6 +76,11 @@ namespace render {
         }
         if (activePromptType == WOODS_PROMPT) {
             window->draw(overlay);
+        }
+        else if(activePromptType == YES_NO){
+            window->draw(overlay);
+            window->draw(yes_button);
+            window->draw(no_button);
         }
     }
 }
