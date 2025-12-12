@@ -1,8 +1,4 @@
-#include "RandomAI.h"
-#include "../../shared/engine/DrawCardCommand.h"
-#include "../../shared/engine/MoveCommand.h"
-#include "../../shared/engine/AttackCommand.h"
-
+#include "AI.h"
 namespace ai
 {
     AI::AI(state::Board* board, engine::Engine* engine)
@@ -19,11 +15,7 @@ namespace ai
     }
 
     void AI::move() {
-        if (!engine->isBusy)
-        {
-            cmd = new engine::MoveCommand(*engine, newLocation);
-            engine->commands.push_back(cmd);
-        }
+        // Implementation of AI movement logic
     }
 
     void AI::attackTarget(int targetID) {
