@@ -14,7 +14,7 @@ namespace engine
     {
 
         if (isWaitingForValidation) {
-            engine.isWaitingForTargetPrompt = true;
+            engine.isWaitingForYesNoPrompt = true;
             engine.waitingCommand = this;
             return;
         }
@@ -23,7 +23,7 @@ namespace engine
                 drawCard();
             }
             engine.currentTurnPhase = BATTLE_PHASE;
-            engine.isWaitingForTargetPrompt = false;
+            engine.isWaitingForYesNoPrompt = false;
             isDone = true;
         }
     }
@@ -41,13 +41,14 @@ namespace engine
             card=engine.board->drawHermit();
         }
         currentPlayer.equipCards.push_back(card);
-        engine.commands.emplace_back(new UseCardCommand(engine,card->name));
+        engine.commands.emplace_back(new UseCardCommand(engine,*card));
     }
     
     void DrawCardCommand::receivePromptAnswer(void* answer){
-        bool draw = static_cast<bool>(answer);   
+        draw = static_cast<bool>(answer);
+        std::cout << "answer is : " << draw << std::endl;
         engine.waitingCommand = nullptr;
-        engine.isWaitingForTargetPrompt = false;
+        isWaitingForValidation = false;
     }
 
 }

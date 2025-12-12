@@ -27,6 +27,9 @@ namespace client {
             if (engineGame->isWaitingForTargetPrompt) {
                 renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
             }
+            else if (engineGame->isWaitingForYesNoPrompt){
+                renderMan->openYesNoPrompt();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
@@ -54,7 +57,13 @@ namespace client {
         }
 
     }
-
+    void Client::YesNoAnswer(bool answer){
+        std::cout << "[client] YES NO answer chosen : " << answer << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&answer);
+        }
+    }
     void Client::chosenAttackTarget(int targetID) {
         std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
