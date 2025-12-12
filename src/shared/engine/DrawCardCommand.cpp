@@ -1,6 +1,8 @@
 #include "DrawCardCommand.h"
 #include "state/CardClass.h"
+#include "UseCardCommand.h"
 #include <iostream>
+
 
 namespace engine
 {
@@ -12,14 +14,15 @@ namespace engine
     void DrawCardCommand::execute()
     {
         state::Player& currentPlayer = engine.getCurrentPlayer();
-
+        
         if (cardType == state::WHITE)
             currentPlayer.equipCards.push_back(engine.board->drawWhite());
         if (cardType == state::DARK)
             currentPlayer.equipCards.push_back(engine.board->drawDark());
         if (cardType == state::HERMIT){
-            engine.board->hermitPack.discard(engine.board->drawHermit());
+            currentPlayer.equipCards.push_back(engine.board->drawHermit());
         }
+        engine.commands.push_back(new UseCardCommand(engine,*currentPlayer.equipCards.back()));
         isDone = true;
     }
 

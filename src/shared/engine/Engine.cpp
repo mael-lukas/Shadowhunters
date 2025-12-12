@@ -41,7 +41,6 @@ namespace engine
 
     void Engine::startTurn() {
         commands.clear();
-        // Tu peux aussi notifier le client que c’est le tour de getCurrentPlayer()
     }
 
 
@@ -133,7 +132,7 @@ namespace engine
         {
             // Cas bizarre : plus de Hunters ni de Shadows vivants
             std::cout << "[VICTOIRE] Aucun Hunter ni Shadow vivant. "
-                         "Les Neutres gagnent (si tu veux cette règle).\n";
+                         "Les Neutres gagnent.\n";
         }
         else
         {
