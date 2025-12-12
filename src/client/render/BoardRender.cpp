@@ -2,6 +2,7 @@
 #include <iostream>
 #include "state/Board.h"
 #include "client/Client.h"
+#include "../shared/engine/IPromptableCommand.h"
 #include <cmath>
 
 
@@ -78,6 +79,25 @@ namespace render {
     }
 
     void BoardRender::handleEvent(const sf::Event& event, client::Client* client) {
+         if (!client->engineGame->isWaitingForTargetPrompt) return;
+    if (!client->renderMan->selectingCell) return;
+
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left) {
+
+        sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
+
+        for (int i = 0; i < state::OUTSIDE; i++) {
+            state::Cell cell = static_cast<state::Cell>(i);
+
+            if (cellSprites[cell].getGlobalBounds().contains(mousePos)) {
+                int answer = static_cast<int>(cell);
+                client->engineGame->waitingCommand->receivePromptAnswer(&answer);
+                client->renderMan->selectingCell = false;
+                return;
+            }
+        }
+    }
     }
 
 

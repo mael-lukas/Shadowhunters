@@ -24,9 +24,19 @@ namespace client {
             engineGame->processOneCommand();
             renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
             renderMan->draw();
-            if (engineGame->isWaitingForTargetPrompt) {
-                renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+            if (engineGame->isWaitingForTargetPrompt)
+            {
+                if (dynamic_cast<engine::MoveCommand *>(engineGame->waitingCommand))
+                {
+                    renderMan->openCellPrompt();
+                }
+                else
+                {
+                    renderMan->openTargetPrompt(
+                        engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+                }
             }
+
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }

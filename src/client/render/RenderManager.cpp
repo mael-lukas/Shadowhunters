@@ -63,4 +63,9 @@ namespace render {
         prompt_render.targetPlayers = targets;
         needsRedraw = true;
     }
+
+    void RenderManager::openCellPrompt()
+    {
+        selectingCell = true;
+    }
 }

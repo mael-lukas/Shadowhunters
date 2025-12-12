@@ -36,7 +36,6 @@ namespace engine
 
     void Engine::startTurn() {
         commands.clear();
-        // Tu peux aussi notifier le client que c’est le tour de getCurrentPlayer()
     }
 
 
@@ -75,7 +74,6 @@ namespace engine
             }
         }
 
-        // Fin si un des deux camps n’a plus de survivants
         return (!shadowAlive || !hunterAlive);
     }
 
@@ -84,7 +82,6 @@ namespace engine
         bool shadowAlive = false;
         bool hunterAlive = false;
 
-        // On prépare aussi des listes pour afficher qui a gagné
         std::vector<state::Player *> shadows;
         std::vector<state::Player *> hunters;
         std::vector<state::Player *> neutrals;
@@ -114,11 +111,9 @@ namespace engine
             }
         }
 
-        // Détermination du camp gagnant
         if (!shadowAlive && hunterAlive)
         {
             std::cout << "[VICTOIRE] Les Hunters gagnent la partie.\n";
-            // Ici tu peux plus tard notifier le client / UI
         }
         else if (!hunterAlive && shadowAlive)
         {
@@ -126,15 +121,12 @@ namespace engine
         }
         else if (!hunterAlive && !shadowAlive)
         {
-            // Cas bizarre : plus de Hunters ni de Shadows vivants
             std::cout << "[VICTOIRE] Aucun Hunter ni Shadow vivant. "
                          "Les Neutres gagnent (si tu veux cette règle).\n";
         }
         else
         {
-            // Normalement, checkVictory ne devrait être appelé
-            // que quand isGameOver() a renvoyé true, donc ce cas
-            // ne devrait pas arriver, mais on le garde par sécurité.
+            // Sécurité
             std::cout << "[INFO] checkVictory() appelé sans vainqueur clair.\n";
         }
     }
@@ -142,7 +134,6 @@ namespace engine
 
     state::Board &Engine::getBoard()
     {
-        // Précondition : board != nullptr
         return *board;
     }
 
