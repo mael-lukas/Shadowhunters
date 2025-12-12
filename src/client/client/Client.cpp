@@ -22,6 +22,7 @@ namespace client {
                 renderMan->handleEvent(event, this);
             }
             engineGame->processOneCommand();
+            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
             renderMan->draw();
             if (engineGame->isWaitingForTargetPrompt) {
                 renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
@@ -30,17 +31,13 @@ namespace client {
         }
     }
 
-    void Client::moveClicked(state::CellClass* newLocation) {
+    void Client::moveClicked() {
         if (!engineGame->isBusy)
         {
-            cmd = new engine::MoveCommand(*engineGame, newLocation);
+            cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }
 
-        // test with test button and direct link to board (to be removed when engine is functional) //
-        // int pos = rand() % 6;
-        // int pl = rand() % 4;
-        // board->movePlayerTo(board->playerList[pl].get(),board->cellList[pos]);
     }
 
     void Client::damageClicked() {
@@ -48,9 +45,6 @@ namespace client {
             cmd = new engine::AttackCommand(*engineGame, &engineGame->getCurrentPlayer());
             engineGame -> commands.push_back(cmd);
         }
-        // // test with test button and direct link to board (to be removed when engine is functional) //
-        // int pl = rand() % 4;
-        // board->playerList[pl]->receiveDamage(1);
     }
 
     void Client::drawClicked(state::CardType cardDraw) {
