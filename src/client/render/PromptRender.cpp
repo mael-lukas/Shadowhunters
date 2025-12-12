@@ -44,6 +44,9 @@ namespace render {
                 }
             }
         }
+        if (activePromptType == WOODS_PROMPT) {
+            
+        }
     }
 
     void PromptRender::draw() {
@@ -57,7 +60,9 @@ namespace render {
                 window->draw(target_players_buttons[i]);
             }
             window->draw(target_players_buttons.back());
-
+        }
+        if (activePromptType == WOODS_PROMPT) {
+            window->draw(overlay);
         }
     }
 }

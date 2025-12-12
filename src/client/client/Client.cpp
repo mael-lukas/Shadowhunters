@@ -27,6 +27,9 @@ namespace client {
             if (engineGame->isWaitingForTargetPrompt) {
                 renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
             }
+            if (engineGame->isWaitingForWoodsPrompt) {
+                renderMan->openWoodsPrompt();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }

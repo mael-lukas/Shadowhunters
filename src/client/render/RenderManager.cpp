@@ -63,4 +63,9 @@ namespace render {
         prompt_render.targetPlayers = targets;
         needsRedraw = true;
     }
+
+    void RenderManager::openWoodsPrompt() {
+        prompt_render.activePromptType = WOODS_PROMPT;
+        needsRedraw = true;
+    }   
 }
