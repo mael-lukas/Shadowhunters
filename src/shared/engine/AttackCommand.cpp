@@ -12,6 +12,7 @@ namespace engine {
     void AttackCommand::execute()
     {
         if (isAttackCancelled) {
+            engine.currentTurnPhase = MOVE_PHASE;
             engine.isWaitingForTargetPrompt = false;
             engine.goToNextPlayer();
             isDone = true;
@@ -23,6 +24,7 @@ namespace engine {
             return;
         }
         else {
+            engine.currentTurnPhase = MOVE_PHASE;
             attacker->attackOther(*attacked);
             engine.isWaitingForTargetPrompt = false;
             engine.goToNextPlayer();
@@ -46,7 +48,5 @@ namespace engine {
             engine.isWaitingForTargetPrompt = false;
             isWaitingForTarget = false;
         }
-
-
     }
 }

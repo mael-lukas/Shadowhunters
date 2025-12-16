@@ -7,27 +7,49 @@
 
 namespace engine {
 
-MoveCommand::MoveCommand(Engine& engine)
-    : engine(engine)
-{}
+    MoveCommand::MoveCommand(Engine& engine)
+        : engine(engine)
+    {}
 
-void MoveCommand::execute()
-{
-    state::Player& player = engine.getCurrentPlayer();
-    state::Board& board = engine.getBoard();
+    void MoveCommand::execute()
+    {
+        if (isWaitingForCell) {
+            engine.isWaitingForCellPrompt = true;
+            engine.waitingCommand = this;
+            return;
+        }
 
-    state::CellClass *oldPos = player.position;
-    state::CellClass *newPos = oldPos;
+        if (cellAnswerReceived) {
+            engine.currentTurnPhase = BATTLE_PHASE;
+            engine.board->movePlayerTo(&engine.getCurrentPlayer(), promptCell);
+            engine.isWaitingForCellPrompt = false;
+            isDone = true;
+            return;
+        }
 
+        state::Player& player = engine.getCurrentPlayer();
+        state::CellClass *oldPos = player.position;
+        state::CellClass *newPos = oldPos;
 
-    while (newPos == oldPos) {
-        int die = board.rollDice(state::RollRule::SUM);
-        newPos = board.dieToCell(die);
+        while (newPos == oldPos) {
+            int die = engine.board->rollDice(state::RollRule::SUM);
+            if (die == 7) {
+                isWaitingForCell = true;
+                return;
+            }
+            newPos = engine.board->dieToCell(die);
+        }
+        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.board->movePlayerTo(&player, newPos);
+        isDone = true;
     }
 
-    engine.currentTurnPhase = BATTLE_PHASE;
-    board.movePlayerTo(&player, newPos);
-    isDone = true;
-}
-
+    void MoveCommand::receivePromptAnswer(void* answer)
+    {
+        promptCell = static_cast<state::CellClass*>(answer);
+        engine.waitingCommand = nullptr;
+        engine.isWaitingForCellPrompt = false;
+        isWaitingForCell = false;
+        cellAnswerReceived = true;
+    }
 }
