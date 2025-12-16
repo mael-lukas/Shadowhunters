@@ -48,7 +48,5 @@ namespace engine {
             engine.isWaitingForTargetPrompt = false;
             isWaitingForTarget = false;
         }
-
-
     }
 }

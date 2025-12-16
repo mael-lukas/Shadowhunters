@@ -66,7 +66,6 @@ namespace render {
 
     void RenderManager::openYesNoPrompt(){
         prompt_render.activePromptType = YES_NO;
-        
         needsRedraw = true;
     }
 
@@ -74,4 +73,9 @@ namespace render {
         prompt_render.activePromptType = WOODS_PROMPT;
         needsRedraw = true;
     }   
+
+    void RenderManager::openCellPrompt() {
+        prompt_render.activePromptType = ROLL_7;
+        needsRedraw = true;
+    }
 }

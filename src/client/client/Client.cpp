@@ -33,6 +33,9 @@ namespace client {
             if (engineGame->isWaitingForWoodsPrompt) {
                 renderMan->openWoodsPrompt();
             }
+            if (engineGame->isWaitingForCellPrompt) {
+                renderMan->openCellPrompt();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
@@ -72,6 +75,21 @@ namespace client {
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
+    }
+
+    void Client::cellChosen(int cellID){
+        std::cout << "[CLIENT] Chosen cell ID: " << cellID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            state::CellClass* chosenCell = nullptr;
+            for (state::CellClass* cc : engineGame->board->cellList) {
+                if (cc->cell == static_cast<state::Cell>(cellID)) {
+                    chosenCell = cc;
+                    break;
+                }
+            } 
+            engineGame->waitingCommand->receivePromptAnswer(chosenCell);
         }
     }
 

@@ -143,11 +143,4 @@ namespace engine
         }
     }
 
-
-    state::Board &Engine::getBoard()
-    {
-        // Précondition : board != nullptr
-        return *board;
-    }
-
 }
