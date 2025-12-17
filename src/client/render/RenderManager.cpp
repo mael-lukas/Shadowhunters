@@ -63,4 +63,19 @@ namespace render {
         prompt_render.targetPlayers = targets;
         needsRedraw = true;
     }
+
+    void RenderManager::openYesNoPrompt(){
+        prompt_render.activePromptType = YES_NO;
+        needsRedraw = true;
+    }
+
+    void RenderManager::openWoodsPrompt() {
+        prompt_render.activePromptType = WOODS_PROMPT;
+        needsRedraw = true;
+    }   
+
+    void RenderManager::openCellPrompt() {
+        prompt_render.activePromptType = ROLL_7;
+        needsRedraw = true;
+    }
 }
