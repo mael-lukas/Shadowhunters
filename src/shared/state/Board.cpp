@@ -201,6 +201,27 @@ namespace state
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(playerList.begin(), playerList.end(), g);
+
+        //--------------------------------------------------------
+        /**
+         * Define Level of AI and the number of AI
+         * will be replaced by user choice later
+         */
+        int temporareLevel = 1;
+        int numberOfAI = 3; 
+        //--------------------------------------------------------
+
+        for(int i = 0; i < playerList.size(); i++) {
+            if(i<=numberOfAI-1){
+                playerList[i]->infoUser.push_back(InfoAI{true, temporareLevel});
+            }
+            else{
+                playerList[i]->infoUser.push_back(InfoAI{false, 0});
+            }
+        }
+        
+        std::shuffle(playerList.begin(), playerList.end(), g);
+
         for (int i = 0; i < playerList.size(); i++)
         {
             playerList[i]->id = i;

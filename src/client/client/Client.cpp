@@ -13,6 +13,10 @@ namespace client {
 
     void Client::run() {
         renderMan->init();
+        if(engineGame->getCurrentPlayer().infoUser[0].isAI){
+            std::cout << "[CLIENT] The first player is an AI. Exiting client run loop." << std::endl;
+        }
+
         while (renderMan->window.isOpen()) {
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
