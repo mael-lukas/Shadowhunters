@@ -20,7 +20,7 @@ namespace engine {
         }
 
         if (cellAnswerReceived) {
-            engine.currentTurnPhase = BATTLE_PHASE;
+            engine.currentTurnPhase = CELL_EFFECT_PHASE;
             engine.board->movePlayerTo(&engine.getCurrentPlayer(), promptCell);
             engine.isWaitingForCellPrompt = false;
             isDone = true;
@@ -39,7 +39,7 @@ namespace engine {
             }
             newPos = engine.board->dieToCell(die);
         }
-        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.currentTurnPhase = CELL_EFFECT_PHASE;
         engine.board->movePlayerTo(&player, newPos);
         isDone = true;
     }

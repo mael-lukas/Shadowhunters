@@ -26,7 +26,9 @@ namespace render {
         buttonColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
 
         yes_button.setPosition(sf::Vector2f(600.f,370.f));
+        yes_button.setFillColor(sf::Color(7,196,0));
         no_button.setPosition(sf::Vector2f(900.f,370.f));
+        no_button.setFillColor(sf::Color(224,2,2));
 
          for (int i = 0; i < state::OUTSIDE; i++) {
             sf::Texture texture;
@@ -63,7 +65,10 @@ namespace render {
             }
         }
         if (activePromptType == WOODS_PROMPT) {
-            
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                
+            }
         }
         if (activePromptType == YES_NO){
             if (event.type == sf::Event::MouseButtonPressed) {
@@ -76,6 +81,7 @@ namespace render {
                 }
             }
         }
+
         if (activePromptType == ROLL_7) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             for (int i = 0; i < cellSprites.size(); i++) {
