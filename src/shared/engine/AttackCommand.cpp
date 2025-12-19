@@ -13,20 +13,20 @@ namespace engine {
     {
         if (isAttackCancelled) {
             engine.currentTurnPhase = MOVE_PHASE;
-            engine.isWaitingForTargetPrompt = false;
+            engine.isWaitingForAttackPrompt = false;
             engine.goToNextPlayer();
             isDone = true;
             return;
         }
         if (isWaitingForTarget) {
-            engine.isWaitingForTargetPrompt = true;
+            engine.isWaitingForAttackPrompt = true;
             engine.waitingCommand = this;
             return;
         }
         else {
             engine.currentTurnPhase = MOVE_PHASE;
             attacker->attackOther(*attacked);
-            engine.isWaitingForTargetPrompt = false;
+            engine.isWaitingForAttackPrompt = false;
             engine.goToNextPlayer();
             isDone = true;
         }
@@ -39,13 +39,13 @@ namespace engine {
         if (targetID == -1) {
             isAttackCancelled = true;
             engine.waitingCommand = nullptr;
-            engine.isWaitingForTargetPrompt = false;
+            engine.isWaitingForAttackPrompt = false;
         }
         else {
             attacker = &engine.getCurrentPlayer();
             attacked = engine.board->playerList[targetID].get();
             engine.waitingCommand = nullptr;
-            engine.isWaitingForTargetPrompt = false;
+            engine.isWaitingForAttackPrompt = false;
             isWaitingForTarget = false;
         }
     }

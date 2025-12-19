@@ -24,19 +24,23 @@ namespace client {
             engineGame->processOneCommand();
             renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
             renderMan->draw();
-            if (engineGame->isWaitingForTargetPrompt) {
-                renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
-            }
-            else if (engineGame->isWaitingForYesNoPrompt){
-                renderMan->openYesNoPrompt();
-            }
-            if (engineGame->isWaitingForWoodsPrompt) {
-                renderMan->openWoodsPrompt();
-            }
-            if (engineGame->isWaitingForCellPrompt) {
-                renderMan->openCellPrompt();
-            }
+            lookForPrompts();
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
+        }
+    }
+
+    void Client::lookForPrompts() {
+        if (engineGame->isWaitingForAttackPrompt) {
+            renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+        }
+        if (engineGame->isWaitingForYesNoPrompt) {
+            renderMan->openYesNoPrompt();
+        }
+        if (engineGame->isWaitingForWoodsPrompt) {
+            renderMan->openWoodsPrompt();
+        }
+        if (engineGame->isWaitingForCellPrompt) {
+            renderMan->openCellPrompt();
         }
     }
 
@@ -46,7 +50,14 @@ namespace client {
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }
+    }
 
+    void Client::cellEffectClicked() {
+        if (!engineGame->isBusy)
+        {
+            cmd = engineGame->cellEffectsFactory[engineGame->getCurrentPlayer().position->cell](*engineGame);
+            engineGame->commands.push_back(cmd);
+        }
     }
 
     void Client::damageClicked() {
@@ -55,14 +66,7 @@ namespace client {
             engineGame -> commands.push_back(cmd);
         }
     }
-
-    void Client::drawClicked(state::CardType cardDraw) {
-        if (engineGame->isBusy == false) {
-            cmd = new engine::DrawCardCommand(*engineGame, cardDraw);
-            engineGame -> commands.push_back(cmd);
-        }
-
-    }
+    
     void Client::YesNoAnswer(bool answer){
         std::cout << "[client] YES NO answer chosen : " << answer << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
@@ -90,6 +94,14 @@ namespace client {
                 }
             } 
             engineGame->waitingCommand->receivePromptAnswer(chosenCell);
+        }
+    }
+
+    void Client::woodsAnswerClicked(int buttonID) {
+        std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&buttonID);
         }
     }
 

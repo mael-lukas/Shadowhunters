@@ -27,9 +27,23 @@ namespace render {
         move_button_text.setPosition(move_button.getPosition().x + move_button.getSize().x / 2.0f,
                                      move_button.getPosition().y + move_button.getSize().y / 2.0f);
 
+
+        cell_effect_button.setSize(sf::Vector2f(250.f,140.f));
+        cell_effect_button.setFillColor(sf::Color::Blue);
+        cell_effect_button.setPosition(26.f,570.f);
+        cell_effect_button_text.setFont(font);
+        cell_effect_button_text.setCharacterSize(25);
+        cell_effect_button_text.setFillColor(sf::Color::White);
+        cell_effect_button_text.setString("Use Cell effect");
+        sf::FloatRect buttonRect3 = cell_effect_button_text.getLocalBounds();
+        cell_effect_button_text.setOrigin(buttonRect3.left + buttonRect3.width / 2.0f,
+                                   buttonRect3.top + buttonRect3.height / 2.0f);
+        cell_effect_button_text.setPosition(cell_effect_button.getPosition().x + cell_effect_button.getSize().x / 2.0f,
+                                     cell_effect_button.getPosition().y + cell_effect_button.getSize().y / 2.0f);
+
         attack_button.setSize(sf::Vector2f(250.f,140.f));
         attack_button.setFillColor(sf::Color::Red);
-        attack_button.setPosition(26.f,570.f);
+        attack_button.setPosition(26.f,745.f);
         attack_button_text.setFont(font);
         attack_button_text.setCharacterSize(25);
         attack_button_text.setFillColor(sf::Color::White);
@@ -48,7 +62,11 @@ namespace render {
 
             if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move button clicked" << std::endl;
-                client->moveClicked();
+                client->moveClicked(); 
+            }
+            if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Cell effect button clicked" << std::endl;
+                client->cellEffectClicked();
             }
             if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Attack button clicked" << std::endl;
@@ -61,6 +79,10 @@ namespace render {
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);
+        }
+        if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE) {
+            window->draw(cell_effect_button);
+            window->draw(cell_effect_button_text);
         }
         if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE) {
             window->draw(attack_button);

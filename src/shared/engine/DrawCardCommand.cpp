@@ -10,9 +10,9 @@ namespace engine
     {
         cardType = type;
     }
+
     void DrawCardCommand::execute()
     {
-
         if (isWaitingForValidation) {
             engine.isWaitingForYesNoPrompt = true;
             engine.waitingCommand = this;
@@ -35,18 +35,18 @@ namespace engine
             card = engine.board->drawWhite();
         }
         if (cardType == state::DARK){
-            card =engine.board->drawDark();
+            card = engine.board->drawDark();
         }
         if (cardType == state::HERMIT){
-            card=engine.board->drawHermit();
+            card = engine.board->drawHermit();
         }
         currentPlayer.equipCards.push_back(card);
         engine.commands.emplace_back(new UseCardCommand(engine,*card));
     }
     
     void DrawCardCommand::receivePromptAnswer(void* answer){
-        draw = static_cast<bool>(answer);
-        std::cout << "answer is : " << draw << std::endl;
+        draw = *static_cast<bool*>(answer);
+        std::cout << "answer is : " << static_cast<int>(draw) << std::endl;
         engine.waitingCommand = nullptr;
         isWaitingForValidation = false;
     }

@@ -58,7 +58,7 @@ namespace render {
         needsRedraw = true;
     }
 
-    void RenderManager::openTargetPrompt(std::vector<state::Player*> targets) {
+    void RenderManager::openAttackPrompt(std::vector<state::Player*> targets) {
         prompt_render.activePromptType = ATTACK_TARGET;
         prompt_render.targetPlayers = targets;
         needsRedraw = true;
