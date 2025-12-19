@@ -73,7 +73,10 @@ namespace render {
         prompt_render.activePromptType = WOODS_PROMPT;
         needsRedraw = true;
     }   
-
+    void RenderManager::openGatePrompt(){
+        prompt_render.activePromptType = GATE_PROMPT;
+        needsRedraw = true;
+    }
     void RenderManager::openCellPrompt() {
         prompt_render.activePromptType = ROLL_7;
         needsRedraw = true;

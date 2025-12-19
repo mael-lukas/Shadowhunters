@@ -24,7 +24,7 @@ namespace render {
         }
 
         buttonColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
-
+        cardTypeColors = {sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color::Red};
         yes_button.setPosition(sf::Vector2f(600.f,370.f));
         yes_button.setFillColor(sf::Color(7,196,0));
         no_button.setPosition(sf::Vector2f(900.f,370.f));
@@ -45,7 +45,13 @@ namespace render {
             sprite.setPosition(600.f + 200.f*(i/2), 300.f + 250.f*(i%2));
             cellSprites.push_back(sprite);
         }
-
+        for (int i=0;i<4;i++){
+            gateButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
+            gateButtons[i].setPosition(sf::Vector2f(540.f + (i%3)*400.f, 300.f + (i/3)*120.f));
+            gateButtons[i].setFillColor(cardTypeColors[i]);
+            gateButtons[i].setOutlineColor(sf::Color(200,200,200));
+            gateButtons[i].setOutlineThickness(3.f);
+        }
         for (int i = 0; i < 8; i++) {
             woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
             woodsButtons[i].setPosition(sf::Vector2f(530.f + (i%2)*430.f, 280.f + (i/2)*110.f));
@@ -97,6 +103,17 @@ namespace render {
                 }
             }
         }
+        if (activePromptType == GATE_PROMPT){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < gateButtons.size(); i++) {
+                    if (gateButtons[i].getGlobalBounds().contains(clickPos)) {
+                        std::cout << "[PromptRender] Gate button " << i << " clicked." << std::endl;
+                        client->cardTypeChosen(i);
+                    }
+                }
+        }
+    }
         if (activePromptType == ROLL_7) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             for (int i = 0; i < cellSprites.size(); i++) {
@@ -139,6 +156,14 @@ namespace render {
                 window->draw(button);
             }
         }
+
+        if (activePromptType == GATE_PROMPT){
+            window->draw(overlay);
+            for (const sf::RectangleShape& button : gateButtons) {
+                window->draw(button);
+            } 
+        }
+
         if(activePromptType == YES_NO){
             window->draw(overlay);
             window->draw(yes_button);
