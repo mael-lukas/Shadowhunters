@@ -10,12 +10,12 @@ namespace state {
     if (type == WHITE) {
       for (int i = 0; i < WHITECOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(new CardClass(c,WHITE, ONELOOP));
+        listOfCards.push_back(new CardClass(c,WHITE, INSTANT));
       }
     } else if (type == DARK) {
       for (int i = WHITECOUNT+1; i < DARKCOUNT; i++) {
         Card c = static_cast<Card>(i);
-        listOfCards.push_back(new CardClass(c,DARK, PERMANENT));
+        listOfCards.push_back(new CardClass(c,DARK, INSTANT));
       }
     } else if (type == HERMIT) {
       for (int i = DARKCOUNT+1 ; i < HERMITCOUNT; i++) {
@@ -32,13 +32,13 @@ namespace state {
   }
 
   CardClass* PackOfCards::draw () {
-    // NOT IMPLEMENTED : if deck is empty, reshuffle discard pile into deck
     if (listOfCards.size() > 0) {
       CardClass* topCard = listOfCards.front();
       listOfCards.erase(listOfCards.begin());
       std::cout << "In the pack"<<std::endl;
       return topCard;
     }
+
     else {
       //CardClass* topCard = new CardClass(NONE,WHITE);
       std::vector<CardClass*>  temp = listOfCards;

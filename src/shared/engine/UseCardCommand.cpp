@@ -12,7 +12,6 @@ UseCardCommand::UseCardCommand(Engine& engine, state::CardClass card)
 
 void UseCardCommand::execute()
 {
-    // On récupère le joueur actif 
     state::Player& currentPlayer = engine.getCurrentPlayer();
     if (card.effectTimer == INSTANT){
         currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));

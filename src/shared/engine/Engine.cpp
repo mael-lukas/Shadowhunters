@@ -5,15 +5,18 @@
 #include <algorithm>
 #include <iostream>
 #include "engine/DrawCardCommand.h"
+#include "engine/WoodsCommand.h"
 
 namespace engine
 {
     Engine::Engine(state::Board *board): board(board), isBusy(false), currentPlayerIndex(0) {
         currentTurnPhase = MOVE_PHASE;
-        cellEffects[state::GRAVEYARD] = new DrawCardCommand(*this, state::DARK);
-        cellEffects[state::CHURCH] = new DrawCardCommand(*this, state::WHITE);
-        cellEffects[state::HERMITZONE] = new DrawCardCommand(*this, state::HERMIT);
-        
+        cellEffectsFactory[state::GRAVEYARD] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
+        cellEffectsFactory[state::CHURCH] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
+        cellEffectsFactory[state::HERMITZONE] = [](Engine& engine) { return new DrawCardCommand(engine, state::HERMIT); };
+        cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
+        cellEffectsFactory[state::GATE] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
+        cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
     }
 
     state::Player& Engine::getCurrentPlayer() {

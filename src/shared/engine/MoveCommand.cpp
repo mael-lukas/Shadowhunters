@@ -20,7 +20,7 @@ namespace engine {
         }
 
         if (cellAnswerReceived) {
-            engine.currentTurnPhase = BATTLE_PHASE;
+            engine.currentTurnPhase = CELL_EFFECT_PHASE;
             engine.board->movePlayerTo(&engine.getCurrentPlayer(), promptCell);
             engine.isWaitingForCellPrompt = false;
             isDone = true;
@@ -32,14 +32,15 @@ namespace engine {
         state::CellClass *newPos = oldPos;
 
         while (newPos == oldPos) {
-            int die = engine.board->rollDice(state::RollRule::SUM);
+            //int die = engine.board->rollDice(state::RollRule::SUM);
+            int die = 7;
             if (die == 7) {
                 isWaitingForCell = true;
                 return;
             }
             newPos = engine.board->dieToCell(die);
         }
-        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.currentTurnPhase = CELL_EFFECT_PHASE;
         engine.board->movePlayerTo(&player, newPos);
         isDone = true;
     }
