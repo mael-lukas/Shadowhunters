@@ -13,17 +13,27 @@ namespace client {
     board(board), renderMan(renderMan), engineGame(engineGame),randomAI(randomAI){}
 
     void Client::run() {
+        sf::Clock clock; // démarre le chrono
+        sf::Time elapsed1;
+        std::cout << elapsed1.asSeconds() << std::endl;
         renderMan->init();
         while (renderMan->window.isOpen()) {
             sf::Event event;
             if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
-                static bool aiHasPlayedThisPhase = false;
-                std::cout << "[CLIENT] The Current player is an AI. His id is:"<<engineGame->getCurrentPlayer().id << std::endl;
-                randomAI->setTurnPhase(engineGame->currentTurnPhase);
-                randomAI->playPhase();
-                engineGame ->processOneCommand();
-                int i=0;
-                while(i<100000){i++;}
+                while (renderMan->window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) {
+                        renderMan->window.close();
+                    }
+                    else {}
+                }
+                elapsed1 = clock.getElapsedTime();
+                if(elapsed1.asSeconds() > 0.8f){
+                    renderMan->draw();
+                    randomAI->setTurnPhase(engineGame->currentTurnPhase);
+                    randomAI->playPhase();
+                    engineGame ->processOneCommand();
+                    clock.restart();
+                }
             }
             else{
                 while (renderMan->window.pollEvent(event)) {
@@ -77,14 +87,12 @@ namespace client {
 
     }
     void Client::YesNoAnswer(bool answer){
-        std::cout << "[client] YES NO answer chosen : " << answer << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&answer);
         }
     }
     void Client::chosenAttackTarget(int targetID) {
-        std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
@@ -92,7 +100,6 @@ namespace client {
     }
 
     void Client::cellChosen(int cellID){
-        std::cout << "[CLIENT] Chosen cell ID: " << cellID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             state::CellClass* chosenCell = nullptr;

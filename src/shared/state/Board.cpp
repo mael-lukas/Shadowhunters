@@ -208,7 +208,7 @@ namespace state
          * will be replaced by user choice later
          */
         LevelAI temporareLevel = HEURISTIC;
-        int numberOfAI = 1;
+        int numberOfAI = 3;
         //--------------------------------------------------------
 
         for(int i = 0; i < playerList.size(); i++) {

@@ -1,8 +1,6 @@
 #include "AttackCommandAI.h"
 #include "state/Player.h" 
 #include <iostream>
-#include <thread>
-#include <chrono>
 
 namespace engine {
 

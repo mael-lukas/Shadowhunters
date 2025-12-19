@@ -4,8 +4,6 @@
 #include "state/Player.h"
 #include "state/CellClass.h"
 #include "state/RollRule.h"
-#include <thread>
-#include <chrono>
 
 namespace engine {
 
