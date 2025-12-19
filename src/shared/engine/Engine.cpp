@@ -27,6 +27,16 @@ namespace engine
         if (!board->playerList.empty()) {
             currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
         }
+        state::Player& currentPlayer = getCurrentPlayer();
+        auto& equipCards = currentPlayer.equipCards;
+        for (auto it = equipCards.begin(); it != equipCards.end(); ) {
+            if ((*it)->effectTimer == state::ONELOOP) {
+                board->discardCard(*it);
+                it = equipCards.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
 
     void Engine::processOneCommand() {

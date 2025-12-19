@@ -16,6 +16,10 @@ void UseCardCommand::execute()
     if (card.effectTimer == INSTANT){
         currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
         engine.board->discardCard(&card);
+    } else if (card.effectTimer == ONELOOP){
+        currentPlayer.equipCards.push_back(&card);
+    } else {
+        currentPlayer.equipCards.push_back(&card);
     }
     isDone = true;
 }
