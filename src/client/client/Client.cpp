@@ -17,11 +17,13 @@ namespace client {
         while (renderMan->window.isOpen()) {
             sf::Event event;
             if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
+                static bool aiHasPlayedThisPhase = false;
                 std::cout << "[CLIENT] The Current player is an AI. His id is:"<<engineGame->getCurrentPlayer().id << std::endl;
-                engineGame ->processOneCommand();
                 randomAI->setTurnPhase(engineGame->currentTurnPhase);
                 randomAI->playPhase();
-                std::cout<<"After playPhase"<<std::endl;
+                engineGame ->processOneCommand();
+                int i=0;
+                while(i<100000){i++;}
             }
             else{
                 while (renderMan->window.pollEvent(event)) {

@@ -1,6 +1,6 @@
 #include "RandomAI.h"
 #include "../../shared/engine/DrawCardCommand.h"
-#include "../../shared/engine/MoveCommand.h"
+#include "../../shared/engine/MoveCommandAI.h"
 #include "../../shared/engine/AttackCommandAI.h"
 
 #include <random>
@@ -26,9 +26,8 @@ namespace ai
     void RandomAI::move() {
         if (!engine->isBusy)
         {
-            cmd = new engine::MoveCommand(*engine);
+            cmd = new engine::MoveCommandAI(*engine);
             engine->commands.push_back(cmd);
-            std::cout << "Move Function Called" << std::endl;
         }
     }
 
