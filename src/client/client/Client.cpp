@@ -97,6 +97,14 @@ namespace client {
         }
     }
 
+    void Client::woodsAnswerClicked(int buttonID) {
+        std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&buttonID);
+        }
+    }
+
     void Client::revealedClicked(){
 
     }

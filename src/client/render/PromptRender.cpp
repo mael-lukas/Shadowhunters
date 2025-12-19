@@ -13,7 +13,7 @@ namespace render {
         if (!font.loadFromFile(path + "/arial.ttf")) {
             std::cerr << "Error loading font" << std::endl;
         }
-        overlay.setSize(sf::Vector2f(800.f,600.f));
+        overlay.setSize(sf::Vector2f(800.f,750.f));
         overlay.setFillColor(sf::Color(0,0,0,200));
         overlay.setPosition(500.f,200.f);
 
@@ -48,9 +48,12 @@ namespace render {
 
         for (int i = 0; i < 8; i++) {
             woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
-            woodsButtons[i].setPosition(sf::Vector2f(540.f + (i%2)*400.f, 300.f + (i/2)*120.f));
+            woodsButtons[i].setPosition(sf::Vector2f(530.f + (i%2)*430.f, 280.f + (i/2)*110.f));
             woodsButtons[i].setFillColor(buttonColors[i/2]);
         }
+        woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
+        woodsButtons[8].setPosition(sf::Vector2f(740.f, 730.f));
+        woodsButtons[8].setFillColor(sf::Color(200,200,200));
     }
 
     void PromptRender::handleEvent(const sf::Event& event, client::Client* client) {
@@ -73,10 +76,13 @@ namespace render {
         if (activePromptType == WOODS_PROMPT) {
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-                for (int i = 0; i < woodsButtons.size(); i++) {
+                for (int i = 0; i < 8; i++) {
                     if (woodsButtons[i].getGlobalBounds().contains(clickPos)) {
-                        std::cout << "[PromptRender] Woods button " << i << " clicked." << std::endl;
+                        client->woodsAnswerClicked(i);
                     }
+                }
+                if (woodsButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->woodsAnswerClicked(-1);
                 }
             }
         }
@@ -121,7 +127,14 @@ namespace render {
             window->draw(target_players_buttons.back());
         }
         if (activePromptType == WOODS_PROMPT) {
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Deal 2 damage:\t\t\t\t\t Heal 1 wound:");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(570.f,210.f);
             window->draw(overlay);
+            window->draw(promptText);
             for (const sf::RectangleShape& button : woodsButtons) {
                 window->draw(button);
             }
