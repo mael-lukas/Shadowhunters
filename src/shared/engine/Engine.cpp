@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include "engine/DrawCardCommand.h"
+#include "engine/WoodsCommand.h"
 
 namespace engine
 {
@@ -15,7 +16,7 @@ namespace engine
         cellEffectsFactory[state::HERMITZONE] = [](Engine& engine) { return new DrawCardCommand(engine, state::HERMIT); };
         cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
         cellEffectsFactory[state::GATE] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
-        cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new DrawCardCommand(engine, state::HERMIT); };
+        cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
     }
 
     state::Player& Engine::getCurrentPlayer() {

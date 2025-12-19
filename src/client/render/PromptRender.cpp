@@ -45,6 +45,12 @@ namespace render {
             sprite.setPosition(600.f + 200.f*(i/2), 300.f + 250.f*(i%2));
             cellSprites.push_back(sprite);
         }
+
+        for (int i = 0; i < 8; i++) {
+            woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
+            woodsButtons[i].setPosition(sf::Vector2f(540.f + (i%2)*400.f, 300.f + (i/2)*120.f));
+            woodsButtons[i].setFillColor(buttonColors[i/2]);
+        }
     }
 
     void PromptRender::handleEvent(const sf::Event& event, client::Client* client) {
@@ -67,7 +73,11 @@ namespace render {
         if (activePromptType == WOODS_PROMPT) {
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-                
+                for (int i = 0; i < woodsButtons.size(); i++) {
+                    if (woodsButtons[i].getGlobalBounds().contains(clickPos)) {
+                        std::cout << "[PromptRender] Woods button " << i << " clicked." << std::endl;
+                    }
+                }
             }
         }
         if (activePromptType == YES_NO){
@@ -81,7 +91,6 @@ namespace render {
                 }
             }
         }
-
         if (activePromptType == ROLL_7) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             for (int i = 0; i < cellSprites.size(); i++) {
@@ -113,6 +122,9 @@ namespace render {
         }
         if (activePromptType == WOODS_PROMPT) {
             window->draw(overlay);
+            for (const sf::RectangleShape& button : woodsButtons) {
+                window->draw(button);
+            }
         }
         if(activePromptType == YES_NO){
             window->draw(overlay);
