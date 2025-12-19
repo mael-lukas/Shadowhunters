@@ -207,16 +207,17 @@ namespace state
          * Define Level of AI and the number of AI
          * will be replaced by user choice later
          */
-        int temporareLevel = 1;
-        int numberOfAI = 3; 
+        LevelAI temporareLevel = HEURISTIC;
+        int numberOfAI = 1;
         //--------------------------------------------------------
 
         for(int i = 0; i < playerList.size(); i++) {
             if(i<=numberOfAI-1){
-                playerList[i]->infoUser.push_back(InfoAI{true, temporareLevel});
+                playerList[i]->type=temporareLevel;
             }
             else{
-                playerList[i]->infoUser.push_back(InfoAI{false, 0});
+                temporareLevel = HUMAN;
+                playerList[i]->type= temporareLevel ;
             }
         }
         

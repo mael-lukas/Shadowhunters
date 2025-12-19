@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 namespace state
 {
@@ -34,6 +35,7 @@ namespace state
 
         //roll the attack dice
         int damage = board->rollDice(DIFF);
+        std::cout << "[ATTACK] Player " << id << " attacks Player " << player.id << " for " << damage << " damage." << std::endl;
 
         // check if reduction by equipment
         int damage_supposed = player.getAttacked(*this,damage);

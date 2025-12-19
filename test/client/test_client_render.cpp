@@ -1,6 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <SFML/Graphics.hpp>
 #include "../../src/shared/state.h"
+#include "../../src/shared/ai.h"
 #include "../../src/client/render.h"
 #include "../../src/client/client.h"
 
@@ -8,6 +9,7 @@ using namespace state;
 using namespace render;
 using namespace client;
 using namespace engine;
+using namespace ai;
 
 /*BOOST_AUTO_TEST_CASE(TestRender)
 {
@@ -53,7 +55,10 @@ BOOST_AUTO_TEST_CASE(TestRenderWithClient)
   Board bd;
   Engine eng(&bd);
   RenderManager rm(&bd);
-  Client client(&bd, &rm, &eng);
+  RandomAI randomAI(&bd, &eng);
+  //HeuristicAI heuristicAI(&bd, &eng);
+  //AdvancedAI advancedAI(&bd, &eng);
+  Client client(&bd, &rm, &eng, &randomAI);
   client.run();
 }
 

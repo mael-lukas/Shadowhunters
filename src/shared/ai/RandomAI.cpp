@@ -14,16 +14,12 @@ namespace ai
 
     RandomAI::~RandomAI() {}
 
-    void RandomAI::playerTurn() {
-        move();
-        drawCard();
-    }
-
     void RandomAI::drawCard() {
         state::CardType cardType = state::CardType(randomChoice(3));
         if (engine->isBusy == false) {
             cmd = new engine::DrawCardCommand(*engine,cardType);
             engine -> commands.push_back(cmd);
+            std::cout << "Draw Card Function Called" << std::endl;
         }
     }
 
@@ -32,17 +28,31 @@ namespace ai
         {
             cmd = new engine::MoveCommand(*engine);
             engine->commands.push_back(cmd);
+            std::cout << "Move Function Called" << std::endl;
         }
     }
 
-    void RandomAI::attackTarget(int targetID) {
+    void RandomAI::attackTarget() {
         if (engine->isBusy == false) {
             state::Player* attacker = &engine->getCurrentPlayer();
-            if(attacker->id == targetID) {
-                state::Player* attacked = engine->board->playerList[targetID].get();
+            std::cout << "Recherche voisin" << std::endl;
+            neighboursPlayers=engine->board->getNeighbours(&engine->getCurrentPlayer());
+            if(neighboursPlayers.size() == 0) {
+                cmd = new engine::AttackCommandAI(*engine, attacker, nullptr);
+                engine -> commands.push_back(cmd);
+                std::cout << "No Neighbour to attack" << std::endl;
+                return;
+            }
+
+            do {
+                targetID = randomChoice(neighboursPlayers.size());
+            }while(attacker->id == targetID);
+            if(attacker->id != targetID) {
+                state::Player* attacked = neighboursPlayers[targetID];
                 cmd = new engine::AttackCommandAI(*engine, attacker, attacked);
                 engine -> commands.push_back(cmd);
             }
+            neighboursPlayers.clear();
             
         }
     }
@@ -52,6 +62,7 @@ namespace ai
         std::mt19937 g(rd());
         std::uniform_int_distribution<int> dist(0, numberOfChoices - 1);
         return dist(g);
+        std::cout << "RandomChoice Function Called" << std::endl;
     }
 
 };

@@ -2,44 +2,51 @@
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
+#include "../../shared/ai/RandomAI.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 
 namespace client {
-    Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame) : 
-    board(board), renderMan(renderMan), engineGame(engineGame) {}
+    Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame,ai::RandomAI* randomAI) : 
+    board(board), renderMan(renderMan), engineGame(engineGame),randomAI(randomAI){}
 
     void Client::run() {
         renderMan->init();
-        if(engineGame->getCurrentPlayer().infoUser[0].isAI){
-            std::cout << "[CLIENT] The first player is an AI. Exiting client run loop." << std::endl;
-        }
-
         while (renderMan->window.isOpen()) {
             sf::Event event;
-            while (renderMan->window.pollEvent(event)) {
+            if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
+                std::cout << "[CLIENT] The Current player is an AI. His id is:"<<engineGame->getCurrentPlayer().id << std::endl;
+                engineGame ->processOneCommand();
+                randomAI->setTurnPhase(engineGame->currentTurnPhase);
+                randomAI->playPhase();
+                std::cout<<"After playPhase"<<std::endl;
+            }
+            else{
+                while (renderMan->window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     renderMan->window.close();
                 }
                 renderMan->handleEvent(event, this);
+                }
+                engineGame->processOneCommand();
+                renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
+                renderMan->draw();
+                if (engineGame->isWaitingForTargetPrompt) {
+                    renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+                }
+                else if (engineGame->isWaitingForYesNoPrompt){
+                    renderMan->openYesNoPrompt();
+                }
+                if (engineGame->isWaitingForWoodsPrompt) {
+                    renderMan->openWoodsPrompt();
+                }
+                if (engineGame->isWaitingForCellPrompt) {
+                    renderMan->openCellPrompt();
+                }
             }
-            engineGame->processOneCommand();
-            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
-            renderMan->draw();
-            if (engineGame->isWaitingForTargetPrompt) {
-                renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
-            }
-            else if (engineGame->isWaitingForYesNoPrompt){
-                renderMan->openYesNoPrompt();
-            }
-            if (engineGame->isWaitingForWoodsPrompt) {
-                renderMan->openWoodsPrompt();
-            }
-            if (engineGame->isWaitingForCellPrompt) {
-                renderMan->openCellPrompt();
-            }
+            
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }

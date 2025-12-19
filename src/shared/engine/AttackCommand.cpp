@@ -11,10 +11,14 @@ namespace engine {
 
     void AttackCommand::execute()
     {
+        std::cout << "Executing AttackCommand" << std::endl;
         if (isAttackCancelled) {
             engine.currentTurnPhase = MOVE_PHASE;
+            std::cout << "Attack cancelled." << std::endl;
             engine.isWaitingForTargetPrompt = false;
+            std::cout << "Player actuelle: " << engine.getCurrentPlayer().id << std::endl;
             engine.goToNextPlayer();
+            std::cout << "Player future: " << engine.getCurrentPlayer().id << std::endl;
             isDone = true;
             return;
         }
@@ -26,8 +30,11 @@ namespace engine {
         else {
             engine.currentTurnPhase = MOVE_PHASE;
             attacker->attackOther(*attacked);
+            std::cout << "Target attacked." << std::endl;
             engine.isWaitingForTargetPrompt = false;
+            std::cout << "Player actuelle: " << engine.getCurrentPlayer().id << std::endl;
             engine.goToNextPlayer();
+            std::cout << "Player future: " << engine.getCurrentPlayer().id << std::endl;
             isDone = true;
         }
         
