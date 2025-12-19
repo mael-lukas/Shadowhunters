@@ -78,4 +78,14 @@ namespace render {
         prompt_render.activePromptType = ROLL_7;
         needsRedraw = true;
     }
+
+    void RenderManager::openTargetPrompt() {
+        prompt_render.activePromptType = EFFECT_TARGET;
+        std::vector<state::Player*> allPlayers;
+        for (auto& p : board->playerList) {
+            allPlayers.push_back(p.get());
+        }
+        prompt_render.targetPlayers = allPlayers;
+        needsRedraw = true;
+    }
 }

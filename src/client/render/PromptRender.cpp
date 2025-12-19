@@ -99,6 +99,16 @@ namespace render {
                 }
             }
         }
+        if (activePromptType == EFFECT_TARGET) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < targetPlayers.size(); i++) {
+                    if (target_players_buttons[i].getGlobalBounds().contains(clickPos)) {
+                        client->chosenAttackTarget(targetPlayers[i]->id);
+                    }
+                }
+            }
+        }
     }
 
     void PromptRender::draw() {
@@ -142,6 +152,20 @@ namespace render {
             window->draw(promptText);
             for (const sf::Sprite& sprite : cellSprites) {
                 window->draw(sprite);
+            }
+        }
+        if (activePromptType == EFFECT_TARGET) {
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Choose a target for the card effect:");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(700.f,190.f);
+            window->draw(overlay);
+            window->draw(promptText);
+            for (int i = 0; i < targetPlayers.size(); i++) {
+                target_players_buttons[i].setFillColor(buttonColors[targetPlayers[i]->id]);
+                window->draw(target_players_buttons[i]);
             }
         }
     }

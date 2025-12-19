@@ -42,6 +42,9 @@ namespace client {
         if (engineGame->isWaitingForCellPrompt) {
             renderMan->openCellPrompt();
         }
+        if (engineGame->isWaitingForCardTargetPrompt) {
+            renderMan->openTargetPrompt();
+        }
     }
 
     void Client::moveClicked() {
@@ -94,6 +97,14 @@ namespace client {
                 }
             } 
             engineGame->waitingCommand->receivePromptAnswer(chosenCell);
+        }
+    }
+
+    void Client::chosenEffectTarget(int targetID) {
+        std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
     }
 
