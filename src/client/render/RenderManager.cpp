@@ -81,4 +81,9 @@ namespace render {
         prompt_render.activePromptType = ROLL_7;
         needsRedraw = true;
     }
+    void RenderManager::openStealEquipPrompt(std::vector<state::CardClass*> potentialCards){
+        prompt_render.activePromptType = STEAL_EQUIP;
+        prompt_render.potentialCards = potentialCards;
+        needsRedraw = true;
+    }
 }

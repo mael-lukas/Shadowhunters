@@ -1,5 +1,6 @@
 #include "StealEquipCommand.h"
 #include "Engine.h"
+#include <algorithm>
 
 namespace engine {
 
@@ -8,15 +9,49 @@ namespace engine {
     {}
 
     void StealEquipCommand::execute() {
-        
+        if (isPromptCancelled) {
+            engine.currentTurnPhase = BATTLE_PHASE;
+            engine.isWaitingForCardStealPrompt = false;
+            isDone = true;
+            return;
+        }
+        if (isWaitingForCard) {
+            engine.isWaitingForCardStealPrompt = true;
+            engine.waitingCommand = this;
+            return;
+        }
+        else {
+            engine.currentTurnPhase = BATTLE_PHASE;
+            if (equipCard != nullptr) {
+                for (auto& player : engine.board->playerList) {
+                    if (player.get() != thief) {
+                        auto& equipCards = player->equipCards;
+                        auto it = std::find(equipCards.begin(), equipCards.end(), equipCard);
+                        if (it != equipCards.end()) {
+                            equipCards.erase(it);
+                            thief->equipACard(equipCard);
+                            break;
+                        }
+                    }
+                }
+            }
+            engine.isWaitingForCardStealPrompt = false;
+            isDone = true;
+        }
     }
 
     void StealEquipCommand::receivePromptAnswer(void* answer) {
-        if (isPromptCancelled) {
+        state::CardClass* chosenCard = static_cast<state::CardClass*>(answer);
+        if (chosenCard == nullptr) {
+            isPromptCancelled = true;
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardStealPrompt = false;
         }
-        if (isWaitingForVictim) {
-        }
-        if (isWaitingForCard) {
+        else {
+            equipCard = chosenCard;
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardStealPrompt = false;
+            isWaitingForCard = false;
         }
     }
 }

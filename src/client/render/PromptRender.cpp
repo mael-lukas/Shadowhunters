@@ -17,19 +17,20 @@ namespace render {
         overlay.setFillColor(sf::Color(0,0,0,200));
         overlay.setPosition(500.f,200.f);
 
+/////////////// Initialize ATTACK TARGET buttons ////////////////
         for (int i = 0; i < board->playerList.size(); i++) {
             target_players_buttons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
             target_players_buttons[i].setPosition(sf::Vector2f(700.f,250.f + i*120.f));
             target_players_buttons[i].setFillColor(sf::Color(150,150,150,255));
         }
-
         buttonColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
-        cardTypeColors = {sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color::Red};
+
         yes_button.setPosition(sf::Vector2f(600.f,370.f));
         yes_button.setFillColor(sf::Color(7,196,0));
         no_button.setPosition(sf::Vector2f(900.f,370.f));
         no_button.setFillColor(sf::Color(224,2,2));
 
+/////////////// Initialize CELL CHOICE (ROLL 7) buttons ////////////////
          for (int i = 0; i < state::OUTSIDE; i++) {
             sf::Texture texture;
             std::string cellPath = path + "/sh_card_textures/sh_area/area0" + std::to_string(i) + ".jpg";
@@ -45,13 +46,18 @@ namespace render {
             sprite.setPosition(600.f + 200.f*(i/2), 300.f + 250.f*(i%2));
             cellSprites.push_back(sprite);
         }
+
+/////////////// Initialize UNDERWORLD GATE PROMPT buttons ////////////////
+        cardTypeColors = {sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color(200,200,200)};
         for (int i=0;i<4;i++){
-            gateButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
-            gateButtons[i].setPosition(sf::Vector2f(540.f + (i%3)*400.f, 300.f + (i/3)*120.f));
+            gateButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
+            gateButtons[i].setPosition(sf::Vector2f(730.f,280.f + i*120.f));
             gateButtons[i].setFillColor(cardTypeColors[i]);
-            gateButtons[i].setOutlineColor(sf::Color(200,200,200));
+            gateButtons[i].setOutlineColor(sf::Color(150,150,150));
             gateButtons[i].setOutlineThickness(3.f);
         }
+
+/////////////// Initialize WEIRD WOODS PROMPT buttons ////////////////
         for (int i = 0; i < 8; i++) {
             woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
             woodsButtons[i].setPosition(sf::Vector2f(530.f + (i%2)*430.f, 280.f + (i/2)*110.f));
@@ -59,8 +65,21 @@ namespace render {
         }
         woodsButtons.push_back(sf::RectangleShape(sf::Vector2f(300.f,80.f)));
         woodsButtons[8].setPosition(sf::Vector2f(740.f, 730.f));
-        woodsButtons[8].setFillColor(sf::Color(200,200,200));
+        woodsButtons[8].setFillColor(sf::Color(150,150,150));
+        
+/////////////// Initialize STEAL EQUIP CARD PROMPT buttons ////////////////
+        for (int i = 0; i < 4; i++) {
+            stealEquipButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
+            stealEquipButtons[i].setPosition(sf::Vector2f(700.f,250.f + i*120.f));
+            stealEquipButtons[i].setFillColor(sf::Color::Black);
+            stealEquipButtons[i].setOutlineColor(sf::Color(200,200,200));
+            stealEquipButtons[i].setOutlineThickness(3.f);
+        }
+        stealEquipButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
+        stealEquipButtons[4].setPosition(sf::Vector2f(700.f,250.f + 4*120.f));
+        stealEquipButtons[4].setFillColor(sf::Color(150,150,150,255));
     }
+
 
     void PromptRender::handleEvent(const sf::Event& event, client::Client* client) {
         if (activePromptType == NONE) {
@@ -112,13 +131,26 @@ namespace render {
                         client->cardTypeChosen(i);
                     }
                 }
+            }
         }
-    }
         if (activePromptType == ROLL_7) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             for (int i = 0; i < cellSprites.size(); i++) {
                 if (cellSprites[i].getGlobalBounds().contains(clickPos)) {
                     client->cellChosen(i);
+                }
+            }
+        }
+        if (activePromptType == STEAL_EQUIP){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < potentialCards.size(); i++) {
+                    if (stealEquipButtons[i].getGlobalBounds().contains(clickPos)) {
+                        client->stealEquipAnswer(potentialCards[i]);
+                    }
+                }
+                if (stealEquipButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->stealEquipAnswer(nullptr);
                 }
             }
         }
@@ -135,6 +167,18 @@ namespace render {
             promptText.setCharacterSize(34);
             promptText.setFillColor(sf::Color::White);
             promptText.setPosition(700.f,190.f);
+
+            sf::Text cancel_text; 
+            cancel_text.setFont(font);
+            cancel_text.setCharacterSize(35);
+            cancel_text.setFillColor(sf::Color::Black);
+            cancel_text.setString("Cancel");
+            sf::FloatRect buttonRect = cancel_text.getLocalBounds();
+            cancel_text.setOrigin(buttonRect.left + buttonRect.width / 2.0f,
+                                    buttonRect.top + buttonRect.height / 2.0f);
+            cancel_text.setPosition(target_players_buttons.back().getPosition().x + target_players_buttons.back().getSize().x / 2.0f,
+                                        target_players_buttons.back().getPosition().y + target_players_buttons.back().getSize().y / 2.0f);
+
             window->draw(overlay);
             window->draw(promptText);
             for (int i = 0; i < targetPlayers.size(); i++) {
@@ -142,6 +186,7 @@ namespace render {
                 window->draw(target_players_buttons[i]);
             }
             window->draw(target_players_buttons.back());
+            window->draw(cancel_text);
         }
         if (activePromptType == WOODS_PROMPT) {
             sf::Text promptText;
@@ -150,22 +195,60 @@ namespace render {
             promptText.setCharacterSize(34);
             promptText.setFillColor(sf::Color::White);
             promptText.setPosition(570.f,210.f);
+
+            sf::Text cancel_text; 
+            cancel_text.setFont(font);
+            cancel_text.setCharacterSize(35);
+            cancel_text.setFillColor(sf::Color::Black);
+            cancel_text.setString("Cancel");
+            sf::FloatRect buttonRect = cancel_text.getLocalBounds();
+            cancel_text.setOrigin(buttonRect.left + buttonRect.width / 2.0f,
+                                    buttonRect.top + buttonRect.height / 2.0f);
+            cancel_text.setPosition(woodsButtons.back().getPosition().x + woodsButtons.back().getSize().x / 2.0f,
+                                        woodsButtons.back().getPosition().y + woodsButtons.back().getSize().y / 2.0f);
+
             window->draw(overlay);
             window->draw(promptText);
             for (const sf::RectangleShape& button : woodsButtons) {
                 window->draw(button);
             }
+            window->draw(cancel_text);
         }
-
         if (activePromptType == GATE_PROMPT){
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("From which deck would you like to draw a card ?");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(570.f,210.f);
+
+            sf::Text cancel_text; 
+            cancel_text.setFont(font);
+            cancel_text.setCharacterSize(35);
+            cancel_text.setFillColor(sf::Color::Black);
+            cancel_text.setString("Cancel");
+            sf::FloatRect buttonRect = cancel_text.getLocalBounds();
+            cancel_text.setOrigin(buttonRect.left + buttonRect.width / 2.0f,
+                                    buttonRect.top + buttonRect.height / 2.0f);
+            cancel_text.setPosition(gateButtons.back().getPosition().x + gateButtons.back().getSize().x / 2.0f,
+                                        gateButtons.back().getPosition().y + gateButtons.back().getSize().y / 2.0f);
+
             window->draw(overlay);
+            window->draw(promptText);
             for (const sf::RectangleShape& button : gateButtons) {
                 window->draw(button);
-            } 
+            }
+            window->draw(cancel_text);
         }
-
         if(activePromptType == YES_NO){
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Would you like to draw a card:");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(700.f,290.f);
             window->draw(overlay);
+            window->draw(promptText);
             window->draw(yes_button);
             window->draw(no_button);
         }
@@ -181,6 +264,33 @@ namespace render {
             for (const sf::Sprite& sprite : cellSprites) {
                 window->draw(sprite);
             }
+        }
+        if (activePromptType == STEAL_EQUIP){
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Choose an equip card to steal:");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(650.f,190.f);
+
+            sf::Text cancel_text; 
+            cancel_text.setFont(font);
+            cancel_text.setCharacterSize(35);
+            cancel_text.setFillColor(sf::Color::Black);
+            cancel_text.setString("Cancel");
+            sf::FloatRect buttonRect = cancel_text.getLocalBounds();
+            cancel_text.setOrigin(buttonRect.left + buttonRect.width / 2.0f,
+                                    buttonRect.top + buttonRect.height / 2.0f);
+            cancel_text.setPosition(stealEquipButtons.back().getPosition().x + stealEquipButtons.back().getSize().x / 2.0f,
+                                        stealEquipButtons.back().getPosition().y + stealEquipButtons.back().getSize().y / 2.0f);
+
+            window->draw(overlay);
+            window->draw(promptText);
+            for (int i = 0; i < potentialCards.size(); i++) {
+                window->draw(stealEquipButtons[i]);
+            }
+            window->draw(stealEquipButtons.back());
+            window->draw(cancel_text);
         }
     }
 }
