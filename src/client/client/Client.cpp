@@ -65,6 +65,18 @@ namespace client {
         if (engineGame->isWaitingForCellPrompt) {
             renderMan->openCellPrompt();
         }
+        if (engineGame->isWaitingForGatePrompt){
+            renderMan->openGatePrompt();
+        }
+        if (engineGame->isWaitingForCardStealPrompt){
+            std::vector<state::CardClass*> potentialCards;
+            for (auto& player : engineGame->board->playerList) {
+                if (player.get() != &engineGame->getCurrentPlayer()) {
+                    potentialCards.insert(potentialCards.end(), player->equipCards.begin(), player->equipCards.end());
+                }
+            }
+            renderMan->openStealEquipPrompt(potentialCards);
+        }
     }
 
     void Client::moveClicked() {
@@ -117,11 +129,27 @@ namespace client {
         }
     }
 
+    void Client::cardTypeChosen(int type){
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        std::cout << "Client cardtype chosen: " << type << std::endl;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&type);
+        }
+    }
+
     void Client::woodsAnswerClicked(int buttonID) {
         std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&buttonID);
+        }
+    }
+
+    void Client::stealEquipAnswer(state::CardClass* chosenCard){
+        std::cout << "[CLIENT] Stolen card chosen:" << chosenCard << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(chosenCard);
         }
     }
 

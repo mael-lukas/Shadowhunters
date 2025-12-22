@@ -240,6 +240,7 @@ namespace state
             break;
         case DARK:
             darkPack.discard(card);
+            break;
         default:
         std::cout<<"error discarding"<<std::endl;
             break;
