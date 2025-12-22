@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_CASE(TestState) {
     PackOfCards whitePack(WHITECOUNT, WHITE);
     PackOfCards darkPack(DARKCOUNT-WHITECOUNT-1,DARK);
     PackOfCards hermitPack(HERMITCOUNT-DARKCOUNT-1,HERMIT);
-    BOOST_CHECK_EQUAL(darkPack.listOfCards[0]->name,DARK1);
+    BOOST_CHECK_EQUAL(darkPack.listOfCards[0]->name,SPIDER1);
     hermitPack.shuffle();
     CardClass* drawnHermit = hermitPack.draw();
     std::cout << std::to_string(static_cast<Card>(drawnHermit->name)) << std::endl;
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(TestState) {
 BOOST_AUTO_TEST_CASE(TestStateBoard) {
     Board bd;
     BOOST_CHECK((2 <= bd.rollDice(SUM) && bd.rollDice(SUM) <= 10));
-    BOOST_CHECK_EQUAL(bd.drawDark()->name,DARK1);
+    BOOST_CHECK_EQUAL(bd.drawDark()->name,SPIDER1);
     BOOST_CHECK_EQUAL(bd.drawWhite()->name,WHITE1);
     BOOST_CHECK_EQUAL(bd.drawHermit()->name,HERMIT1);
 

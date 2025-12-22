@@ -8,6 +8,9 @@
 #include "engine/DrawCardCommand.h"
 #include "engine/WoodsCommand.h"
 #include "engine/StealEquipCommand.h"
+#include "engine/DarkSpiderCommand.h"
+#include "engine/DarkDollCommand.h"
+#include "engine/DarkBatCommand.h"
 
 namespace engine
 {
@@ -19,6 +22,14 @@ namespace engine
         cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new StealEquipCommand(engine, &engine.getCurrentPlayer()); };
         cellEffectsFactory[state::GATE] = [](Engine& engine) { return new GateCommand(engine); };
         cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
+
+        cardEffectsFactory[state::SPIDER1] = [](Engine& engine) { return new DarkSpiderCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::SPIDER2] = [](Engine& engine) { return new DarkSpiderCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::DOLL1] = [](Engine& engine) { return new DarkDollCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::DOLL2] = [](Engine& engine) { return new DarkDollCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT1] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT2] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT3] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
     }
 
     state::Player& Engine::getCurrentPlayer() {
