@@ -73,9 +73,17 @@ namespace render {
         prompt_render.activePromptType = WOODS_PROMPT;
         needsRedraw = true;
     }   
-
+    void RenderManager::openGatePrompt(){
+        prompt_render.activePromptType = GATE_PROMPT;
+        needsRedraw = true;
+    }
     void RenderManager::openCellPrompt() {
         prompt_render.activePromptType = ROLL_7;
+        needsRedraw = true;
+    }
+    void RenderManager::openStealEquipPrompt(std::vector<state::CardClass*> potentialCards){
+        prompt_render.activePromptType = STEAL_EQUIP;
+        prompt_render.potentialCards = potentialCards;
         needsRedraw = true;
     }
 }

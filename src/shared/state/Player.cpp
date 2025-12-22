@@ -50,4 +50,9 @@ namespace state
         return role;
     }
 
+    void Player::equipACard(CardClass* card) {
+        equipCards.push_back(card);
+        notifyObservers(StateEventID::PLAYER_CHANGED);
+    }
+
 }

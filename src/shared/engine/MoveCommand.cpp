@@ -32,8 +32,7 @@ namespace engine {
         state::CellClass *newPos = oldPos;
 
         while (newPos == oldPos) {
-            //int die = engine.board->rollDice(state::RollRule::SUM);
-            int die = 7;
+            int die = engine.board->rollDice(state::RollRule::SUM);
             if (die == 7) {
                 isWaitingForCell = true;
                 return;
