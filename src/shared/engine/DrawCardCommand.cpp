@@ -10,7 +10,10 @@ namespace engine
     {
         cardType = type;
     }
-
+    DrawCardCommand::DrawCardCommand(Engine& engine,state::CardType type,bool draw): engine(engine),isWaitingForValidation(false),draw(draw)
+    {
+        cardType = type;
+    }
     void DrawCardCommand::execute()
     {
         if (isWaitingForValidation) {

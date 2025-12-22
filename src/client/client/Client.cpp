@@ -42,6 +42,9 @@ namespace client {
         if (engineGame->isWaitingForCellPrompt) {
             renderMan->openCellPrompt();
         }
+        if (engineGame->isWaitingForGatePrompt){
+            renderMan->openGatePrompt();
+        }
     }
 
     void Client::moveClicked() {
@@ -94,6 +97,14 @@ namespace client {
                 }
             } 
             engineGame->waitingCommand->receivePromptAnswer(chosenCell);
+        }
+    }
+
+    void Client::cardTypeChosen(int type){
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        std::cout << "Client cardtype chosen: " << type << std::endl;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&type);
         }
     }
 

@@ -14,8 +14,9 @@ void UseCardCommand::execute()
 {
     state::Player& currentPlayer = engine.getCurrentPlayer();
     if (card.effectTimer == INSTANT){
-        currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
+        
         engine.board->discardCard(&card);
+        currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
     }
     isDone = true;
 }

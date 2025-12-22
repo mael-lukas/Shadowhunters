@@ -3,6 +3,7 @@
 #include "state/Player.h"
 #include <random>
 #include <algorithm>
+#include "GateCommand.h"
 #include <iostream>
 #include "engine/DrawCardCommand.h"
 #include "engine/WoodsCommand.h"
@@ -15,7 +16,7 @@ namespace engine
         cellEffectsFactory[state::CHURCH] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
         cellEffectsFactory[state::HERMITZONE] = [](Engine& engine) { return new DrawCardCommand(engine, state::HERMIT); };
         cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
-        cellEffectsFactory[state::GATE] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
+        cellEffectsFactory[state::GATE] = [](Engine& engine) { return new GateCommand(engine); };
         cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
     }
 
