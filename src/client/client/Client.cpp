@@ -37,31 +37,17 @@ namespace client {
             }
             else{
                 while (renderMan->window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    renderMan->window.close();
-                }
-                renderMan->handleEvent(event, this);
+                    if (event.type == sf::Event::Closed) {
+                        renderMan->window.close();
+                    }
+                    renderMan->handleEvent(event, this);
                 }
                 engineGame->processOneCommand();
                 renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
                 renderMan->draw();
-                if (engineGame->isWaitingForTargetPrompt) {
-                    renderMan->openTargetPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
-                }
-                else if (engineGame->isWaitingForYesNoPrompt){
-                    renderMan->openYesNoPrompt();
-                }
-                if (engineGame->isWaitingForWoodsPrompt) {
-                    renderMan->openWoodsPrompt();
-                }
-                if (engineGame->isWaitingForCellPrompt) {
-                    renderMan->openCellPrompt();
-                }
+                lookForPrompts();
             }
-            engineGame->processOneCommand();
-            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
-            renderMan->draw();
-            lookForPrompts();
+            
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
