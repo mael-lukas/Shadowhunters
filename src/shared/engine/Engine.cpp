@@ -3,9 +3,11 @@
 #include "state/Player.h"
 #include <random>
 #include <algorithm>
+#include "GateCommand.h"
 #include <iostream>
 #include "engine/DrawCardCommand.h"
 #include "engine/WoodsCommand.h"
+#include "engine/StealEquipCommand.h"
 
 namespace engine
 {
@@ -14,8 +16,8 @@ namespace engine
         cellEffectsFactory[state::GRAVEYARD] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
         cellEffectsFactory[state::CHURCH] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
         cellEffectsFactory[state::HERMITZONE] = [](Engine& engine) { return new DrawCardCommand(engine, state::HERMIT); };
-        cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new DrawCardCommand(engine, state::DARK); };
-        cellEffectsFactory[state::GATE] = [](Engine& engine) { return new DrawCardCommand(engine, state::WHITE); };
+        cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new StealEquipCommand(engine, &engine.getCurrentPlayer()); };
+        cellEffectsFactory[state::GATE] = [](Engine& engine) { return new GateCommand(engine); };
         cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
     }
 

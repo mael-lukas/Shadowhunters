@@ -73,19 +73,17 @@ namespace render {
         prompt_render.activePromptType = WOODS_PROMPT;
         needsRedraw = true;
     }   
-
+    void RenderManager::openGatePrompt(){
+        prompt_render.activePromptType = GATE_PROMPT;
+        needsRedraw = true;
+    }
     void RenderManager::openCellPrompt() {
         prompt_render.activePromptType = ROLL_7;
         needsRedraw = true;
     }
-
-    void RenderManager::openTargetPrompt() {
-        prompt_render.activePromptType = EFFECT_TARGET;
-        std::vector<state::Player*> allPlayers;
-        for (auto& p : board->playerList) {
-            allPlayers.push_back(p.get());
-        }
-        prompt_render.targetPlayers = allPlayers;
+    void RenderManager::openStealEquipPrompt(std::vector<state::CardClass*> potentialCards){
+        prompt_render.activePromptType = STEAL_EQUIP;
+        prompt_render.potentialCards = potentialCards;
         needsRedraw = true;
     }
 }

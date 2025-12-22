@@ -14,38 +14,9 @@ void UseCardCommand::execute()
 {
     state::Player& currentPlayer = engine.getCurrentPlayer();
     if (card.effectTimer == INSTANT){
-        // Handle effects before discarding
-        if (card.name == DARK1) {
-            if (target == nullptr) {
-                isWaitingForPrompt = true;
-                engine.isWaitingForCardTargetPrompt = true;
-                engine.waitingCommand = this;
-                return;
-            } else {
-                // Apply effect: deal 2 damage to target, heal self by 1
-                target->receiveDamage(2);
-                currentPlayer.receiveDamage(-1);
-            }
-        }
-        if (card.name == DARK2) {
-            if (target == nullptr) {
-                std::cout<<"Waiting for target prompt..."<<std::endl;
-                isWaitingForPrompt = true;
-                engine.isWaitingForCardTargetPrompt = true;
-                engine.waitingCommand = this;
-                return;
-            } else {
-                // Apply effect: deal 2 damage to target, heal self by 1
-                target->receiveDamage(2);
-                currentPlayer.receiveDamage(-1);
-            }
-        }
-        currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
+        
         engine.board->discardCard(&card);
-    } else if (card.effectTimer == ONELOOP){
-        currentPlayer.equipCards.push_back(&card);
-    } else {
-        currentPlayer.equipCards.push_back(&card);
+        currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
     }
     isDone = true;
 }
