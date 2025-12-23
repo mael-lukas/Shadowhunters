@@ -54,6 +54,9 @@ namespace client {
             }
             renderMan->openStealEquipPrompt(potentialCards);
         }
+        if (engineGame->isWaitingForCardEffectTargetPrompt){
+            renderMan->openCardEffectTargetPrompt();
+        }
     }
 
     void Client::moveClicked() {
@@ -130,6 +133,14 @@ namespace client {
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(chosenCard);
+        }
+    }
+
+    void Client::chosenCardEffectTarget(int targetID){
+        std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
     }
 

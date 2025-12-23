@@ -5,9 +5,15 @@
 #include <algorithm>
 #include "GateCommand.h"
 #include <iostream>
-#include "engine/DrawCardCommand.h"
-#include "engine/WoodsCommand.h"
-#include "engine/StealEquipCommand.h"
+#include "DrawCardCommand.h"
+#include "WoodsCommand.h"
+#include "StealEquipCommand.h"
+#include "DarkSpiderCommand.h"
+#include "DarkDollCommand.h"
+#include "DarkBatCommand.h"
+#include "WhiteFlareCommand.h"
+#include "WhiteWaterCommand.h"
+#include "WhiteAidCommand.h"
 
 namespace engine
 {
@@ -19,6 +25,22 @@ namespace engine
         cellEffectsFactory[state::ALTAR] = [](Engine& engine) { return new StealEquipCommand(engine, &engine.getCurrentPlayer()); };
         cellEffectsFactory[state::GATE] = [](Engine& engine) { return new GateCommand(engine); };
         cellEffectsFactory[state::WOODS] = [](Engine& engine) { return new WoodsCommand(engine); };
+
+        cardEffectsFactory[state::SPIDER1] = [](Engine& engine) { return new DarkSpiderCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::SPIDER2] = [](Engine& engine) { return new DarkSpiderCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::DOLL1] = [](Engine& engine) { return new DarkDollCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::DOLL2] = [](Engine& engine) { return new DarkDollCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT1] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT2] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BAT3] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::FLARE1] = [](Engine& engine) { return new WhiteFlareCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::FLARE2] = [](Engine& engine) { return new WhiteFlareCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER1] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER2] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER3] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER4] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::AID1] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::AID2] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
     }
 
     state::Player& Engine::getCurrentPlayer() {
@@ -29,6 +51,17 @@ namespace engine
         if (!board->playerList.empty()) {
             currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
         }
+        state::Player& currentPlayer = getCurrentPlayer();
+        auto& equipCards = currentPlayer.equipCards;
+        for (auto it = equipCards.begin(); it != equipCards.end(); ) {
+            if ((*it)->effectTimer == state::ONELOOP) {
+                board->discardCard(*it);
+                it = equipCards.erase(it);
+            } else {
+                ++it;
+            }
+        }
+        
     }
 
     void Engine::processOneCommand() {

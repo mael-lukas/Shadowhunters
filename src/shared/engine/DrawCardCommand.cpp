@@ -1,7 +1,7 @@
 #include "DrawCardCommand.h"
 #include "state/CardClass.h"
+#include "UseHermitCommand.h"
 #include <iostream>
-#include "UseCardCommand.h"
 
 namespace engine
 {
@@ -22,10 +22,11 @@ namespace engine
             return;
         }
         else {
+            engine.currentTurnPhase = BATTLE_PHASE;
             if(draw){
+                engine.currentTurnPhase = CARD_EFFECT_PHASE;
                 drawCard();
             }
-            engine.currentTurnPhase = BATTLE_PHASE;
             engine.isWaitingForYesNoPrompt = false;
             isDone = true;
         }
@@ -44,7 +45,12 @@ namespace engine
             card = engine.board->drawHermit();
         }
         currentPlayer.equipCards.push_back(card);
-        engine.commands.emplace_back(new UseCardCommand(engine,*card));
+        if (cardType == state::HERMIT) {
+            engine.commands.emplace_back(new UseHermitCommand(engine, *card));
+        }
+        else {
+            engine.commands.emplace_back(engine.cardEffectsFactory[card->name](engine));
+        }
     }
     
     void DrawCardCommand::receivePromptAnswer(void* answer){

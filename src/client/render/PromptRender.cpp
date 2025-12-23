@@ -78,6 +78,13 @@ namespace render {
         stealEquipButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
         stealEquipButtons[4].setPosition(sf::Vector2f(700.f,250.f + 4*120.f));
         stealEquipButtons[4].setFillColor(sf::Color(150,150,150,255));
+
+//////////////// Initialize CARD EFFECT TARGET PROMPT buttons ////////////////
+        for (int i = 0; i < board->playerList.size(); i++) {
+            cardEffectTargetButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
+            cardEffectTargetButtons[i].setPosition(sf::Vector2f(700.f,250.f + i*120.f));
+            cardEffectTargetButtons[i].setFillColor(buttonColors[i]);
+        }
     }
 
 
@@ -151,6 +158,16 @@ namespace render {
                 }
                 if (stealEquipButtons.back().getGlobalBounds().contains(clickPos)) {
                     client->stealEquipAnswer(nullptr);
+                }
+            }
+        }
+        if (activePromptType == CARD_EFFECT_TARGET){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos)) {
+                        client->chosenCardEffectTarget(board->playerList[i]->id);
+                    }
                 }
             }
         }
@@ -291,6 +308,20 @@ namespace render {
             }
             window->draw(stealEquipButtons.back());
             window->draw(cancel_text);
+        }
+        if (activePromptType == CARD_EFFECT_TARGET){
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Choose a target for the card effect:");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(650.f,190.f);
+
+            window->draw(overlay);
+            window->draw(promptText);
+            for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
+                window->draw(cardEffectTargetButtons[i]);
+            }
         }
     }
 }

@@ -86,4 +86,8 @@ namespace render {
         prompt_render.potentialCards = potentialCards;
         needsRedraw = true;
     }
+    void RenderManager::openCardEffectTargetPrompt(){
+        prompt_render.activePromptType = CARD_EFFECT_TARGET;
+        needsRedraw = true;
+    }
 }
