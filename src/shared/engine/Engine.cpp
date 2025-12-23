@@ -5,12 +5,15 @@
 #include <algorithm>
 #include "GateCommand.h"
 #include <iostream>
-#include "engine/DrawCardCommand.h"
-#include "engine/WoodsCommand.h"
-#include "engine/StealEquipCommand.h"
-#include "engine/DarkSpiderCommand.h"
-#include "engine/DarkDollCommand.h"
-#include "engine/DarkBatCommand.h"
+#include "DrawCardCommand.h"
+#include "WoodsCommand.h"
+#include "StealEquipCommand.h"
+#include "DarkSpiderCommand.h"
+#include "DarkDollCommand.h"
+#include "DarkBatCommand.h"
+#include "WhiteFlareCommand.h"
+#include "WhiteWaterCommand.h"
+#include "WhiteAidCommand.h"
 
 namespace engine
 {
@@ -30,6 +33,14 @@ namespace engine
         cardEffectsFactory[state::BAT1] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::BAT2] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::BAT3] = [](Engine& engine) { return new DarkBatCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::FLARE1] = [](Engine& engine) { return new WhiteFlareCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::FLARE2] = [](Engine& engine) { return new WhiteFlareCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER1] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER2] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER3] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::WATER4] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::AID1] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::AID2] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
     }
 
     state::Player& Engine::getCurrentPlayer() {
@@ -50,6 +61,7 @@ namespace engine
                 ++it;
             }
         }
+        
     }
 
     void Engine::processOneCommand() {

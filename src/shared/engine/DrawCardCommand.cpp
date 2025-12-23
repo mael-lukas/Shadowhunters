@@ -22,8 +22,9 @@ namespace engine
             return;
         }
         else {
-            engine.currentTurnPhase = CARD_EFFECT_PHASE;
+            engine.currentTurnPhase = BATTLE_PHASE;
             if(draw){
+                engine.currentTurnPhase = CARD_EFFECT_PHASE;
                 drawCard();
             }
             engine.isWaitingForYesNoPrompt = false;
