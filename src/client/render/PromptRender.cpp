@@ -109,7 +109,7 @@ namespace render {
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
                 for (int i = 0; i < 8; i++) {
-                    if (woodsButtons[i].getGlobalBounds().contains(clickPos)) {
+                    if (woodsButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i/2]->isAlive) {
                         client->woodsAnswerClicked(i);
                     }
                 }
@@ -165,7 +165,7 @@ namespace render {
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
                 for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
-                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos)) {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i]->isAlive) {
                         client->chosenCardEffectTarget(board->playerList[i]->id);
                     }
                 }
@@ -226,9 +226,12 @@ namespace render {
 
             window->draw(overlay);
             window->draw(promptText);
-            for (const sf::RectangleShape& button : woodsButtons) {
-                window->draw(button);
+            for (int i = 0; i < woodsButtons.size() - 1; i++) {
+                if (board->playerList[i/2]->isAlive) {
+                    window->draw(woodsButtons[i]);
+                }
             }
+            window->draw(woodsButtons.back());
             window->draw(cancel_text);
         }
         if (activePromptType == GATE_PROMPT){
@@ -320,7 +323,9 @@ namespace render {
             window->draw(overlay);
             window->draw(promptText);
             for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
-                window->draw(cardEffectTargetButtons[i]);
+                if (board->playerList[i]->isAlive) {
+                    window->draw(cardEffectTargetButtons[i]);
+                }
             }
         }
     }

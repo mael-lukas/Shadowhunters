@@ -19,6 +19,7 @@ namespace state
         if (wounds >= maxHP) {
             wounds = maxHP;
             isAlive = false;
+            board->movePlayerTo(this, board->cellList.back());
         }
         notifyObservers(StateEventID::PLAYER_CHANGED);
         return isAlive;

@@ -54,6 +54,29 @@ namespace render {
         }
     }
 
+    void RenderManager::drawGameOverScreen(engine::GameState gameState) {
+        sf::Text text;
+        text.setFont(ui_render.font);
+        text.setCharacterSize(72);
+        text.setFillColor(sf::Color::White);
+        sf::FloatRect bounds = text.getLocalBounds();
+        text.setOrigin(bounds.left + bounds.width / 2.f,
+                       bounds.top  + bounds.height / 2.f);
+        window.clear();
+        if (gameState == engine::DRAW) {
+            text.setPosition(550.f, 350.f);
+            text.setString("Both parties are dead. \n\t\t It's a draw");
+        }
+        else {
+            text.setPosition(360.f, 350.f);
+            std::string winners = (gameState == engine::HUNTERS_WIN) ? "Hunters" : "Shadows";
+            std::string losers = (gameState == engine::HUNTERS_WIN) ? "Shadows" : "Hunters";
+            text.setString("All " + losers + " have been eliminated. \n\t\t\tThe " + winners + " win !\n");
+        }
+        window.draw(text);
+        window.display();
+    }
+
     void RenderManager::getNotified(state::StateEventID e) {
         needsRedraw = true;
     }

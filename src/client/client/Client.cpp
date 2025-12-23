@@ -8,12 +8,23 @@
 
 
 namespace client {
-    Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame) : 
-    board(board), renderMan(renderMan), engineGame(engineGame) {}
+    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame) : 
+    renderMan(renderMan), engineGame(engineGame) {}
 
     void Client::run() {
         renderMan->init();
         while (renderMan->window.isOpen()) {
+            if (engineGame->currentGameState != engine::ONGOING) {
+                sf::Event event;
+                while (renderMan->window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) {
+                        renderMan->window.close();
+                    }
+                }
+                renderMan->drawGameOverScreen(engineGame->currentGameState);
+                std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                continue;
+            }
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
@@ -25,6 +36,10 @@ namespace client {
             renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
             renderMan->draw();
             lookForPrompts();
+            engineGame->checkForVictory();
+            if (engineGame->currentGameState != engine::ONGOING) {
+                std::cout << "Game Over!" << std::endl;
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
@@ -48,7 +63,7 @@ namespace client {
         if (engineGame->isWaitingForCardStealPrompt){
             std::vector<state::CardClass*> potentialCards;
             for (auto& player : engineGame->board->playerList) {
-                if (player.get() != &engineGame->getCurrentPlayer()) {
+                if (player.get() != &engineGame->getCurrentPlayer() && player->isAlive) {
                     potentialCards.insert(potentialCards.end(), player->equipCards.begin(), player->equipCards.end());
                 }
             }
