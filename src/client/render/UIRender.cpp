@@ -14,7 +14,7 @@ namespace render {
             std::cerr << "Error loading font" << std::endl;
         }
 
-        move_button.setSize(sf::Vector2f(250.f,140.f));
+        move_button.setSize(sf::Vector2f(200.f,140.f));
         move_button.setFillColor(sf::Color::White);
         move_button.setPosition(26.f,395.f);
         move_button_text.setFont(font);
@@ -28,7 +28,7 @@ namespace render {
                                      move_button.getPosition().y + move_button.getSize().y / 2.0f);
 
 
-        cell_effect_button.setSize(sf::Vector2f(250.f,140.f));
+        cell_effect_button.setSize(sf::Vector2f(200.f,140.f));
         cell_effect_button.setFillColor(sf::Color::Blue);
         cell_effect_button.setPosition(26.f,570.f);
         cell_effect_button_text.setFont(font);
@@ -41,7 +41,7 @@ namespace render {
         cell_effect_button_text.setPosition(cell_effect_button.getPosition().x + cell_effect_button.getSize().x / 2.0f,
                                      cell_effect_button.getPosition().y + cell_effect_button.getSize().y / 2.0f);
 
-        attack_button.setSize(sf::Vector2f(250.f,140.f));
+        attack_button.setSize(sf::Vector2f(200.f,140.f));
         attack_button.setFillColor(sf::Color::Red);
         attack_button.setPosition(26.f,745.f);
         attack_button_text.setFont(font);
