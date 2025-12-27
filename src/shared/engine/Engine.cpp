@@ -41,6 +41,8 @@ namespace engine
         cardEffectsFactory[state::WATER4] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::AID1] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::AID2] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
+
+        board->playerList[0]->isTurnPlayer = true;
     }
 
     state::Player& Engine::getCurrentPlayer() {
@@ -49,12 +51,15 @@ namespace engine
 
     void Engine::goToNextPlayer() {
         if (!board->playerList.empty()) {
+            state::Player& currentPlayer = getCurrentPlayer();
+            currentPlayer.isTurnPlayer = false;
             currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
             while (!getCurrentPlayer().isAlive) {
                 currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
             }
         }
         state::Player& currentPlayer = getCurrentPlayer();
+        currentPlayer.isTurnPlayer = true;
         auto& equipCards = currentPlayer.equipCards;
         for (auto it = equipCards.begin(); it != equipCards.end(); ) {
             if ((*it)->effectTimer == state::ONELOOP) {

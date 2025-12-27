@@ -4,7 +4,7 @@
 
 namespace render {
 
-    UIRender::UIRender (sf::RenderWindow* win) : window(win) {
+    UIRender::UIRender (state::Board* board, sf::RenderWindow* win) : board(board), window(win) {
         currentTurnPhase = engine::TurnPhase::MOVE_PHASE;
     }
 
@@ -13,6 +13,24 @@ namespace render {
         if (!font.loadFromFile(path + "/arial.ttf")) {
             std::cerr << "Error loading font" << std::endl;
         }
+
+        for (int i = 0; i < 4; i++) {
+            sf::Texture texture;
+            if (!texture.loadFromFile(path + "/sh_card_textures/sh_character_bubbles/char" + std::to_string(i) + ".png")) {
+                std::cerr << "Error loading character texture " << i << std::endl;
+            }
+            characterTextures.push_back(texture);
+        }
+
+        for (int i = 0; i < characterTextures.size(); i++) {
+            sf::Sprite sprite;
+            sprite.setTexture(characterTextures[i]);
+            sprite.setScale(0.3f, 0.3f);
+            characterSprites.push_back(sprite);
+        }
+
+        characterBubblesPos = {sf::Vector2f(500.f, 860.f), sf::Vector2f(440.f, 230.f), sf::Vector2f(1320.f, 170.f), sf::Vector2f(1410.f, 800.f)};
+        playerColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
 
         move_button.setSize(sf::Vector2f(200.f,140.f));
         move_button.setFillColor(sf::Color::White);
@@ -76,6 +94,28 @@ namespace render {
     }
 
     void UIRender::draw () {
+        for (int i = 0; i < board->playerList.size(); i++) {
+            state::Player* player = board->playerList[i].get();
+            sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
+            sprite.setRotation(i * 90.f);
+            sprite.setPosition(characterBubblesPos[i]);
+            sf::FloatRect bounds = sprite.getGlobalBounds();
+            sf::Vector2f sprite_center = sf::Vector2f(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
+            float outline = 10.f;
+            sf::CircleShape circle;
+            circle.setRadius(bounds.width / 2.f + outline);
+            circle.setOrigin(circle.getRadius(), circle.getRadius());
+            circle.setPosition(sprite_center);
+            circle.setFillColor(playerColors[i]);
+            if (player->isTurnPlayer) {
+                circle.setOutlineThickness(5.f);
+                circle.setOutlineColor(sf::Color::White);
+            } else {
+                circle.setOutlineThickness(0.f);
+            }
+            window->draw(circle);
+            window->draw(sprite);
+        }
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);

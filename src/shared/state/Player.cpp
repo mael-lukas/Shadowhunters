@@ -2,7 +2,7 @@
 
 namespace state
 {
-    Player::Player(Board* board,int maxHP,Role role) : board(board),maxHP(maxHP),role(role)
+    Player::Player(Board* board,int maxHP,Role role, CharacterName name) : board(board),maxHP(maxHP),role(role),name(name)
     {
         position= board->cellList.back();
     }

@@ -8,7 +8,7 @@ namespace render {
     player_render(board,&window),
     card_render(board,&window),
     prompt_render(board,&window),
-    ui_render(&window),
+    ui_render(board,&window),
     needsRedraw(true) {}
 
     void RenderManager::init() {
