@@ -31,7 +31,7 @@ namespace render {
 
         characterBubblesPos = {sf::Vector2f(500.f, 860.f), sf::Vector2f(440.f, 230.f), sf::Vector2f(1320.f, 170.f), sf::Vector2f(1410.f, 800.f)};
         playerColors = {sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Red};
-
+        // create move button
         move_button.setSize(sf::Vector2f(200.f,140.f));
         move_button.setFillColor(sf::Color::White);
         move_button.setPosition(26.f,395.f);
@@ -45,7 +45,7 @@ namespace render {
         move_button_text.setPosition(move_button.getPosition().x + move_button.getSize().x / 2.0f,
                                      move_button.getPosition().y + move_button.getSize().y / 2.0f);
 
-
+        
         cell_effect_button.setSize(sf::Vector2f(200.f,140.f));
         cell_effect_button.setFillColor(sf::Color::Blue);
         cell_effect_button.setPosition(26.f,570.f);
@@ -71,13 +71,31 @@ namespace render {
                                    buttonRect2.top + buttonRect2.height / 2.0f);
         attack_button_text.setPosition(attack_button.getPosition().x + attack_button.getSize().x / 2.0f,
                                      attack_button.getPosition().y + attack_button.getSize().y / 2.0f);
+
+
+        // create reveal button
+        reveal_button.setSize(sf::Vector2f(200.f,140.f));
+        reveal_button.setFillColor(sf::Color::Blue);
+        reveal_button.setPosition(26.f,195.f);
+        reveal_button_text.setFont(font);
+        reveal_button_text.setCharacterSize(26);
+        reveal_button_text.setFillColor(sf::Color::White);
+        reveal_button_text.setString("Reveal yourself");
+        sf::FloatRect buttonRect4 = reveal_button_text.getLocalBounds();
+        reveal_button_text.setOrigin(buttonRect4.left + buttonRect4.width / 2.0f,
+                                   buttonRect4.top + buttonRect4.height / 2.0f);
+        reveal_button_text.setPosition(reveal_button.getPosition().x + reveal_button.getSize().x / 2.0f,
+                                     reveal_button.getPosition().y + reveal_button.getSize().y / 2.0f);
     }
 
     void UIRender::handleEvent (const sf::Event& event, client::Client* client) {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
-
+            if (reveal_button.getGlobalBounds().contains(clickPos)){
+                std::cout << "Reveal button clicked" << std::endl;
+                client->revealedClicked(); 
+            }
             if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move button clicked" << std::endl;
                 client->moveClicked(); 
@@ -110,12 +128,19 @@ namespace render {
             if (player->isTurnPlayer) {
                 circle.setOutlineThickness(5.f);
                 circle.setOutlineColor(sf::Color::White);
+                if(player->revealed==false){
+                window->draw(reveal_button);
+                window->draw(reveal_button_text);
+                }
             } else {
                 circle.setOutlineThickness(0.f);
             }
             window->draw(circle);
-            window->draw(sprite);
+            if (player->revealed==true){
+            window->draw(sprite);}
+
         }
+        
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);
