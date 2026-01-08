@@ -83,10 +83,12 @@ namespace state{
     {
         if (revealed == false)
         {
+            std::cout << "[CAPACITY] vampire not revealed, normal damage" << std::endl;
             return Player::attackOther(other);
         }
         else
         {
+            std::cout << "[CAPACITY] Vampire  revealed, heal damage" << std::endl;
             int damage = board->rollDice(DIFF);
             // Calcul des dégâts après défense/équipement
             int damage_supposed = other.getAttacked(*this, damage);
