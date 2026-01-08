@@ -110,17 +110,22 @@ namespace engine
         }
     }
 
-    // void Engine::startTurn() {
-    //     commands.clear();
-    // }
-
-
-    // void Engine::endTurn()
-    // {
-    //     if (!board->playerList.empty())
-    //     {
-    //         currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
-    //     }
-    // }
+    void Engine::processOneCommandMT() {
+        if (commands.empty()) {
+            return;
+        }
+        isBusy = true;
+        Command* cmd = commands.front();
+        cmd->execute(); //executeMT();
+        if (cmd->isDone) {
+            commands.erase(commands.begin());
+            isBusy = false;
+        }
+    }
+    
+    void Engine::update() {
+        processOneCommandMT();
+        checkForVictory();
+    }
 
 }
