@@ -1,6 +1,8 @@
 #include "UIRender.h"
 #include <iostream>
 #include "client/Client.h"
+#include "../shared/state/CharacterName.h"
+#include "../shared/state/Subject.h"
 
 namespace render {
 
@@ -20,6 +22,11 @@ namespace render {
                 std::cerr << "Error loading character texture " << i << std::endl;
             }
             characterTextures.push_back(texture);
+            sf::Texture texture2;
+            if (!texture2.loadFromFile(path + "/sh_card_textures/sh_characters/" + std::to_string(i) + ".jpg")) {
+                std::cerr << "Error loading character texture " << i << std::endl;
+            }
+            characterFullCard.push_back(texture2);
         }
 
         for (int i = 0; i < characterTextures.size(); i++) {
@@ -27,6 +34,10 @@ namespace render {
             sprite.setTexture(characterTextures[i]);
             sprite.setScale(0.3f, 0.3f);
             characterSprites.push_back(sprite);
+            sf::Sprite sprite2;
+            sprite2.setTexture(characterFullCard[i]);
+            sprite2.setScale(0.3f, 0.3f);
+            characterCardSprite.push_back(sprite2);
         }
 
         characterBubblesPos = {sf::Vector2f(500.f, 860.f), sf::Vector2f(440.f, 230.f), sf::Vector2f(1320.f, 170.f), sf::Vector2f(1410.f, 800.f)};
@@ -95,18 +106,36 @@ namespace render {
             if (reveal_button.getGlobalBounds().contains(clickPos)){
                 std::cout << "Reveal button clicked" << std::endl;
                 client->revealedClicked(); 
+                return;
             }
             if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move button clicked" << std::endl;
                 client->moveClicked(); 
+                return;
             }
             if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Cell effect button clicked" << std::endl;
                 client->cellEffectClicked();
+                return;
             }
             if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Attack button clicked" << std::endl;
                 client->damageClicked();
+                return;
+            }
+            for(int i = 0; i < board->playerList.size(); i++){
+                state::Player* player = board->playerList[i].get();
+                sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
+                sprite.setRotation(i * 90.f);
+                sprite.setPosition(characterBubblesPos[i]);
+                std::cout<< "is each player tested, displaying info"<<player->name<< std::endl;
+                if(sprite.getGlobalBounds().contains(clickPos)){
+                    std::cout<< "clicked on player, displaying info"<<player->name<< std::endl;
+                    selectedPlayer = player;
+                    draw();
+                    window->display();
+                return;
+                }
             }
         }
     }
@@ -140,7 +169,12 @@ namespace render {
             window->draw(sprite);}
 
         }
-        
+        if(selectedPlayer){
+            sf::Sprite sprite = characterCardSprite[static_cast<int>(selectedPlayer->name)];
+            sprite.setPosition(1500.f,200.f);
+            window->draw(sprite);
+            selectedPlayer = nullptr;
+        }
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);
