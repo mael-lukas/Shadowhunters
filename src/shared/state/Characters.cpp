@@ -13,17 +13,17 @@ namespace state{
     // Define the constructor of each character
 
     // Define Emi : 10 Hp, hunter
-    Emi::Emi(Board* board):Player::Player(board,10,HUNTER){};
+    Emi::Emi(Board* board):Player::Player(board,10,HUNTER, EMI){};
     // Franklin : 12 Hp, hunter
-    Franklin::Franklin(Board* board):Player::Player(board,12,HUNTER){};
+    Franklin::Franklin(Board* board):Player::Player(board,12,HUNTER, FRANKLIN){};
     // Georges: 14 Hp, hunter
-    Georges::Georges(Board* board):Player::Player(board,14,HUNTER){};
+    Georges::Georges(Board* board):Player::Player(board,14,HUNTER, GEORGES){};
     //Vampire: 13 Hp, shadow
-    Vampire::Vampire(Board* board):Player::Player(board,13,SHADOW){};
+    Vampire::Vampire(Board* board):Player::Player(board,13,SHADOW, VAMPIRE){};
     //Unknown: 11 Hp, shadow
-    Unknown::Unknown(Board* board):Player::Player(board,11,SHADOW){};
+    Unknown::Unknown(Board* board):Player::Player(board,11,SHADOW, UNKNOWN){};
     //Werewolf: 14 Hp, shadow
-    Werewolf::Werewolf(Board* board):Player::Player(board,14,SHADOW){};
+    Werewolf::Werewolf(Board* board):Player::Player(board,14,SHADOW, WEREWOLF){};
 
     //Overwrite some function
 
@@ -83,10 +83,12 @@ namespace state{
     {
         if (revealed == false)
         {
+            std::cout << "[CAPACITY] vampire not revealed, normal damage" << std::endl;
             return Player::attackOther(other);
         }
         else
         {
+            std::cout << "[CAPACITY] Vampire  revealed, heal damage" << std::endl;
             int damage = board->rollDice(DIFF);
             // Calcul des dégâts après défense/équipement
             int damage_supposed = other.getAttacked(*this, damage);

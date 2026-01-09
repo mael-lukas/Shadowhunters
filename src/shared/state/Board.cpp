@@ -245,5 +245,6 @@ namespace state
         std::cout<<"error discarding"<<std::endl;
             break;
         }
+        notifyObservers(CARD_CHANGED);
     }
 }

@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_CASE(TestState) {
     PackOfCards whitePack(WHITECOUNT, WHITE);
     PackOfCards darkPack(DARKCOUNT-WHITECOUNT-1,DARK);
     PackOfCards hermitPack(HERMITCOUNT-DARKCOUNT-1,HERMIT);
-    BOOST_CHECK_EQUAL(darkPack.listOfCards[0]->name,DARK1);
+    BOOST_CHECK_EQUAL(darkPack.listOfCards[0]->name,SPIDER1);
     hermitPack.shuffle();
     CardClass* drawnHermit = hermitPack.draw();
     std::cout << std::to_string(static_cast<Card>(drawnHermit->name)) << std::endl;
@@ -18,14 +18,14 @@ BOOST_AUTO_TEST_CASE(TestState) {
     std::cout << "White draw size: " << whitePack.listOfCards.size() << std::endl;
     std::cout << "White discard size: " << whitePack.discardPile.size() << std::endl;
     CardClass* drawnWhite = whitePack.draw();
-    BOOST_CHECK_EQUAL(drawnWhite->name, WHITE1);
+    BOOST_CHECK_EQUAL(drawnWhite->name, FLARE1);
     BOOST_CHECK_EQUAL(whitePack.listOfCards.size(), 1);
     whitePack.discard(drawnWhite);
     BOOST_CHECK_EQUAL(whitePack.discardPile.size(), 1);
     std::cout << "White draw size: " << whitePack.listOfCards.size() << std::endl;
     std::cout << "White discard size: " << whitePack.discardPile.size() << std::endl;
     CardClass* drawnWhite2 = whitePack.draw();
-    BOOST_CHECK_EQUAL(drawnWhite->name, WHITE1);
+    BOOST_CHECK_EQUAL(drawnWhite->name, FLARE1);
     BOOST_CHECK_EQUAL(whitePack.listOfCards.size(), 0);
     whitePack.discard(drawnWhite2);
     BOOST_CHECK_EQUAL(whitePack.discardPile.size(), 2);
@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_CASE(TestState) {
 BOOST_AUTO_TEST_CASE(TestStateBoard) {
     Board bd;
     BOOST_CHECK((2 <= bd.rollDice(SUM) && bd.rollDice(SUM) <= 10));
-    BOOST_CHECK_EQUAL(bd.drawDark()->name,DARK1);
-    BOOST_CHECK_EQUAL(bd.drawWhite()->name,WHITE1);
+    BOOST_CHECK_EQUAL(bd.drawDark()->name,SPIDER1);
+    BOOST_CHECK_EQUAL(bd.drawWhite()->name,FLARE1);
     BOOST_CHECK_EQUAL(bd.drawHermit()->name,HERMIT1);
 
     std::vector<Player*> supposed_neighbours = bd.cellList[OUTSIDE]->playersInCell;

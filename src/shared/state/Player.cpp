@@ -3,7 +3,7 @@
 
 namespace state
 {
-    Player::Player(Board* board,int maxHP,Role role) : board(board),maxHP(maxHP),role(role)
+    Player::Player(Board* board,int maxHP,Role role, CharacterName name) : board(board),maxHP(maxHP),role(role),name(name)
     {
         position= board->cellList.back();
     }
@@ -20,6 +20,7 @@ namespace state
         if (wounds >= maxHP) {
             wounds = maxHP;
             isAlive = false;
+            board->movePlayerTo(this, board->cellList.back());
         }
         notifyObservers(StateEventID::PLAYER_CHANGED);
         return isAlive;

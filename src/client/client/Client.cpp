@@ -2,15 +2,15 @@
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
-#include "../../shared/ai/RandomAI.h"
+#include "../../shared/engine/RevealCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 
 namespace client {
-    Client::Client(state::Board* board, render::RenderManager* renderMan, engine::Engine* engineGame,ai::RandomAI* randomAI) : 
-    board(board), renderMan(renderMan), engineGame(engineGame),randomAI(randomAI){}
+    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame) : 
+    renderMan(renderMan), engineGame(engineGame) {}
 
     void Client::run() {
         sf::Clock clock; // démarre le chrono
@@ -18,6 +18,17 @@ namespace client {
         std::cout << elapsed1.asSeconds() << std::endl;
         renderMan->init();
         while (renderMan->window.isOpen()) {
+            if (engineGame->currentGameState != engine::ONGOING) {
+                sf::Event event;
+                while (renderMan->window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) {
+                        renderMan->window.close();
+                    }
+                }
+                renderMan->drawGameOverScreen(engineGame->currentGameState);
+                std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                continue;
+            }
             sf::Event event;
             if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
                 while (renderMan->window.pollEvent(event)) {
@@ -35,19 +46,14 @@ namespace client {
                     clock.restart();
                 }
             }
-            else{
-                while (renderMan->window.pollEvent(event)) {
-                    if (event.type == sf::Event::Closed) {
-                        renderMan->window.close();
-                    }
-                    renderMan->handleEvent(event, this);
-                }
-                engineGame->processOneCommand();
-                renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
-                renderMan->draw();
-                lookForPrompts();
+            engineGame->processOneCommand();
+            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
+            renderMan->draw();
+            lookForPrompts();
+            engineGame->checkForVictory();
+            if (engineGame->currentGameState != engine::ONGOING) {
+                std::cout << "Game Over!" << std::endl;
             }
-            
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
     }
@@ -71,18 +77,29 @@ namespace client {
         if (engineGame->isWaitingForCardStealPrompt){
             std::vector<state::CardClass*> potentialCards;
             for (auto& player : engineGame->board->playerList) {
-                if (player.get() != &engineGame->getCurrentPlayer()) {
+                if (player.get() != &engineGame->getCurrentPlayer() && player->isAlive) {
                     potentialCards.insert(potentialCards.end(), player->equipCards.begin(), player->equipCards.end());
                 }
             }
             renderMan->openStealEquipPrompt(potentialCards);
         }
+        if (engineGame->isWaitingForCardEffectTargetPrompt){
+            renderMan->openCardEffectTargetPrompt();
+        }
     }
 
     void Client::moveClicked() {
         if (!engineGame->isBusy)
-        {
+        {   
+            
             cmd = new engine::MoveCommand(*engineGame);
+            engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void Client::revealedClicked(){
+        if (!engineGame->isBusy){
+            cmd = new engine::RevealCommand(*engineGame,engineGame->getCurrentPlayer().id);
             engineGame->commands.push_back(cmd);
         }
     }
@@ -153,7 +170,13 @@ namespace client {
         }
     }
 
-    void Client::revealedClicked(){
-
+    void Client::chosenCardEffectTarget(int targetID){
+        std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
     }
+
+
 }

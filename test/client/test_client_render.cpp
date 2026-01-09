@@ -55,9 +55,10 @@ BOOST_AUTO_TEST_CASE(TestRenderWithClient)
   Board bd;
   Engine eng(&bd);
   RenderManager rm(&bd);
-  RandomAI randomAI(&bd, &eng);
-  //HeuristicAI heuristicAI(&bd, &eng);
   //AdvancedAI advancedAI(&bd, &eng);
+  //HeuristicAI heuristicAI(&bd, &eng);
+  RandomAI randomAI(&bd, &eng);
+  Client client(&rm, &eng);
   Client client(&bd, &rm, &eng, &randomAI);
   client.run();
 }
