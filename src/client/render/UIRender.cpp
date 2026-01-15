@@ -103,7 +103,7 @@ namespace render {
         capacity_button.setFillColor(sf::Color::Green);
         capacity_button.setPosition(26.f,195.f);
         capacity_button_text.setFont(font);
-        capacity_button_text.setCharacterSize(18);
+        capacity_button_text.setCharacterSize(26);
         capacity_button_text.setFillColor(sf::Color::White);
         capacity_button_text.setString("Capacity\nOne time use");
         sf::FloatRect buttonRect5 = capacity_button_text.getLocalBounds();
@@ -127,7 +127,7 @@ namespace render {
                 }
             }
             
-            // Check reveal button first (only shown when current player is not revealed)
+            // Check reveal button first
             if (currentPlayer && !currentPlayer->revealed && 
                 reveal_button.getGlobalBounds().contains(clickPos)){
                 std::cout << "Reveal button clicked" << std::endl;
@@ -135,7 +135,7 @@ namespace render {
                 return;
             }
             
-            // Check capacity button (only shown when current player is revealed, Franklin/Georges, and capacity not used)
+            // Check capacity button
             if (currentPlayer && currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
                 currentPlayer->revealed &&
                 (currentPlayer->name == state::CharacterName::FRANKLIN || 
