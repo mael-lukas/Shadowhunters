@@ -47,17 +47,9 @@ namespace state{
 
         if (revealed)
         {
-            if (capacityUsed)
-            {
-                return;
-            }
-            capacityUsed = true;
-
-            // Fait par l'engine
-            // Player *target = engine->chooseTarget(*this);
-            // int dmg = board->rollDice(ONLYD4);
-            // if (target)
-            //  target->receiveDamage(dmg);
+            // Note: The actual command creation and execution 
+            // should be handled by the engine when this capacity is triggered
+            // capacityUsed is now set in FranklinCapacityCommand::execute()
         }
     }
 
@@ -66,16 +58,9 @@ namespace state{
 
         if (revealed)
         {
-            if (capacityUsed) {
-                return;
-            }
-            capacityUsed = true;
-
-            // Fait par l'engine
-            // Player *target = engine->chooseTarget(*this);
-            // int dmg = board->rollDice(ONLYD6);
-            //: if (target)
-            // target->receiveDamage(dmg);
+            // Note: The actual command creation and execution 
+            // should be handled by the engine when this capacity is triggered
+            // capacityUsed is now set in GeorgesCapacityCommand::execute()
         }
     }
 
@@ -88,13 +73,13 @@ namespace state{
         }
         else
         {
-            std::cout << "[CAPACITY] Vampire  revealed, heal damage" << std::endl;
             int damage = board->rollDice(DIFF);
             // Calcul des dégâts après défense/équipement
             int damage_supposed = other.getAttacked(*this, damage);
             // Si des dégâts ont effectivement été infligés → soin de 2
             if (damage_supposed > 0)
             {
+                std::cout << "[CAPACITY] Vampire  revealed, heal damage" << std::endl;
                 this->receiveDamage(-2);
                 int real_damage = damage_supposed;
                 return dealDamage(damage_supposed, other);
@@ -115,9 +100,9 @@ namespace state{
         }
         else
         {
-            std::cout << "[CAPACITY] Werewolf counter attacks" << std::endl;
             int counter = board->rollDice(DIFF);
-            dealDamage(counter, source);
+            bool counterResult = dealDamage(counter, source);
+            std::cout << "[CAPACITY] Werewolf inflicted " << counter << " counter damage" << std::endl;
             return Player::getAttacked(source, damage);
         }
     }

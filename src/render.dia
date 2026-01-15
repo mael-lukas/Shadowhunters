@@ -6328,19 +6328,19 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O42">
       <dia:attribute name="obj_pos">
-        <dia:point val="89.028,11.7935"/>
+        <dia:point val="89.128,11.8435"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="88.978,11.7435;114.603,33.6435"/>
+        <dia:rectangle val="89.078,11.7935;114.703,35.2935"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="89.028,11.7935"/>
+        <dia:point val="89.128,11.8435"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="25.524999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="21.800000000000004"/>
+        <dia:real val="23.400000000000006"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#UIRender#</dia:string>
@@ -6689,6 +6689,52 @@
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
             <dia:string>#reveal_button_text#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#sf::Text#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#capacity_button#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#sf::RectangleShape#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#capacity_button_text#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#sf::Text#</dia:string>
@@ -7145,16 +7191,16 @@
         <dia:point val="86.8317,58.9039"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="86.7817,22.6435;89.0276,59.7539"/>
+        <dia:rectangle val="86.7817,23.4935;89.1276,59.7539"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="86.8317,58.9039"/>
-        <dia:point val="88.3047,58.9039"/>
-        <dia:point val="88.3047,22.6935"/>
-        <dia:point val="88.9776,22.6935"/>
+        <dia:point val="88.3547,58.9039"/>
+        <dia:point val="88.3547,23.5435"/>
+        <dia:point val="89.0776,23.5435"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -7187,7 +7233,7 @@
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="14"/>
-        <dia:connection handle="1" to="O42" connection="58"/>
+        <dia:connection handle="1" to="O42" connection="62"/>
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
@@ -7351,17 +7397,17 @@
     </dia:object>
     <dia:object type="UML - Dependency" version="1" id="O46">
       <dia:attribute name="obj_pos">
-        <dia:point val="114.553,15.2935"/>
+        <dia:point val="114.653,15.3435"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="114.503,15.2435;153.363,56.7931"/>
+        <dia:rectangle val="114.603,15.2935;153.363,56.7931"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="114.553,15.2935"/>
-        <dia:point val="148.293,15.2935"/>
+        <dia:point val="114.653,15.3435"/>
+        <dia:point val="148.293,15.3435"/>
         <dia:point val="148.293,56.3431"/>
         <dia:point val="152.913,56.3431"/>
       </dia:attribute>
@@ -7407,16 +7453,16 @@
         <dia:point val="62.9584,22.7598"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="62.9084,21.9666;89.4276,23.5666"/>
+        <dia:rectangle val="62.9084,22.3916;89.5276,23.9935"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="62.9584,22.7598"/>
-        <dia:point val="75.768,22.7598"/>
-        <dia:point val="75.768,22.6935"/>
-        <dia:point val="88.9776,22.6935"/>
+        <dia:point val="75.818,22.7598"/>
+        <dia:point val="75.818,23.5435"/>
+        <dia:point val="89.0776,23.5435"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -7452,7 +7498,7 @@
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O5" connection="50"/>
-        <dia:connection handle="1" to="O42" connection="58"/>
+        <dia:connection handle="1" to="O42" connection="62"/>
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
