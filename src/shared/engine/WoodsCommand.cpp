@@ -1,6 +1,8 @@
 #include "WoodsCommand.h"
 #include "Engine.h"
 
+#include <iostream>
+
 namespace engine {
     WoodsCommand::WoodsCommand(Engine& engine)
         : engine(engine)
@@ -27,6 +29,30 @@ namespace engine {
             engine.isWaitingForWoodsPrompt = false;
             isDone = true;
         }   
+    }
+
+     void WoodsCommand::executeAI()
+    {
+        std::cout<< "Executing WoodsCommandAI "  << std::endl;
+        switch(woods_Choice) {
+            case ATTACK:
+                damage = 2;
+                target->receiveDamage(damage);
+                isDone = true;
+                break;
+            case HEAL:
+                damage = -1;
+                break;
+            default:
+                engine.currentTurnPhase = BATTLE_PHASE;
+                isDone = true;
+                return;
+        }
+        engine.currentTurnPhase = BATTLE_PHASE;
+        if (target != nullptr) {
+            target->receiveDamage(damage);
+        }
+        isDone = true;
     }
 
     void WoodsCommand::receivePromptAnswer(void* answer)

@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "../../shared/engine/Engine.h"
 #include <iostream>
 
 namespace ai
@@ -15,7 +16,7 @@ namespace ai
     void AI::playPhase() {
         switch(currentTurnPhase) {
             case engine::MOVE_PHASE:
-                std::cout << "Move Phase" << std::endl;
+                std::cout << "Move Phase of the id: " << engine->getCurrentPlayer().id <<" and this is a : "<< engine->getCurrentPlayer().type << std::endl;
                 move();
                 break;
             case engine::BATTLE_PHASE:
@@ -24,7 +25,7 @@ namespace ai
                 break;
             case engine::CELL_EFFECT_PHASE:
                 std::cout << "CELL_EFFECT_PHASE" << std::endl;
-                drawCard();
+                cellEffect();
                 break;
             default:
             std::cerr << "Unknown turn phase!" << std::endl;
@@ -43,6 +44,10 @@ namespace ai
 
     void AI::attackTarget() {
         // Implementation of AI attacking a target
+    }
+
+    void AI::cellEffect() {
+        // Implementation of AI using cell effects
     }
 
 };

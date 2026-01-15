@@ -9,8 +9,8 @@
 
 
 namespace client {
-    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame) : 
-    renderMan(renderMan), engineGame(engineGame) {}
+    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame, ai::RandomAI* randomAI) : 
+    renderMan(renderMan), engineGame(engineGame), randomAI(randomAI) {}
 
     void Client::run() {
         sf::Clock clock; // démarre le chrono
@@ -31,6 +31,7 @@ namespace client {
             }
             sf::Event event;
             if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
+                std::cout << "[CLIENT] AI turn started." << std::endl;
                 while (renderMan->window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) {
                         renderMan->window.close();
@@ -40,16 +41,42 @@ namespace client {
                 elapsed1 = clock.getElapsedTime();
                 if(elapsed1.asSeconds() > 0.8f){
                     renderMan->draw();
-                    randomAI->setTurnPhase(engineGame->currentTurnPhase);
-                    randomAI->playPhase();
+                    switch(engineGame->getCurrentPlayer().type ){
+                        case state::LevelAI::RANDOM:
+                            std::cout << "[CLIENT] Random AI turn started." << std::endl;
+                            randomAI->setTurnPhase(engineGame->currentTurnPhase);
+                            randomAI->playPhase();
+                            break;
+                        case state::LevelAI::HEURISTIC:
+                            std::cout << "[CLIENT] Heuristic AI turn started." << std::endl;
+                            break;
+                        case state::LevelAI::ADVANCED:
+                            std::cout << "[CLIENT] Advanced AI turn started." << std::endl;
+                            break;
+                        default:
+                            std::cerr << "Unknown AI level!" << std::endl;
+                            break;
+                    }
                     engineGame ->processOneCommand();
                     clock.restart();
                 }
             }
-            engineGame->processOneCommand();
-            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
-            renderMan->draw();
-            lookForPrompts();
+            else{
+                std::cout << "[CLIENT] Human turn started." << std::endl;
+                while (renderMan->window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) {
+                        renderMan->window.close();
+                    }
+                    renderMan->handleEvent(event, this);
+                }
+                engineGame->processOneCommand();
+                renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
+                renderMan->draw();
+                lookForPrompts();
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(15));
+            
             engineGame->checkForVictory();
             if (engineGame->currentGameState != engine::ONGOING) {
                 std::cout << "Game Over!" << std::endl;

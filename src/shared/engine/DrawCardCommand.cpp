@@ -32,6 +32,15 @@ namespace engine
         }
     }
 
+    void DrawCardCommand::executeAI(){
+        if(draw){
+            drawCard();
+        }
+        draw = false;
+        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.isWaitingForYesNoPrompt = false;
+        isDone = true;
+    }
     void DrawCardCommand::drawCard(){
         state::Player& currentPlayer = engine.getCurrentPlayer();
         state::CardClass* card;

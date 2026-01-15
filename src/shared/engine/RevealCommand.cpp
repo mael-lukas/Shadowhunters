@@ -17,4 +17,10 @@ namespace engine {
         isDone = true;
     }
 
+    void RevealCommand::executeAI()
+    {
+        engine.board->playerList[playerId]->revealed=true;
+        isDone = true;
+    }
+
 }

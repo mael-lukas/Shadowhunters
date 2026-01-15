@@ -32,6 +32,23 @@ namespace engine {
         }
     }
 
+    void AttackCommand::executeAI()
+    {
+        if(attacked == nullptr) {
+            std::cout << "[AI] " << attacker->id << " chooses not to attack." << std::endl;
+            engine.goToNextPlayer();
+            engine.currentTurnPhase = MOVE_PHASE;
+            isDone = true;
+            return;
+        }
+        std::cout << "[AI] " << attacker->id << " attacks " << attacked->id << std::endl;
+        attacker->attackOther(*attacked);
+        attacked = nullptr;
+        engine.goToNextPlayer();
+        engine.currentTurnPhase = MOVE_PHASE;
+        isDone = true;
+    }
+
     void AttackCommand::receivePromptAnswer(void* answer)
     {
         int targetID = *static_cast<int*>(answer);

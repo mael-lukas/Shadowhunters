@@ -4,6 +4,7 @@
 #include "state/Player.h"
 #include "state/CellClass.h"
 #include "state/RollRule.h"
+#include <iostream>
 
 namespace engine {
 
@@ -42,6 +43,27 @@ namespace engine {
         engine.currentTurnPhase = CELL_EFFECT_PHASE;
         engine.board->movePlayerTo(&player, newPos);
         isDone = true;
+    }
+
+    void MoveCommand::executeAI()
+    {
+        std::cout << "Move AI"<< std::endl;
+        state::Player& player = engine.getCurrentPlayer();
+        state::CellClass *oldPos = player.position;
+        state::CellClass *newPos = oldPos;
+
+        /*while (newPos == oldPos) {
+            int die;
+            do {
+                die = engine.board->rollDice(state::RollRule::SUM);
+            } while (die == 7);
+            newPos = engine.board->dieToCell(die);
+        }*/
+        engine.currentTurnPhase = BATTLE_PHASE;
+        std::cout << "Choice Position : " << choice_Position << std::endl;
+        engine.board->movePlayerTo(&player, choice_Position);
+        isDone = true;
+        
     }
 
     void MoveCommand::receivePromptAnswer(void* answer)

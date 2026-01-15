@@ -19,3 +19,14 @@ void UseHermitCommand::execute()
     engine.currentTurnPhase = BATTLE_PHASE;
     isDone = true;
 }
+
+void UseHermitCommand::executeAI()
+{
+    state::Player& currentPlayer = engine.getCurrentPlayer();
+    if (card.effectTimer == INSTANT){
+        engine.board->discardCard(&card);
+        currentPlayer.equipCards.erase(std::find(currentPlayer.equipCards.begin(),currentPlayer.equipCards.end(),&card));
+    }
+    engine.currentTurnPhase = BATTLE_PHASE;
+    isDone = true;
+}

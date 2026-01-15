@@ -24,6 +24,26 @@ namespace engine{
         isDone=true;
     }
 
+    void GateCommand::executeAI(){
+
+        switch(gate_Choice){
+            case DARK:
+                engine.commands.emplace_back(new DrawCardCommand(engine, state::DARK));
+                break;
+            case WHITE:
+                engine.commands.emplace_back(new DrawCardCommand(engine, state::WHITE));
+                break; 
+            case HERMIT:
+                engine.commands.emplace_back(new DrawCardCommand(engine, state::HERMIT));
+                break;
+            default:
+                engine.currentTurnPhase = BATTLE_PHASE;
+                //engine.isWaitingForWoodsPrompt = false;
+                break;
+        }
+        isDone=true;
+    }
+
 
     void GateCommand::receivePromptAnswer(void* answer){
         int targetType = *static_cast<int*>(answer);

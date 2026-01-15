@@ -40,6 +40,26 @@ namespace engine {
         }
     }
 
+    void StealEquipCommand::executeAI() {
+        engine.currentTurnPhase = BATTLE_PHASE;
+        if (equipCard != nullptr) {
+            for (auto& player : engine.board->playerList) {
+                if (player.get() != thief) {
+                    auto& equipCards = player->equipCards;
+                    auto it = std::find(equipCards.begin(), equipCards.end(), equipCard);
+                    if (it != equipCards.end()) {
+                        equipCards.erase(it);
+                        thief->equipACard(equipCard);
+                        break;
+                    }
+                }
+            }
+        }
+        engine.isWaitingForCardStealPrompt = false;
+        isDone = true;
+        
+    }
+
     void StealEquipCommand::receivePromptAnswer(void* answer) {
         state::CardClass* chosenCard = static_cast<state::CardClass*>(answer);
         if (chosenCard == nullptr) {

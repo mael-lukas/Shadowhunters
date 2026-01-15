@@ -132,7 +132,7 @@ namespace state
     {
         CellClass *oldPos = player->position;
         player->position = newPos;
-
+        std::cout << "Move player from " << oldPos->cell << " to " << newPos->cell << std::endl;
         oldPos->playersInCell.erase(std::find(oldPos->playersInCell.begin(), oldPos->playersInCell.end(), player));
 
         newPos->playersInCell.emplace_back(player);
@@ -207,7 +207,7 @@ namespace state
          * Define Level of AI and the number of AI
          * will be replaced by user choice later
          */
-        LevelAI temporareLevel = HEURISTIC;
+        LevelAI temporareLevel = RANDOM;
         int numberOfAI = 3;
         //--------------------------------------------------------
 

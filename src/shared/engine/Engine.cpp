@@ -72,12 +72,23 @@ namespace engine
     }
 
     void Engine::processOneCommand() {
+        std::cout << "[ENGINE] Processing one command. isBusy = " << (bool)isBusy << std::endl;
         if (commands.empty()) {
             return;
         }
         isBusy = true;
+        state::Player& currentPlayer = getCurrentPlayer();
         Command* cmd = commands.front();
-        cmd->execute();
+        if( currentPlayer.type != state::HUMAN) {
+            std::cout << "Execute AI command" << std::endl;
+            cmd->executeAI();
+        }
+        else{
+            std::cout << "Execute Human command" << std::endl;
+            cmd->execute();
+        }
+
+        
         if (cmd->isDone) {
             commands.erase(commands.begin());
             isBusy = false;
