@@ -181,28 +181,68 @@ namespace render {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
-
-            if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
+            selectedPlayer = nullptr;
+            // Find the current player
+            state::Player* myPlayer = board->playerList[client->playerID].get();
+            
+            // Check reveal button first
+            if (myPlayer->revealed == false && 
+                reveal_button.getGlobalBounds().contains(clickPos)){
+                std::cout << "Reveal button clicked" << std::endl;
+                client->revealedClicked(); 
+                return;
+            }
+            
+            // Check capacity button
+            if (renderMan.renderingTurnPlayer && currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
+                myPlayer->revealed == true &&
+                (myPlayer->name == state::CharacterName::FRANKLIN || 
+                 myPlayer->name == state::CharacterName::GEORGES) &&
+                !myPlayer->capacityUsed &&
+                capacity_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Capacity button clicked" << std::endl;
+                client->capacityClicked();
+                return;
+            }
+            
+            if (renderMan.renderingTurnPlayer && currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Move button clicked" << std::endl;
                 client->moveClicked(); 
+                return;
             }
-            if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
+            if (renderMan.renderingTurnPlayer && currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Cell effect button clicked" << std::endl;
                 client->cellEffectClicked();
+                return;
             }
-            if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
+            if (renderMan.renderingTurnPlayer && currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
                 std::cout << "Attack button clicked" << std::endl;
                 client->damageClicked();
+                return;
+            }
+            for(int i = 0; i < board->playerList.size(); i++){
+                state::Player* player = board->playerList[i].get();
+                sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
+                sprite.setRotation(i * 90.f);
+                sprite.setPosition(characterBubblesPos[i]);
+                if(sprite.getGlobalBounds().contains(clickPos)){
+                    selectedPlayer = player;
+                    draw();
+                    window->display();
+                return;
+                }
             }
         }
     }
 
     void UIRender::draw () {
+        int clientID = renderMan.clientID;
         for (int i = 0; i < board->playerList.size(); i++) {
             state::Player* player = board->playerList[i].get();
+            int nbOfPlayers = board->playerList.size();
             sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
-            sprite.setRotation(i * 90.f);
-            sprite.setPosition(characterBubblesPos[i]);
+            sprite.setRotation(((i + nbOfPlayers - clientID) % nbOfPlayers) * 90.f);
+            sprite.setPosition(characterBubblesPos[(i + nbOfPlayers - clientID) % nbOfPlayers]);
             sf::FloatRect bounds = sprite.getGlobalBounds();
             sf::Vector2f sprite_center = sf::Vector2f(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
             float outline = 10.f;

@@ -183,6 +183,4 @@ namespace client {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
     }
-
-
 }

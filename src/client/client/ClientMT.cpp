@@ -2,6 +2,9 @@
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
+#include "../../shared/engine/RevealCommand.h"
+#include "../../shared/engine/FranklinCapacityCommand.h"
+#include "../../shared/engine/GeorgesCapacityCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -14,6 +17,7 @@ namespace client {
 
     void ClientMT::run() {
         renderMan->init();
+        renderMan->clientID = playerID;
         while (renderMan->window.isOpen()) {
             if (engineGame->currentGameState != engine::ONGOING) {
                 sf::Event event;
@@ -168,6 +172,23 @@ namespace client {
     }
 
     void ClientMT::revealedClicked(){
-        
+        if (!engineGame->isBusy){
+            cmd = new engine::RevealCommand(*engineGame, playerID);
+            engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void ClientMT::capacityClicked(){
+        if (!engineGame->isBusy){
+            auto& currentPlayer = engineGame->getCurrentPlayer();
+            if (currentPlayer.name == state::FRANKLIN) {
+                cmd = new engine::FranklinCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+            else if (currentPlayer.name == state::GEORGES) {
+                cmd = new engine::GeorgesCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+        }
     }
 }

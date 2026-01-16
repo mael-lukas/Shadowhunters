@@ -138,7 +138,7 @@
         <dia:point val="3.41969,3.34219"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="3.16969,3.64219;24.1747,20.7422"/>
+        <dia:rectangle val="3.36969,3.29219;24.3747,20.3922"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="3.41969,3.34219"/>
@@ -1374,7 +1374,7 @@
         <dia:point val="26.4,3.795"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="26.35,3.745;47.355,20.845"/>
+        <dia:rectangle val="26.35,3.745;47.355,21.645"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="26.4,3.795"/>
@@ -1383,7 +1383,7 @@
         <dia:real val="20.905000000000001"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="17.000000000000004"/>
+        <dia:real val="17.800000000000004"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#ClientMT#</dia:string>
@@ -1852,6 +1852,36 @@
         </dia:composite>
         <dia:composite type="umloperation">
           <dia:attribute name="name">
+            <dia:string>#capacityClicked#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="stereotype">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#void#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="inheritance_type">
+            <dia:enum val="2"/>
+          </dia:attribute>
+          <dia:attribute name="query">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="parameters"/>
+        </dia:composite>
+        <dia:composite type="umloperation">
+          <dia:attribute name="name">
             <dia:string>#chosenAttackTarget#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
@@ -2194,17 +2224,17 @@
     </dia:object>
     <dia:object type="UML - Dependency" version="1" id="O9">
       <dia:attribute name="obj_pos">
-        <dia:point val="36.8525,20.795"/>
+        <dia:point val="36.8525,21.595"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-5.74496,8.21373;36.9025,20.845"/>
+        <dia:rectangle val="-5.74496,8.21373;36.9025,21.645"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="36.8525,20.795"/>
-        <dia:point val="-0.940625,20.795"/>
+        <dia:point val="36.8525,21.595"/>
+        <dia:point val="-0.940625,21.595"/>
         <dia:point val="-0.940625,8.66373"/>
         <dia:point val="-5.29496,8.66373"/>
       </dia:attribute>
@@ -2247,17 +2277,17 @@
     </dia:object>
     <dia:object type="UML - Dependency" version="1" id="O10">
       <dia:attribute name="obj_pos">
-        <dia:point val="36.8525,20.795"/>
+        <dia:point val="36.8525,21.595"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-6.11309,12.7537;36.9025,20.845"/>
+        <dia:rectangle val="-6.11309,12.7537;36.9025,21.645"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="36.8525,20.795"/>
-        <dia:point val="0.259375,20.795"/>
+        <dia:point val="36.8525,21.595"/>
+        <dia:point val="0.259375,21.595"/>
         <dia:point val="0.259375,13.2037"/>
         <dia:point val="-5.66309,13.2037"/>
       </dia:attribute>
