@@ -87,6 +87,18 @@ namespace render {
         needsRedraw = true;
     }
 
+    void RenderManager::openHermitGivePrompt(int  currentId){
+        prompt_render.activePromptType= HERMIT_GIVE;
+        prompt_render.currentPlayerId = currentId;
+        needsRedraw = true;
+    }
+
+    void RenderManager::openHermitReceivePrompt(state::CardClass* card){
+        prompt_render.activePromptType = HERMIT_RECEIVE;
+        prompt_render.hermitCard= card;
+        needsRedraw = true;
+    }
+
     void RenderManager::openYesNoPrompt(){
         prompt_render.activePromptType = YES_NO;
         needsRedraw = true;

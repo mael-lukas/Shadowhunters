@@ -167,7 +167,6 @@ namespace render {
                 sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
                 sprite.setRotation(i * 90.f);
                 sprite.setPosition(characterBubblesPos[i]);
-                std::cout<< "is each player tested, displaying info"<<player->name<< std::endl;
                 if(sprite.getGlobalBounds().contains(clickPos)){
                     std::cout<< "clicked on player, displaying info"<<player->name<< std::endl;
                     selectedPlayer = player;
