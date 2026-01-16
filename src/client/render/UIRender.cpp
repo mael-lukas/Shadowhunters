@@ -237,6 +237,7 @@ namespace render {
 
     void UIRender::draw () {
         int clientID = renderMan.clientID;
+        state::Player* myPlayer = board->playerList[clientID].get();
         for (int i = 0; i < board->playerList.size(); i++) {
             state::Player* player = board->playerList[i].get();
             int nbOfPlayers = board->playerList.size();
@@ -254,41 +255,55 @@ namespace render {
             if (player->isTurnPlayer) {
                 circle.setOutlineThickness(5.f);
                 circle.setOutlineColor(sf::Color::White);
-                if(player->revealed==false){
-                    window->draw(reveal_button);
-                    window->draw(reveal_button_text);
-                }
-                // Display capacity button for Franklin and Georges during MOVE_PHASE
-                else if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
-                         !player->capacityUsed &&
-                         (player->name == state::CharacterName::FRANKLIN || 
-                          player->name == state::CharacterName::GEORGES)) {
-                    window->draw(capacity_button);
-                    window->draw(capacity_button_text);
-                }
+                // if(player->revealed==false) {
+                //     window->draw(reveal_button);
+                //     window->draw(reveal_button_text);
+                // }
+                // // Display capacity button for Franklin and Georges during MOVE_PHASE
+                // else if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
+                //          !player->capacityUsed &&
+                //          (player->name == state::CharacterName::FRANKLIN || 
+                //           player->name == state::CharacterName::GEORGES)) {
+                //     window->draw(capacity_button);
+                //     window->draw(capacity_button_text);
+                // }
             } else {
                 circle.setOutlineThickness(0.f);
             }
             window->draw(circle);
             if (player->revealed==true){
             window->draw(sprite);}
-
         }
-        if(selectedPlayer){
+
+        if (myPlayer->revealed==false) {
+            window->draw(reveal_button);
+            window->draw(reveal_button_text);
+        }
+
+        if (renderMan.renderingTurnPlayer && myPlayer->revealed && currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
+            !myPlayer->capacityUsed &&
+            (myPlayer->name == state::CharacterName::FRANKLIN || 
+             myPlayer->name == state::CharacterName::GEORGES)) {
+            window->draw(capacity_button);
+            window->draw(capacity_button_text);
+        }
+
+        if(selectedPlayer != nullptr && (selectedPlayer->revealed==true || selectedPlayer->name == myPlayer->name)){
             sf::Sprite sprite = characterCardSprite[static_cast<int>(selectedPlayer->name)];
             sprite.setPosition(1500.f,200.f);
             window->draw(sprite);
             //selectedPlayer = nullptr;
         }
-        if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
+
+        if (renderMan.renderingTurnPlayer == true && currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);
         }
-        if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE) {
+        if (renderMan.renderingTurnPlayer == true && currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE) {
             window->draw(cell_effect_button);
             window->draw(cell_effect_button_text);
         }
-        if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE) {
+        if (renderMan.renderingTurnPlayer == true && currentTurnPhase == engine::TurnPhase::BATTLE_PHASE) {
             window->draw(attack_button);
             window->draw(attack_button_text);
         }
