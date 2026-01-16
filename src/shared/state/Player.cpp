@@ -7,7 +7,9 @@ namespace state
         position= board->cellList.back();
     }
 
-
+    int Player::getHP(){
+        return maxHP;
+    }
     int Player::getAttacked(Player& attacker,int damage){
         // check if equipment reduce damage TODO
         return damage; // par défaut, pas de défense
