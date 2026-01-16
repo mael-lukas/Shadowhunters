@@ -25,8 +25,10 @@ namespace engine {
 
     void DarkSpiderCommand::execute() {
         if (isWaitingForTarget) {
-            engine.isWaitingForCardEffectTargetPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -37,7 +39,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForCardEffectTargetPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -45,15 +49,19 @@ namespace engine {
     void DarkSpiderCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCardEffectTargetPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardEffectTargetPrompt = false;
+        }
         isWaitingForTarget = false;
     }
 
     void DarkDollCommand::execute() {
         if (isWaitingForTarget) {
-            engine.isWaitingForCardEffectTargetPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -69,7 +77,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForCardEffectTargetPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -77,15 +87,19 @@ namespace engine {
     void DarkDollCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCardEffectTargetPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardEffectTargetPrompt = false;
+        }
         isWaitingForTarget = false;
     }
 
     void DarkBatCommand::execute() {
         if (isWaitingForTarget) {
-            engine.isWaitingForCardEffectTargetPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -96,7 +110,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForCardEffectTargetPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -104,8 +120,10 @@ namespace engine {
     void DarkBatCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCardEffectTargetPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardEffectTargetPrompt = false;
+        }
         isWaitingForTarget = false;
     }
 
@@ -137,8 +155,10 @@ namespace engine {
 
     void WhiteAidCommand::execute() {
         if (isWaitingForTarget) {
-            engine.isWaitingForCardEffectTargetPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -149,7 +169,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForCardEffectTargetPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -157,8 +179,10 @@ namespace engine {
     void WhiteAidCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCardEffectTargetPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardEffectTargetPrompt = false;
+        }
         isWaitingForTarget = false;
     }
 }

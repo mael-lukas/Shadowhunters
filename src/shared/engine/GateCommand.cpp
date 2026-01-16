@@ -10,13 +10,17 @@ namespace engine{
 
     void GateCommand::execute(){
         if (isWaitingForSelection) {
-            engine.isWaitingForGatePrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex); 
+                engine.isWaitingForGatePrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         if (isPromptCancelled){
             engine.currentTurnPhase = BATTLE_PHASE;
-            engine.isWaitingForWoodsPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex); 
+                engine.isWaitingForGatePrompt = false;
+            }
         }
         else{
             engine.commands.emplace_back(new DrawCardCommand(engine,typeSelected,not isPromptCancelled));
@@ -37,8 +41,9 @@ namespace engine{
 
         }
         isWaitingForSelection=false;
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForGatePrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForGatePrompt = false;
+        }
     }
-
 }

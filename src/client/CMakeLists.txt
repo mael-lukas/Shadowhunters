@@ -8,6 +8,7 @@ generate_dia_header("${CMAKE_CURRENT_SOURCE_DIR}/../render.dia")
 # Find all source files to include in library
 file(GLOB_RECURSE client_sources *.cpp)
 list(REMOVE_ITEM client_sources "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+list(REMOVE_ITEM client_sources "${CMAKE_CURRENT_SOURCE_DIR}/mainMT.cpp")
 
 # Build the "client" library, add required include and link against dependencies
 add_library(${lib_client_target} STATIC ${client_sources} ${jsoncpp_sources})
@@ -26,6 +27,10 @@ target_link_libraries(${lib_client_target} PUBLIC
 set(client_target client)
 add_executable(${client_target} main.cpp)
 target_link_libraries(${client_target} ${lib_client_target})
+
+set(clientMT_target clientMT)
+add_executable(${clientMT_target} mainMT.cpp)
+target_link_libraries(${clientMT_target} ${lib_client_target})
 if(BUILD_CODE_COVERAGE)
   add_dependencies(code-coverage ${client_target})
 endif()

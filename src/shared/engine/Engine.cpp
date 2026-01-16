@@ -116,7 +116,7 @@ namespace engine
         }
         isBusy = true;
         Command* cmd = commands.front();
-        cmd->execute(); //executeMT();
+        cmd->execute();
         if (cmd->isDone) {
             commands.erase(commands.begin());
             isBusy = false;

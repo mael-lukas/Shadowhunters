@@ -93,6 +93,26 @@ namespace render {
         }
     }
 
+    void UIRender::handleEvent (const sf::Event& event, client::ClientMT* client) {
+        if (event.type == sf::Event::MouseButtonPressed) {
+            sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+            std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
+
+            if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Move button clicked" << std::endl;
+                client->moveClicked(); 
+            }
+            if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Cell effect button clicked" << std::endl;
+                client->cellEffectClicked();
+            }
+            if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Attack button clicked" << std::endl;
+                client->damageClicked();
+            }
+        }
+    }
+
     void UIRender::draw () {
         for (int i = 0; i < board->playerList.size(); i++) {
             state::Player* player = board->playerList[i].get();

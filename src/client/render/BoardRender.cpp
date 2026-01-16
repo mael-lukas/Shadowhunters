@@ -80,6 +80,9 @@ namespace render {
     void BoardRender::handleEvent(const sf::Event& event, client::Client* client) {
     }
 
+    void BoardRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
+    }
+
 
     void BoardRender::draw() {
         window->draw(boardSprite);

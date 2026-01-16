@@ -11,13 +11,17 @@ namespace engine {
     void StealEquipCommand::execute() {
         if (isPromptCancelled) {
             engine.currentTurnPhase = BATTLE_PHASE;
-            engine.isWaitingForCardStealPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardStealPrompt = false;
+            }
             isDone = true;
             return;
         }
         if (isWaitingForCard) {
-            engine.isWaitingForCardStealPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardStealPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -35,7 +39,9 @@ namespace engine {
                     }
                 }
             }
-            engine.isWaitingForCardStealPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardStealPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -44,13 +50,17 @@ namespace engine {
         state::CardClass* chosenCard = static_cast<state::CardClass*>(answer);
         if (chosenCard == nullptr) {
             isPromptCancelled = true;
-            engine.waitingCommand = nullptr;
-            engine.isWaitingForCardStealPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.waitingCommand = nullptr;
+                engine.isWaitingForCardStealPrompt = false;
+            }
         }
         else {
             equipCard = chosenCard;
-            engine.waitingCommand = nullptr;
-            engine.isWaitingForCardStealPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.waitingCommand = nullptr;
+                engine.isWaitingForCardStealPrompt = false;
+            }
             isWaitingForCard = false;
         }
     }

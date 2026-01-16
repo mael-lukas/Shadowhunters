@@ -29,6 +29,10 @@ namespace render {
     void CardRender::handleEvent(const sf::Event& event, client::Client* client) {
     }
 
+    void CardRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
+    }
+
+
     void CardRender::draw() {
         ///// text based test /////
         std::string cardInfo = "Card render info \n";

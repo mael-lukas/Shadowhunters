@@ -173,6 +173,91 @@ namespace render {
         }
     }
 
+    void PromptRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
+        if (activePromptType == NONE) {
+            return;
+        }
+        if (activePromptType == ATTACK_TARGET) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < targetPlayers.size(); i++) {
+                    if (target_players_buttons[i].getGlobalBounds().contains(clickPos)) {
+                        client->chosenAttackTarget(targetPlayers[i]->id);
+                    }
+                }
+                if (target_players_buttons.back().getGlobalBounds().contains(clickPos)) {
+                    client->chosenAttackTarget(-1);
+                }
+            }
+        }
+        if (activePromptType == WOODS_PROMPT) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < 8; i++) {
+                    if (woodsButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i/2]->isAlive) {
+                        client->woodsAnswerClicked(i);
+                    }
+                }
+                if (woodsButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->woodsAnswerClicked(-1);
+                }
+            }
+        }
+        if (activePromptType == YES_NO){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                if(yes_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(true);
+                }
+                else if (no_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(false);
+                }
+            }
+        }
+        if (activePromptType == GATE_PROMPT){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < gateButtons.size(); i++) {
+                    if (gateButtons[i].getGlobalBounds().contains(clickPos)) {
+                        std::cout << "[PromptRender] Gate button " << i << " clicked." << std::endl;
+                        client->cardTypeChosen(i);
+                    }
+                }
+            }
+        }
+        if (activePromptType == ROLL_7) {
+            sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+            for (int i = 0; i < cellSprites.size(); i++) {
+                if (cellSprites[i].getGlobalBounds().contains(clickPos)) {
+                    client->cellChosen(i);
+                }
+            }
+        }
+        if (activePromptType == STEAL_EQUIP){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < potentialCards.size(); i++) {
+                    if (stealEquipButtons[i].getGlobalBounds().contains(clickPos)) {
+                        client->stealEquipAnswer(potentialCards[i]);
+                    }
+                }
+                if (stealEquipButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->stealEquipAnswer(nullptr);
+                }
+            }
+        }
+        if (activePromptType == CARD_EFFECT_TARGET){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i]->isAlive) {
+                        client->chosenCardEffectTarget(board->playerList[i]->id);
+                    }
+                }
+            }
+        }
+    }
+
     void PromptRender::draw() {
         if (activePromptType == NONE) {
             return;

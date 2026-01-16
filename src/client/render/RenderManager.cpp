@@ -41,17 +41,32 @@ namespace render {
         ui_render.handleEvent(event, client);
     }
 
-    void RenderManager::draw() {
-        if (needsRedraw) {
-            window.clear();
-            board_render.draw();
-            player_render.draw();
-            card_render.draw();
-            prompt_render.draw();
-            ui_render.draw();
-            window.display();
-            needsRedraw = false;
+    void RenderManager::handleEvent(const sf::Event& event, client::ClientMT* client) {
+        if (event.type == sf::Event::Closed) {
+            window.close();
+            return;
         }
+        if (event.type == sf::Event::Resized) {
+            sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+            window.setView(sf::View(visibleArea));
+            needsRedraw = true;
+        }
+        board_render.handleEvent(event, client);
+        player_render.handleEvent(event, client);
+        card_render.handleEvent(event, client);
+        prompt_render.handleEvent(event, client);
+        ui_render.handleEvent(event, client);
+    }
+
+    void RenderManager::draw() {
+        window.clear();
+        board_render.draw();
+        player_render.draw();
+        card_render.draw();
+        prompt_render.draw();
+        ui_render.draw();
+        window.display();
+        needsRedraw = false;
     }
 
     void RenderManager::drawGameOverScreen(engine::GameState gameState) {
@@ -78,39 +93,55 @@ namespace render {
     }
 
     void RenderManager::getNotified(state::StateEventID e) {
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 
     void RenderManager::openAttackPrompt(std::vector<state::Player*> targets) {
         prompt_render.activePromptType = ATTACK_TARGET;
         prompt_render.targetPlayers = targets;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 
     void RenderManager::openYesNoPrompt(){
         prompt_render.activePromptType = YES_NO;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 
     void RenderManager::openWoodsPrompt() {
         prompt_render.activePromptType = WOODS_PROMPT;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }   
     void RenderManager::openGatePrompt(){
         prompt_render.activePromptType = GATE_PROMPT;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
     void RenderManager::openCellPrompt() {
         prompt_render.activePromptType = ROLL_7;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
     void RenderManager::openStealEquipPrompt(std::vector<state::CardClass*> potentialCards){
         prompt_render.activePromptType = STEAL_EQUIP;
         prompt_render.potentialCards = potentialCards;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
     void RenderManager::openCardEffectTargetPrompt(){
         prompt_render.activePromptType = CARD_EFFECT_TARGET;
-        needsRedraw = true;
+        {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 }

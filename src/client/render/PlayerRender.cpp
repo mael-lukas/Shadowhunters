@@ -63,6 +63,9 @@ namespace render {
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
     }
 
+    void PlayerRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
+    }
+
     void PlayerRender::draw() {
         for (Pawn* pawn : listOfPawns) {
             if (pawn->type == PawnType::POSITION) {
