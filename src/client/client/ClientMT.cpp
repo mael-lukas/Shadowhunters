@@ -26,6 +26,7 @@ namespace client {
                 std::this_thread::sleep_for(std::chrono::milliseconds(33));
                 continue;
             }
+            renderMan->renderingTurnPlayer = (engineGame->currentPlayerIndex == playerID);
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
@@ -36,9 +37,7 @@ namespace client {
             {   std::lock_guard<std::mutex> lock(engineGame->turnPhaseMutex);
                 renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);    
             }
-            //std::cout << "[Client] Avant draw, needsRedraw=" << renderMan->needsRedraw << std::endl;
             renderMan->draw();
-            //std::cout << "[Client] Après draw, needsRedraw=" << renderMan->needsRedraw << std::endl;
             {   std::lock_guard<std::mutex> lock(engineGame->promptMutex);
                 lookForPrompts();
             }

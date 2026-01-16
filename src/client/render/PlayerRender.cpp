@@ -5,9 +5,10 @@
 #include "render/Pawn.h"
 
 namespace render {
-    PlayerRender::PlayerRender(state::Board* board, sf::RenderWindow* win) :
+    PlayerRender::PlayerRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
 
     void PlayerRender::init() {
         std::vector<sf::Color> pawnColors = {

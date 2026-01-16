@@ -4,11 +4,11 @@
 namespace render {
     RenderManager::RenderManager(state::Board* board) : 
     board(board),
-    board_render(board,&window),
-    player_render(board,&window),
-    card_render(board,&window),
-    prompt_render(board,&window),
-    ui_render(board,&window),
+    board_render(board,&window,*this),
+    player_render(board,&window,*this),
+    card_render(board,&window,*this),
+    prompt_render(board,&window,*this),
+    ui_render(board,&window,*this),
     needsRedraw(true) {}
 
     void RenderManager::init() {

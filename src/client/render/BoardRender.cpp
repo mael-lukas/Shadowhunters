@@ -6,9 +6,11 @@
 
 
 namespace render {
-    BoardRender::BoardRender(state::Board* board, sf::RenderWindow* win) :
+    BoardRender::BoardRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan)
+    {}
 
     void BoardRender::init() {
 

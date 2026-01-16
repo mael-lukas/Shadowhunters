@@ -4,9 +4,10 @@
 #include "client/Client.h"
 
 namespace render {
-    CardRender::CardRender(state::Board* board, sf::RenderWindow* win) :
+    CardRender::CardRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
 
     void CardRender::init() {
         // TODO: load textures from all cards

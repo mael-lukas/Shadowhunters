@@ -4,9 +4,10 @@
 #include "client/Client.h"
 
 namespace render {
-    PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win) :
+    PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
 
     void PromptRender::init() {
         std::string path = std::string(ASSET_PATH);

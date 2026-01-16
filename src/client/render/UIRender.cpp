@@ -6,7 +6,7 @@
 
 namespace render {
 
-    UIRender::UIRender (state::Board* board, sf::RenderWindow* win) : board(board), window(win) {
+    UIRender::UIRender (state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) : board(board), window(win), renderMan(renderMan) {
         currentTurnPhase = engine::TurnPhase::MOVE_PHASE;
     }
 
@@ -117,7 +117,7 @@ namespace render {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
             std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
-            
+            selectedPlayer = nullptr;
             // Find the current player
             state::Player* currentPlayer = nullptr;
             for (auto& player : board->playerList) {
@@ -167,9 +167,7 @@ namespace render {
                 sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
                 sprite.setRotation(i * 90.f);
                 sprite.setPosition(characterBubblesPos[i]);
-                std::cout<< "is each player tested, displaying info"<<player->name<< std::endl;
                 if(sprite.getGlobalBounds().contains(clickPos)){
-                    std::cout<< "clicked on player, displaying info"<<player->name<< std::endl;
                     selectedPlayer = player;
                     draw();
                     window->display();
@@ -240,7 +238,7 @@ namespace render {
             sf::Sprite sprite = characterCardSprite[static_cast<int>(selectedPlayer->name)];
             sprite.setPosition(1500.f,200.f);
             window->draw(sprite);
-            selectedPlayer = nullptr;
+            //selectedPlayer = nullptr;
         }
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
