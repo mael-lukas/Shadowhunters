@@ -1,6 +1,8 @@
 #include "UIRender.h"
 #include <iostream>
 #include "client/Client.h"
+#include "../shared/state/CharacterName.h"
+#include "../shared/state/Subject.h"
 
 namespace render {
 
@@ -20,6 +22,11 @@ namespace render {
                 std::cerr << "Error loading character texture " << i << std::endl;
             }
             characterTextures.push_back(texture);
+            sf::Texture texture2;
+            if (!texture2.loadFromFile(path + "/sh_card_textures/sh_characters/" + std::to_string(i) + ".jpg")) {
+                std::cerr << "Error loading character texture " << i << std::endl;
+            }
+            characterFullCard.push_back(texture2);
         }
 
         for (int i = 0; i < characterTextures.size(); i++) {
@@ -27,6 +34,10 @@ namespace render {
             sprite.setTexture(characterTextures[i]);
             sprite.setScale(0.3f, 0.3f);
             characterSprites.push_back(sprite);
+            sf::Sprite sprite2;
+            sprite2.setTexture(characterFullCard[i]);
+            sprite2.setScale(0.3f, 0.3f);
+            characterCardSprite.push_back(sprite2);
         }
 
         characterBubblesPos = {sf::Vector2f(500.f, 860.f), sf::Vector2f(440.f, 230.f), sf::Vector2f(1320.f, 170.f), sf::Vector2f(1410.f, 800.f)};
@@ -86,27 +97,83 @@ namespace render {
                                    buttonRect4.top + buttonRect4.height / 2.0f);
         reveal_button_text.setPosition(reveal_button.getPosition().x + reveal_button.getSize().x / 2.0f,
                                      reveal_button.getPosition().y + reveal_button.getSize().y / 2.0f);
+
+        // create capacity button
+        capacity_button.setSize(sf::Vector2f(200.f,140.f));
+        capacity_button.setFillColor(sf::Color::Green);
+        capacity_button.setPosition(26.f,195.f);
+        capacity_button_text.setFont(font);
+        capacity_button_text.setCharacterSize(26);
+        capacity_button_text.setFillColor(sf::Color::White);
+        capacity_button_text.setString("Capacity\nOne time use");
+        sf::FloatRect buttonRect5 = capacity_button_text.getLocalBounds();
+        capacity_button_text.setOrigin(buttonRect5.left + buttonRect5.width / 2.0f,
+                                   buttonRect5.top + buttonRect5.height / 2.0f);
+        capacity_button_text.setPosition(capacity_button.getPosition().x + capacity_button.getSize().x / 2.0f,
+                                     capacity_button.getPosition().y + capacity_button.getSize().y / 2.0f);
     }
 
     void UIRender::handleEvent (const sf::Event& event, client::Client* client) {
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
-            //std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
-            if (reveal_button.getGlobalBounds().contains(clickPos)){
-                //std::cout << "Reveal button clicked" << std::endl;
-                client->revealedClicked(); 
+            std::cout << "click (pixels): x=" << clickPos.x << " y=" << clickPos.y << std::endl;
+            
+            // Find the current player
+            state::Player* currentPlayer = nullptr;
+            for (auto& player : board->playerList) {
+                if (player->isTurnPlayer) {
+                    currentPlayer = player.get();
+                    break;
+                }
             }
+            
+            // Check reveal button first
+            if (currentPlayer && !currentPlayer->revealed && 
+                reveal_button.getGlobalBounds().contains(clickPos)){
+                std::cout << "Reveal button clicked" << std::endl;
+                client->revealedClicked(); 
+                return;
+            }
+            
+            // Check capacity button
+            if (currentPlayer && currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
+                currentPlayer->revealed &&
+                (currentPlayer->name == state::CharacterName::FRANKLIN || 
+                 currentPlayer->name == state::CharacterName::GEORGES) &&
+                !currentPlayer->capacityUsed &&
+                capacity_button.getGlobalBounds().contains(clickPos)) {
+                std::cout << "Capacity button clicked" << std::endl;
+                client->capacityClicked();
+                return;
+            }
+            
             if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && move_button.getGlobalBounds().contains(clickPos)) {
                 //std::cout << "Move button clicked" << std::endl;
                 client->moveClicked(); 
+                return;
             }
             if (currentTurnPhase == engine::TurnPhase::CELL_EFFECT_PHASE && cell_effect_button.getGlobalBounds().contains(clickPos)) {
                 //std::cout << "Cell effect button clicked" << std::endl;
                 client->cellEffectClicked();
+                return;
             }
             if (currentTurnPhase == engine::TurnPhase::BATTLE_PHASE && attack_button.getGlobalBounds().contains(clickPos)) {
                 //std::cout << "Attack button clicked" << std::endl;
                 client->damageClicked();
+                return;
+            }
+            for(int i = 0; i < board->playerList.size(); i++){
+                state::Player* player = board->playerList[i].get();
+                sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
+                sprite.setRotation(i * 90.f);
+                sprite.setPosition(characterBubblesPos[i]);
+                if(sprite.getGlobalBounds().contains(clickPos)){
+                    std::cout<< "clicked on player, displaying info"<<player->name<< std::endl;
+                    selectedPlayer = player;
+                    draw();
+                    window->display();
+                return;
+                }
             }
         }
     }
@@ -129,8 +196,16 @@ namespace render {
                 circle.setOutlineThickness(5.f);
                 circle.setOutlineColor(sf::Color::White);
                 if(player->revealed==false){
-                window->draw(reveal_button);
-                window->draw(reveal_button_text);
+                    window->draw(reveal_button);
+                    window->draw(reveal_button_text);
+                }
+                // Display capacity button for Franklin and Georges during MOVE_PHASE
+                else if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
+                         !player->capacityUsed &&
+                         (player->name == state::CharacterName::FRANKLIN || 
+                          player->name == state::CharacterName::GEORGES)) {
+                    window->draw(capacity_button);
+                    window->draw(capacity_button_text);
                 }
             } else {
                 circle.setOutlineThickness(0.f);
@@ -140,7 +215,12 @@ namespace render {
             window->draw(sprite);}
 
         }
-        
+        if(selectedPlayer){
+            sf::Sprite sprite = characterCardSprite[static_cast<int>(selectedPlayer->name)];
+            sprite.setPosition(1500.f,200.f);
+            window->draw(sprite);
+            selectedPlayer = nullptr;
+        }
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);

@@ -13,7 +13,7 @@ namespace engine {
 
     void RevealCommand::execute()
     {
-        engine.board->playerList[playerId]->revealed=true;
+        engine.board->playerList[playerId]->revealYourself();
         isDone = true;
     }
 

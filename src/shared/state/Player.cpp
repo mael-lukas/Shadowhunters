@@ -8,7 +8,9 @@ namespace state
         position= board->cellList.back();
     }
 
-
+    int Player::getHP(){
+        return maxHP;
+    }
     int Player::getAttacked(Player& attacker,int damage){
         // check if equipment reduce damage TODO
         return damage; // par défaut, pas de défense
@@ -48,7 +50,10 @@ namespace state
     void Player::useCapacity() {
     // Par défaut : rien
     }
-
+    void Player::revealYourself(){
+        revealed=true;
+        notifyObservers(StateEventID::PLAYER_CHANGED);
+    }
     Role Player::getRole() {
         return role;
     }

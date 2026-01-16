@@ -48,6 +48,7 @@ namespace render {
             state::Player* player = board->playerList[i].get();
             for (int j = 0; j < player->equipCards.size(); j++) {
                 state::CardClass* card = player->equipCards[j];
+                if(card->type != state::HERMIT){
                 sf::Texture texture;
                 sf::Sprite sprite;
                 std::string path = std::string(ASSET_PATH);
@@ -59,6 +60,19 @@ namespace render {
                 sprite.setRotation(playerRotations[i]);
                 sprite.setScale(0.1f, 0.1f);
                 window->draw(sprite);
+                }
+                else{
+                    sf::Texture texture;
+                sf::Sprite sprite;
+                std::string path = std::string(ASSET_PATH);
+                if (!texture.loadFromFile(path + "/sh_card_textures/sh_cards/card" + std::to_string(static_cast<int>(card->name)) + ".jpg")) {
+                    std::cerr << "Error loading texture for card " << card->name << std::endl;
+                }
+                sprite.setTexture(texture);
+                sprite.setPosition(1500.f,200.f);
+                sprite.setScale(0.3f, 0.3f);
+                window->draw(sprite);
+                }
             }
         }
         test_text.setString(cardInfo);

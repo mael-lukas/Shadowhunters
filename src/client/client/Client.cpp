@@ -3,10 +3,12 @@
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
 #include "../../shared/engine/RevealCommand.h"
+#include "../../shared/engine/FranklinCapacityCommand.h"
+#include "../../shared/engine/GeorgesCapacityCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
-
+#include "HermitGiveReceive.h"
 
 namespace client {
     Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame, ai::RandomAI* randomAI) : 
@@ -99,6 +101,21 @@ namespace client {
         if (engineGame->isWaitingForAttackPrompt) {
             renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
         }
+
+        if(engineGame->isWaitingForHermitTargetPrompt){
+
+            //is waiting for effet
+            return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
+            
+        }
+        if(engineGame->isWaitingForHermitInfoPrompt){
+            for(auto card : engineGame->getCurrentPlayer().equipCards){
+                if(card->type == state::HERMIT){
+                    //TODO Give
+                    return renderMan->openHermitReceivePrompt(card);
+                }
+            }
+        }
         if (engineGame->isWaitingForYesNoPrompt) {
             renderMan->openYesNoPrompt();
         }
@@ -138,6 +155,20 @@ namespace client {
         if (!engineGame->isBusy){
             cmd = new engine::RevealCommand(*engineGame,engineGame->getCurrentPlayer().id);
             engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void Client::capacityClicked(){
+        if (!engineGame->isBusy){
+            auto& currentPlayer = engineGame->getCurrentPlayer();
+            if (currentPlayer.name == state::FRANKLIN) {
+                cmd = new engine::FranklinCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+            else if (currentPlayer.name == state::GEORGES) {
+                cmd = new engine::GeorgesCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
         }
     }
 
@@ -215,5 +246,20 @@ namespace client {
         }
     }
 
+    void Client::chosenHermitTarget(int targetID){
+        std::cout << "[CLIENT] Chosen hermit effect target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
+    }
+    void Client::hermitEffect(client::HermitGiveReceive answer){
+        std::cout << "[CLIENT] Chosen hermit effect " << std::endl;
+        std::cout << "answer choice" << answer.choice << "\n answer damage" << answer.receive << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&answer);
+        }
+    }
 
 }
