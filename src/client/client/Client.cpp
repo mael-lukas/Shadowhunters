@@ -2,6 +2,9 @@
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
+#include "../../shared/engine/RevealCommand.h"
+#include "../../shared/engine/FranklinCapacityCommand.h"
+#include "../../shared/engine/GeorgesCapacityCommand.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -76,9 +79,31 @@ namespace client {
 
     void Client::moveClicked() {
         if (!engineGame->isBusy)
-        {
+        {   
+            
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void Client::revealedClicked(){
+        if (!engineGame->isBusy){
+            cmd = new engine::RevealCommand(*engineGame,engineGame->getCurrentPlayer().id);
+            engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void Client::capacityClicked(){
+        if (!engineGame->isBusy){
+            auto& currentPlayer = engineGame->getCurrentPlayer();
+            if (currentPlayer.name == state::FRANKLIN) {
+                cmd = new engine::FranklinCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+            else if (currentPlayer.name == state::GEORGES) {
+                cmd = new engine::GeorgesCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
         }
     }
 
@@ -159,7 +184,5 @@ namespace client {
         }
     }
 
-    void Client::revealedClicked(){
 
-    }
 }
