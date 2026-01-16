@@ -30,3 +30,11 @@ void UseHermitCommand::executeAI()
     engine.currentTurnPhase = BATTLE_PHASE;
     isDone = true;
 }
+
+bool UseHermitCommand::needTarget()
+{
+    return false;
+}
+
+void UseHermitCommand::receiveAnswer(void* answer) {
+    }

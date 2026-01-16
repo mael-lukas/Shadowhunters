@@ -25,22 +25,25 @@ namespace engine{
     }
 
     void GateCommand::executeAI(){
-
         switch(gate_Choice){
             case DARK:
+                std::cout<< "--------GateCommandAI: DARK"  << std::endl;
                 engine.commands.emplace_back(new DrawCardCommand(engine, state::DARK));
                 break;
             case WHITE:
                 engine.commands.emplace_back(new DrawCardCommand(engine, state::WHITE));
+                std::cout<< "--------GateCommandAI: WHITE"  << std::endl;
                 break; 
             case HERMIT:
                 engine.commands.emplace_back(new DrawCardCommand(engine, state::HERMIT));
+                std::cout<< "--------GateCommandAI: HERMIT"  << std::endl;
                 break;
             default:
-                engine.currentTurnPhase = BATTLE_PHASE;
-                //engine.isWaitingForWoodsPrompt = false;
+                std::cout<< "--------GateCommandAI: CANCEL"  << std::endl;
                 break;
         }
+        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.isWaitingForWoodsPrompt = false;
         isDone=true;
     }
 
@@ -60,5 +63,13 @@ namespace engine{
         engine.waitingCommand = nullptr;
         engine.isWaitingForGatePrompt = false;
     }
+
+    bool GateCommand::needTarget() {
+        return false;
+    }
+
+    void GateCommand::receiveAnswer(void* answer) {
+    }
+
 
 }

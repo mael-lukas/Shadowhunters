@@ -42,15 +42,21 @@ namespace engine {
         }
     }
 
-    //A modifier pour que la target soit choisie par l'IA
     void DarkSpiderCommand::executeAI() {
+        std::cout << "Dark Spider AI executed" << std::endl;
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
+            std::cout << "Dark Spider AI: Target:" << target->id << " received 2 damage. His wounds: " << target->wounds << std::endl;
+            std::cout << "Dark Spider AI: User:" << user->id << " received 2 damage. His wounds: " << user->wounds << std::endl;
             target->receiveDamage(2);
             user->receiveDamage(2);
+            std::cout << "Dark Spider AI: Target:" << target->id << " received 2 damage. His wounds: " << target->wounds << std::endl;
+            std::cout << "Dark Spider AI: User:" << user->id << " received 2 damage. His wounds: " << user->wounds << std::endl;
         }
-        engine.board->discardCard(user->equipCards.back());
-        user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        if (!user->equipCards.empty()) {
+            engine.board->discardCard(user->equipCards.back());
+            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        }
         engine.isWaitingForCardEffectTargetPrompt = false;
         isDone = true;
         
@@ -88,20 +94,29 @@ namespace engine {
         }
     }
 
-    //A modifier pour que la target soit choisie par l'IA
     void DarkDollCommand::executeAI() {
+        std::cout << "Dark Doll AI executed" << std::endl;
+        std::cout << "Dark Doll AI: Target:" << target->id << std::endl; 
+        //std::cout << "Dark Doll AI: Target selected: Player " << target->id << std::endl;
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
             int result = engine.board->rollDice(state::ONLYD6);
             if (result <= 4) {
+                std::cout << "Dark Doll AI: Player:" << target->id << " HP: " << target->wounds << std::endl;
                 target->receiveDamage(3);
+                std::cout << "Dark Doll AI: Target:" << target->id << " received 3 damage." << std::endl;
             }
             else {
+                std::cout << "Dark Doll AI: User:" << user->id << " HP: " << user->wounds << std::endl;
                 user->receiveDamage(3);
+                std::cout << "Dark Doll AI: User:" << user->id << " received 3 damage." << std::endl;
             }
         }
-        engine.board->discardCard(user->equipCards.back());
-        user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        std::cout << "Dark Doll AI: Discarding Dark Doll card." << std::endl;
+        if (!user->equipCards.empty()) {
+            engine.board->discardCard(user->equipCards.back());
+            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        }
         engine.isWaitingForCardEffectTargetPrompt = false;
         isDone = true;
         
@@ -138,11 +153,17 @@ namespace engine {
     void DarkBatCommand::executeAI() {
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
+            std::cout << "Dark Bat AI: Player:" << target->id << " HP: " << target->wounds << std::endl;
+            std::cout << "Dark Bat AI: User:" << user->id << " HP: " << user->wounds << std::endl;
             target->receiveDamage(2);
             user->receiveDamage(-1);
+            std::cout << "Dark Bat AI: Target:" << target->id << " received 2 damage.His wounds: " << target->wounds << std::endl;
+            std::cout << "Dark Bat AI: User:" << user->id << " healed 1 damage. His wounds: " << user->wounds << std::endl;
         }
-        engine.board->discardCard(user->equipCards.back());
-        user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        if (!user->equipCards.empty()) {
+            engine.board->discardCard(user->equipCards.back());
+            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        }
         engine.isWaitingForCardEffectTargetPrompt = false;
         isDone = true;
     }
@@ -177,11 +198,15 @@ namespace engine {
         while (timer.getElapsedTime().asSeconds() < 1.5f) {}  
         for (auto& player : engine.board->playerList) {
             if (player.get() != &engine.getCurrentPlayer() && player->isAlive) {
+                std::cout << "White Flare AI: Player:" << player->id << " Wounds: " << player->wounds << std::endl;
                 player->receiveDamage(2);
+                std::cout << "White Flare AI: Player:" << player->id << " received 2 damage.His wounds: " << player->wounds << std::endl; 
             }
         }
-        engine.board->discardCard(user->equipCards.back());
-        user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        if (!user->equipCards.empty()) {
+            engine.board->discardCard(user->equipCards.back());
+            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        }
         isDone = true;
     }
 
@@ -197,13 +222,16 @@ namespace engine {
     }
 
     void WhiteWaterCommand::executeAI() {
+        std::cout << "White Water AI executed" << std::endl;
         sf::Clock timer;
         engine.currentTurnPhase = BATTLE_PHASE;
         timer.restart();
         while (timer.getElapsedTime().asSeconds() < 1.5f) {}
         user->receiveDamage(-2);
-        engine.board->discardCard(user->equipCards.back());
-        user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        if (!user->equipCards.empty()) {
+            engine.board->discardCard(user->equipCards.back());
+            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
+        }
         isDone = true;
     }
 
@@ -226,12 +254,13 @@ namespace engine {
         }
     }
 
-    //A modifier pour que la target soit choisie par l'IA
     void WhiteAidCommand::executeAI() {
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
+            std::cout << "White Aid AI: Player:" << target->id << " Wounds: " << target->wounds << std::endl;
             target->wounds = 0;
             target->receiveDamage(7);
+            std::cout << "White Aid AI: Player:" << target->id << " Wounds: " << target->wounds << std::endl;
         }
         engine.board->discardCard(user->equipCards.back());
         user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
@@ -247,4 +276,45 @@ namespace engine {
         engine.isWaitingForCardEffectTargetPrompt = false;
         isWaitingForTarget = false;
     }
+
+//============================================================================
+// NeedTarget
+    bool DarkSpiderCommand::needTarget() {
+        return true;
+    }
+    bool DarkDollCommand::needTarget() {
+        return true;
+    }
+    bool DarkBatCommand::needTarget() {
+        return true;
+    }
+    bool WhiteFlareCommand::needTarget() {
+        return false;
+    }
+    bool WhiteWaterCommand::needTarget() {
+        return false;
+    }
+    bool WhiteAidCommand::needTarget() {
+        return true;
+    }
+
+//============================================================================
+// ReceiveAnswer
+    void DarkSpiderCommand::receiveAnswer(void* answer) {
+        target = static_cast<state::Player*>(answer);
+    }
+    void DarkDollCommand::receiveAnswer(void* answer) {
+        target = static_cast<state::Player*>(answer);
+    }
+    void DarkBatCommand::receiveAnswer(void* answer) {
+        target = static_cast<state::Player*>(answer);
+    }
+    void WhiteFlareCommand::receiveAnswer(void* answer) {
+    }
+    void WhiteWaterCommand::receiveAnswer(void* answer) {
+    }
+    void WhiteAidCommand::receiveAnswer(void* answer) {
+        target = static_cast<state::Player*>(answer);   
+    }
+    
 }

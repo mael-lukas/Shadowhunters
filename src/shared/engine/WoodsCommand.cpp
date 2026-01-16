@@ -33,17 +33,19 @@ namespace engine {
 
      void WoodsCommand::executeAI()
     {
-        std::cout<< "Executing WoodsCommandAI "  << std::endl;
         switch(woods_Choice) {
             case ATTACK:
+                std::cout<< "--------WoodsCommandAI: ATTACK"  << std::endl;
                 damage = 2;
                 target->receiveDamage(damage);
                 isDone = true;
                 break;
             case HEAL:
+                std::cout<< "--------WoodsCommandAI: HEAL"  << std::endl;
                 damage = -1;
                 break;
             default:
+                std::cout<< "--------WoodsCommandAI: CANCEL"  << std::endl;
                 engine.currentTurnPhase = BATTLE_PHASE;
                 isDone = true;
                 return;
@@ -75,5 +77,12 @@ namespace engine {
             engine.isWaitingForWoodsPrompt = false;
             isWaitingForTarget = false;
         }
+    }
+
+    bool WoodsCommand::needTarget() {
+        return true;
+    }
+
+    void WoodsCommand::receiveAnswer(void* answer) {
     }
 }

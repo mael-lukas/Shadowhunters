@@ -23,4 +23,12 @@ namespace engine {
         isDone = true;
     }
 
+    bool RevealCommand::needTarget()
+    {
+        return false;
+    }
+
+    void RevealCommand::receiveAnswer(void* answer) {
+    }
+
 }

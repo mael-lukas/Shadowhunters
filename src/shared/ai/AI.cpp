@@ -16,7 +16,6 @@ namespace ai
     void AI::playPhase() {
         switch(currentTurnPhase) {
             case engine::MOVE_PHASE:
-                std::cout << "Move Phase of the id: " << engine->getCurrentPlayer().id <<" and this is a : "<< engine->getCurrentPlayer().type << std::endl;
                 move();
                 break;
             case engine::BATTLE_PHASE:
@@ -26,6 +25,10 @@ namespace ai
             case engine::CELL_EFFECT_PHASE:
                 std::cout << "CELL_EFFECT_PHASE" << std::endl;
                 cellEffect();
+                break;
+            case engine::CARD_EFFECT_PHASE:
+                std::cout << "CARD_EFFECT_PHASE" << std::endl;
+                drawCard();
                 break;
             default:
             std::cerr << "Unknown turn phase!" << std::endl;
@@ -50,4 +53,7 @@ namespace ai
         // Implementation of AI using cell effects
     }
 
+    void AI::cardTarget(engine::Command* cmd) {
+        // Implementation of AI choosing a card target
+    }
 };

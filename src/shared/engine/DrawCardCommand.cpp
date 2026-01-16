@@ -33,11 +33,12 @@ namespace engine
     }
 
     void DrawCardCommand::executeAI(){
+        engine.currentTurnPhase = BATTLE_PHASE;
         if(draw){
+            engine.currentTurnPhase = CARD_EFFECT_PHASE;
             drawCard();
         }
         draw = false;
-        engine.currentTurnPhase = BATTLE_PHASE;
         engine.isWaitingForYesNoPrompt = false;
         isDone = true;
     }
@@ -56,17 +57,25 @@ namespace engine
         currentPlayer.equipCards.push_back(card);
         if (cardType == state::HERMIT) {
             engine.commands.emplace_back(new UseHermitCommand(engine, *card));
+            //engine.commands.insert(engine.commands.begin(), new UseHermitCommand(engine, *card));
         }
         else {
             engine.commands.emplace_back(engine.cardEffectsFactory[card->name](engine));
+            //engine.commands.insert(engine.commands.begin(), engine.cardEffectsFactory[card->name](engine));
         }
     }
     
     void DrawCardCommand::receivePromptAnswer(void* answer){
         draw = *static_cast<bool*>(answer);
-        std::cout << "answer is : " << static_cast<int>(draw) << std::endl;
+        //std::cout << "answer is : " << static_cast<int>(draw) << std::endl;
         engine.waitingCommand = nullptr;
         isWaitingForValidation = false;
     }
 
+    bool DrawCardCommand::needTarget() {
+        return false;
+    }
+
+    void DrawCardCommand::receiveAnswer(void* answer) {
+    }
 }

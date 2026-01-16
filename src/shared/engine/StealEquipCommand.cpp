@@ -74,4 +74,12 @@ namespace engine {
             isWaitingForCard = false;
         }
     }
+
+    bool StealEquipCommand::needTarget() {
+        return true;
+    }
+
+    void StealEquipCommand::receiveAnswer(void* answer) {
+        target = static_cast<state::Player*>(answer);
+    }
 }

@@ -31,7 +31,7 @@ namespace client {
             }
             sf::Event event;
             if(engineGame->getCurrentPlayer().type != state::LevelAI::HUMAN){
-                std::cout << "[CLIENT] AI turn started." << std::endl;
+                //std::cout << "[CLIENT] AI turn started." << std::endl;
                 while (renderMan->window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) {
                         renderMan->window.close();
@@ -39,30 +39,40 @@ namespace client {
                     else {}
                 }
                 elapsed1 = clock.getElapsedTime();
-                if(elapsed1.asSeconds() > 0.8f){
+                if(elapsed1.asSeconds() > 0.7f){
                     renderMan->draw();
-                    switch(engineGame->getCurrentPlayer().type ){
-                        case state::LevelAI::RANDOM:
-                            std::cout << "[CLIENT] Random AI turn started." << std::endl;
-                            randomAI->setTurnPhase(engineGame->currentTurnPhase);
-                            randomAI->playPhase();
-                            break;
-                        case state::LevelAI::HEURISTIC:
-                            std::cout << "[CLIENT] Heuristic AI turn started." << std::endl;
-                            break;
-                        case state::LevelAI::ADVANCED:
-                            std::cout << "[CLIENT] Advanced AI turn started." << std::endl;
-                            break;
-                        default:
-                            std::cerr << "Unknown AI level!" << std::endl;
-                            break;
+                    if (!engineGame->isBusy && engineGame->commands.empty()) {
+                        switch(engineGame->getCurrentPlayer().type ){
+                            case state::LevelAI::RANDOM:
+                                //std::cout << "[CLIENT] Random AI turn started." << std::endl;
+                                randomAI->setTurnPhase(engineGame->currentTurnPhase);
+                                randomAI->playPhase();
+                                break;
+                            case state::LevelAI::HEURISTIC:
+                                //std::cout << "[CLIENT] Heuristic AI turn started." << std::endl;
+                                break;
+                            case state::LevelAI::ADVANCED:
+                                //std::cout << "[CLIENT] Advanced AI turn started." << std::endl;
+                                break;
+                            default:
+                                std::cerr << "Unknown AI level!" << std::endl;
+                                break;
+                        }
                     }
+                    if(!engineGame->isBusy && !engineGame->commands.empty()){
+                        if(engineGame->commands.front()->needTarget()){
+                            std::cout<<"La première commande est : " << engineGame->commands.front() << std::endl;
+                            randomAI->cardTarget(engineGame->commands.front());
+                        }
+                    }
+                        //std::cout << "[CLIENT
                     engineGame ->processOneCommand();
                     clock.restart();
-                }
+                    }
             }
+            
             else{
-                std::cout << "[CLIENT] Human turn started." << std::endl;
+                //std::cout << "[CLIENT] Human turn started." << std::endl;
                 while (renderMan->window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) {
                         renderMan->window.close();
@@ -175,14 +185,14 @@ namespace client {
 
     void Client::cardTypeChosen(int type){
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
-        std::cout << "Client cardtype chosen: " << type << std::endl;
+        //std::cout << "Client cardtype chosen: " << type << std::endl;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&type);
         }
     }
 
     void Client::woodsAnswerClicked(int buttonID) {
-        std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
+        //std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&buttonID);
@@ -190,7 +200,7 @@ namespace client {
     }
 
     void Client::stealEquipAnswer(state::CardClass* chosenCard){
-        std::cout << "[CLIENT] Stolen card chosen:" << chosenCard << std::endl;
+        //std::cout << "[CLIENT] Stolen card chosen:" << chosenCard << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(chosenCard);
@@ -198,7 +208,7 @@ namespace client {
     }
 
     void Client::chosenCardEffectTarget(int targetID){
-        std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
+        //std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);

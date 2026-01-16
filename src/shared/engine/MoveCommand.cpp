@@ -14,6 +14,7 @@ namespace engine {
 
     void MoveCommand::execute()
     {
+        std::cout << "Move Phase Human of the id: " << engine.getCurrentPlayer().id <<" and this is a : "<< engine.getCurrentPlayer().type << std::endl;
         if (isWaitingForCell) {
             engine.isWaitingForCellPrompt = true;
             engine.waitingCommand = this;
@@ -47,7 +48,7 @@ namespace engine {
 
     void MoveCommand::executeAI()
     {
-        std::cout << "Move AI"<< std::endl;
+        std::cout << "Move Phase AI of the id: " << engine.getCurrentPlayer().id <<" and this is a : "<< engine.getCurrentPlayer().type << std::endl;
         state::Player& player = engine.getCurrentPlayer();
         state::CellClass *oldPos = player.position;
         state::CellClass *newPos = oldPos;
@@ -59,7 +60,7 @@ namespace engine {
             } while (die == 7);
             newPos = engine.board->dieToCell(die);
         }*/
-        engine.currentTurnPhase = BATTLE_PHASE;
+        engine.currentTurnPhase = CELL_EFFECT_PHASE;
         std::cout << "Choice Position : " << choice_Position << std::endl;
         engine.board->movePlayerTo(&player, choice_Position);
         isDone = true;
@@ -73,5 +74,12 @@ namespace engine {
         engine.isWaitingForCellPrompt = false;
         isWaitingForCell = false;
         cellAnswerReceived = true;
+    }
+
+    bool MoveCommand::needTarget() {
+        return false;
+    }
+
+    void MoveCommand::receiveAnswer(void* answer) {
     }
 }

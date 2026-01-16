@@ -16,6 +16,8 @@ namespace engine {
             engine.isWaitingForAttackPrompt = false;
             engine.goToNextPlayer();
             isDone = true;
+            std::cout << "Attack Cancelled" << std::endl;
+            std::cout << "=============END Of The Turn=============== "<< std::endl;
             return;
         }
         if (isWaitingForTarget) {
@@ -30,6 +32,8 @@ namespace engine {
             engine.goToNextPlayer();
             isDone = true;
         }
+        std::cout << "Attack executed." << std::endl;
+        std::cout << "=============END Of The Turn=============== "<< std::endl;
     }
 
     void AttackCommand::executeAI()
@@ -39,6 +43,8 @@ namespace engine {
             engine.goToNextPlayer();
             engine.currentTurnPhase = MOVE_PHASE;
             isDone = true;
+            std::cout << "Attack Cancelled" << std::endl;
+            std::cout << "=============END Of The Turn=============== "<< std::endl;
             return;
         }
         std::cout << "[AI] " << attacker->id << " attacks " << attacked->id << std::endl;
@@ -47,6 +53,8 @@ namespace engine {
         engine.goToNextPlayer();
         engine.currentTurnPhase = MOVE_PHASE;
         isDone = true;
+        std::cout << "Attack executed." << std::endl;
+        std::cout << "=============END Of The Turn=============== "<< std::endl;
     }
 
     void AttackCommand::receivePromptAnswer(void* answer)
@@ -64,5 +72,13 @@ namespace engine {
             engine.isWaitingForAttackPrompt = false;
             isWaitingForTarget = false;
         }
+    }
+
+    bool AttackCommand::needTarget() {
+        return true;
+    }
+
+    void AttackCommand::receiveAnswer(void* answer) {
+        attacked = static_cast<state::Player*>(answer);
     }
 }
