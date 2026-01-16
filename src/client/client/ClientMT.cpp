@@ -54,9 +54,26 @@ namespace client {
     }
 
     void ClientMT::lookForPrompts() {
+        if(engineGame->isWaitingForHermitInfoPrompt && (playerID==engineGame->hermitId)){
+            
+            for(auto card : engineGame->getCurrentPlayer().equipCards){
+                if(card->type == state::HERMIT){
+                    //TODO Give
+                    return renderMan->openHermitReceivePrompt(card,engineGame->hermitId);
+                }
+            }
+        }
+
+
         if (playerID != engineGame->currentPlayerIndex) {
             return;
         }
+
+        if(engineGame->isWaitingForHermitTargetPrompt){
+            return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
+        }
+
+
         if (engineGame->isWaitingForAttackPrompt) {
             renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
         }
@@ -177,6 +194,24 @@ namespace client {
             engineGame->commands.push_back(cmd);
         }
     }
+
+    void ClientMT::chosenHermitTarget(int targetID){
+        std::cout << "[CLIENT] Chosen hermit effect target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        engineGame->hermitId=targetID;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
+    }
+    void ClientMT::hermitEffect(client::HermitGiveReceive answer){
+        std::cout << "[CLIENT] Chosen hermit effect " << std::endl;
+        std::cout << "answer choice" << answer.choice << "\n answer damage" << answer.receive << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&answer);
+        }
+    }
+
 
     void ClientMT::capacityClicked(){
         if (!engineGame->isBusy){

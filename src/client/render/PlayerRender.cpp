@@ -18,7 +18,7 @@ namespace render {
             sf::Color::Red
         };
 
-        for (std::unique_ptr<state::Player>& player : board->playerList) {
+        for (std::shared_ptr<state::Player>& player : board->playerList) {
             sf::CircleShape* shape_wounds = new sf::CircleShape(15.f);
             sf::CircleShape* shape_position = new sf::CircleShape(15.f);
             shape_wounds->setFillColor(pawnColors[player->id]);

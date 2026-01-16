@@ -89,10 +89,13 @@ namespace engine
         bool shadowsAlive = false;
         for (auto& player : board->playerList) {
             if (player->isAlive) {
+                {
+                std::lock_guard<std::mutex> lock(board->mutexRole);
                 if (player->getRole() == state::HUNTER) {
                     huntersAlive = true;
                 } else {
                     shadowsAlive = true;
+                }
                 }
             }
         }

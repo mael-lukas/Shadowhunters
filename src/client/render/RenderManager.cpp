@@ -109,13 +109,18 @@ namespace render {
     void RenderManager::openHermitGivePrompt(int  currentId){
         prompt_render.activePromptType= HERMIT_GIVE;
         prompt_render.currentPlayerId = currentId;
-        needsRedraw = true;
+         {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 
-    void RenderManager::openHermitReceivePrompt(state::CardClass* card){
+    void RenderManager::openHermitReceivePrompt(state::CardClass* card,int hermitId){
         prompt_render.activePromptType = HERMIT_RECEIVE;
         prompt_render.hermitCard= card;
-        needsRedraw = true;
+        prompt_render.hermitId=hermitId;
+         {  std::lock_guard<std::mutex> lock(redrawMutex);
+            needsRedraw = true;
+        }
     }
 
     void RenderManager::openYesNoPrompt(){

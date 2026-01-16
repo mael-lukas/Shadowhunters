@@ -62,7 +62,7 @@ namespace client {
             for(auto card : engineGame->getCurrentPlayer().equipCards){
                 if(card->type == state::HERMIT){
                     //TODO Give
-                    return renderMan->openHermitReceivePrompt(card);
+                    return renderMan->openHermitReceivePrompt(card,engineGame->hermitId);
                 }
             }
         }
