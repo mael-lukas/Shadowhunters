@@ -9,6 +9,7 @@
 #include "Vampire.h"
 #include "Unknown.h"
 
+
 namespace state
 {
     Board::Board() : whitePack(WHITECOUNT, WHITE), darkPack(DARKCOUNT - WHITECOUNT - 1, DARK), hermitPack(HERMITCOUNT - DARKCOUNT - 1, HERMIT)
