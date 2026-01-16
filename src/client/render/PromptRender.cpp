@@ -2,6 +2,7 @@
 #include <iostream>
 #include "state/Board.h"
 #include "client/Client.h"
+#include "client/HermitGiveReceive.h"
 
 namespace render {
     PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
@@ -86,6 +87,8 @@ namespace render {
             cardEffectTargetButtons[i].setPosition(sf::Vector2f(700.f,250.f + i*120.f));
             cardEffectTargetButtons[i].setFillColor(buttonColors[i]);
         }
+        /////////// Initialize Hermits cards ////////////
+
     }
 
 
@@ -172,7 +175,66 @@ namespace render {
                 }
             }
         }
-    }
+        if (activePromptType == HERMIT_GIVE)
+        {
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < cardEffectTargetButtons.size(); i++)
+                {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos) && board->playerList.at(i)->isAlive == true && board->playerList.at(i)->id != currentPlayerId)
+                    {
+                        hermitId = board->playerList[i]->id;
+                        client->chosenCardEffectTarget(board->playerList[i]->id);
+                    }
+                }
+            }
+        }
+        if (activePromptType == HERMIT_RECEIVE)
+        {
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                client::HermitGiveReceive answer;
+                answer.choice=(int)is_card_effective;
+                answer.card = nullptr;
+                answer.receive=0;
+                if (yes_button.getGlobalBounds().contains(clickPos) && is_card_effective)
+                {
+                    switch (hermitCard->effect)
+                    {
+                    case state::GIVEORRECEIVE1:
+                        answer.receive = 1;
+                        break;
+                    case state::HEALORRECEIVE1:
+                        if (board->playerList[hermitId]->wounds != 0)
+                        {
+                            answer.receive = -1;
+                        }
+                        else
+                        {
+                            answer.receive = 1;
+                        }
+                        break;
+                    case state::RECEIVE1:
+                        answer.receive = 1;
+                        break;
+                    case state::RECEIVE2:
+                        answer.receive = 2;
+                        break;
+                    default:
+                        break;
+                    }
+
+                    client->hermitEffect(answer);
+                }
+                else if (no_button.getGlobalBounds().contains(clickPos) && !is_card_effective)
+                {   
+                    client->hermitEffect(answer);
+                }
+            }
+        }
+}
 
     void PromptRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
         if (activePromptType == NONE) {
@@ -413,6 +475,104 @@ namespace render {
                     window->draw(cardEffectTargetButtons[i]);
                 }
             }
+        }
+        if (activePromptType == HERMIT_GIVE){
+            sf::Text promptText;
+            promptText.setFont(font);
+            promptText.setString("Choose the target of the hermit card: ");
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(650.f,190.f);
+
+            window->draw(overlay);
+            window->draw(promptText);
+
+            for (int i = 0; i < board->playerList.size(); i++) {
+                if (board->playerList.at(i)->isAlive==true && board->playerList.at(i)->id!=currentPlayerId) {
+                    window->draw(cardEffectTargetButtons[board->playerList.at(i)->id]);
+                }
+            }
+        }
+        if (activePromptType == HERMIT_RECEIVE){
+            sf::Text promptText;
+            promptText.setFont(font);
+
+            switch (hermitCard->info)
+            {
+            
+            case state::ISSHADOW:
+                promptText.setString("Are you Shadow: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::SHADOW;
+                break;
+            case state::ISHUNTER:
+                promptText.setString("Are you Hunter: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::HUNTER;
+                break;
+            case state::ISNEUTRAL:
+                promptText.setString("Are you Neutral: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::NEUTRAL;
+                break;
+            case state::ISHUNTERORSHADOW:
+                promptText.setString("Are you Hunter or Shadow: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::HUNTER | board->playerList[hermitId]->getRole()==state::SHADOW;
+                break;
+            case state::ISHUNTERORNEUTRAL:
+                promptText.setString("Are you Hunter or Neutral: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::HUNTER | board->playerList[hermitId]->getRole()==state::NEUTRAL;
+                break;
+            case state::ISSHADOWORNEUTRAL:
+                promptText.setString("Are you Shadow or Neutral: ");
+                is_card_effective=board->playerList[hermitId]->getRole()==state::SHADOW | board->playerList[hermitId]->getRole()==state::NEUTRAL;
+                break;
+            case state::ISHPLESSOREQUAL11:
+                promptText.setString("Are you a character with less than 11 Hp: ");
+                is_card_effective=board->playerList[hermitId]->getHP()<=11;
+                break;
+            case state::ISHPMOREOREQUAL12:
+                promptText.setString("Are you a character with more than 12 Hp: ");
+                is_card_effective=board->playerList[hermitId]->getHP()>=12;
+                break;
+            default:
+                break;
+            }
+            promptText.setCharacterSize(34);
+            promptText.setFillColor(sf::Color::White);
+            promptText.setPosition(650.f,190.f);
+            window->draw(overlay);
+            window->draw(promptText);
+
+            sf::Text promptText2;
+            promptText2.setFont(font);
+            switch (hermitCard->effect)
+            {
+            case state::GIVEORRECEIVE1:
+                promptText2.setString("If you are give me one of your card or take 1 ");
+                break;
+            case state::HEALORRECEIVE1:
+                promptText2.setString("If you are heal 1 or take 1 if you are at 0");
+                break;
+            case state::RECEIVE1:
+                promptText2.setString("If you are take 1 ");
+                break;
+            case state::RECEIVE2:
+                promptText2.setString("If you are take 2 ");
+                break;
+            default:
+                break;
+            }
+
+            promptText2.setCharacterSize(34);
+            promptText2.setFillColor(sf::Color::White);
+            promptText2.setPosition(650.f,220.f);
+            window->draw(promptText2);
+            if(is_card_effective){
+            window->draw(yes_button);
+            }
+            else{
+                window->draw(no_button);
+            }
+            
+            
         }
     }
 }

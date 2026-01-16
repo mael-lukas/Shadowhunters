@@ -8,7 +8,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-
+#include "HermitGiveReceive.h"
 
 namespace client {
     Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame) : 
@@ -50,6 +50,21 @@ namespace client {
     void Client::lookForPrompts() {
         if (engineGame->isWaitingForAttackPrompt) {
             renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
+        }
+
+        if(engineGame->isWaitingForHermitTargetPrompt){
+
+            //is waiting for effet
+            return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
+            
+        }
+        if(engineGame->isWaitingForHermitInfoPrompt){
+            for(auto card : engineGame->getCurrentPlayer().equipCards){
+                if(card->type == state::HERMIT){
+                    //TODO Give
+                    return renderMan->openHermitReceivePrompt(card);
+                }
+            }
         }
         if (engineGame->isWaitingForYesNoPrompt) {
             renderMan->openYesNoPrompt();
@@ -183,4 +198,21 @@ namespace client {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
     }
+
+    void Client::chosenHermitTarget(int targetID){
+        std::cout << "[CLIENT] Chosen hermit effect target ID: " << targetID << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&targetID);
+        }
+    }
+    void Client::hermitEffect(client::HermitGiveReceive answer){
+        std::cout << "[CLIENT] Chosen hermit effect " << std::endl;
+        std::cout << "answer choice" << answer.choice << "\n answer damage" << answer.receive << std::endl;
+        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if (engineGame->waitingCommand != nullptr) {
+            engineGame->waitingCommand->receivePromptAnswer(&answer);
+        }
+    }
+
 }
