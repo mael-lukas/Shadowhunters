@@ -92,6 +92,12 @@ namespace render {
         needsRedraw = true;
     }
 
+    void RenderManager::openYesNoPrompt(const std::string& customText, sf::Vector2f position){
+        prompt_render.activePromptType = YES_NO;
+        prompt_render.setCustomPrompt(customText, position);
+        needsRedraw = true;
+    }
+
     void RenderManager::openWoodsPrompt() {
         prompt_render.activePromptType = WOODS_PROMPT;
         needsRedraw = true;
@@ -111,6 +117,16 @@ namespace render {
     }
     void RenderManager::openCardEffectTargetPrompt(){
         prompt_render.activePromptType = CARD_EFFECT_TARGET;
+        needsRedraw = true;
+    }
+    void RenderManager::showEffectCard(state::CardClass* card){
+        effectCard = card;
+        ui_render.setEffectCard(card);
+        needsRedraw = true;
+    }
+    void RenderManager::clearEffectCard(){
+        effectCard = nullptr;
+        ui_render.setEffectCard(nullptr);
         needsRedraw = true;
     }
 }

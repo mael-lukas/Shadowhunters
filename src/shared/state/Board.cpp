@@ -64,16 +64,26 @@ namespace state
         std::uniform_int_distribution<int> D6(1, 6);
         int d4_result = D4(g);
         int d6_result = D6(g);
-        if (DIFF == rule)
-            return abs(d6_result - d4_result);
-        else if (SUM == rule)
-            return d6_result + d4_result;
-        else if (ONLYD4 == rule)
-            return d4_result;
-        else if (ONLYD6 == rule)
-            return d6_result;
-        else
-            return 0; // TODO : implement
+        
+        int result = 0;
+        if (DIFF == rule) {
+            result = abs(d6_result - d4_result);
+            std::cout << "[DICE] D6=" << d6_result << ", D4=" << d4_result << " -> DIFF = " << result << std::endl;
+        }
+        else if (SUM == rule) {
+            result = d6_result + d4_result;
+            std::cout << "[DICE] D6=" << d6_result << ", D4=" << d4_result << " -> SUM = " << result << std::endl;
+        }
+        else if (ONLYD4 == rule) {
+            result = d4_result;
+            std::cout << "[DICE] D4 = " << result << std::endl;
+        }
+        else if (ONLYD6 == rule) {
+            result = d6_result;
+            std::cout << "[DICE] D6 = " << result << std::endl;
+        }
+        
+        return result;
     }
 
     CardClass *Board::drawDark()

@@ -3,6 +3,8 @@
 #include "client/Client.h"
 #include "../shared/state/CharacterName.h"
 #include "../shared/state/Subject.h"
+#include "../shared/state/CardType.h"
+#include "../shared/state/Card.h"
 
 namespace render {
 
@@ -27,6 +29,14 @@ namespace render {
                 std::cerr << "Error loading character texture " << i << std::endl;
             }
             characterFullCard.push_back(texture2);
+        }
+
+        for (int i = 0; i < static_cast<int>(state::Card::NONE); i++) {
+            sf::Texture texture;
+            if (!texture.loadFromFile(path + "/sh_card_textures/sh_cards/card" + std::to_string(i) + ".jpg")) {
+                std::cerr << "Error loading card texture " << i << std::endl;
+            }
+            cardTextures.push_back(texture);
         }
 
         for (int i = 0; i < characterTextures.size(); i++) {
@@ -200,7 +210,7 @@ namespace render {
                     window->draw(reveal_button);
                     window->draw(reveal_button_text);
                 }
-                // Display capacity button for Franklin and Georges during MOVE_PHASE
+
                 else if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE && 
                          !player->capacityUsed &&
                          (player->name == state::CharacterName::FRANKLIN || 
@@ -222,6 +232,12 @@ namespace render {
             window->draw(sprite);
             selectedPlayer = nullptr;
         }
+        if (effectCard != nullptr) {
+            sf::Sprite sprite(cardTextures[static_cast<int>(effectCard->name)]);
+            sprite.setScale(0.3f, 0.3f);
+            sprite.setPosition(1500.f, 200.f);
+            window->draw(sprite);
+        }
         if (currentTurnPhase == engine::TurnPhase::MOVE_PHASE) {
             window->draw(move_button);
             window->draw(move_button_text);
@@ -236,8 +252,12 @@ namespace render {
         }
     }
 
-    void UIRender::setTurnPhase (engine::TurnPhase newTurnPhase) {
+    void UIRender::setTurnPhase(engine::TurnPhase newTurnPhase) {
         currentTurnPhase = newTurnPhase;
+    }
+
+    void UIRender::setEffectCard(state::CardClass* card) {
+        effectCard = card;
     }
 
 };

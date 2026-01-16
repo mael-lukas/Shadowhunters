@@ -14,9 +14,8 @@ namespace engine {
             return;
         }
         else {
-            // Don't change turn phase - capacity can be used during MOVE_PHASE
             if (target != nullptr) {
-                int dmg = engine.board->rollDice(state::ONLYD4);
+                int dmg = engine.board->rollDice(state::ONLYD6);
                 target->receiveDamage(dmg);
                 user->capacityUsed = true;
             }
@@ -40,9 +39,8 @@ namespace engine {
             return;
         }
         else {
-            // Don't change turn phase - capacity can be used during MOVE_PHASE
             if (target != nullptr) {
-                int dmg = engine.board->rollDice(state::ONLYD6);
+                int dmg = engine.board->rollDice(state::ONLYD4);
                 target->receiveDamage(dmg);
                 user->capacityUsed = true;
             }
