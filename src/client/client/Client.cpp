@@ -16,6 +16,8 @@ namespace client {
 
     void Client::run() {
         renderMan->init();
+        renderMan->renderingTurnPlayer = true;
+        renderMan->isSingleThreaded = true;
         while (renderMan->window.isOpen()) {
             if (engineGame->currentGameState != engine::ONGOING) {
                 sf::Event event;

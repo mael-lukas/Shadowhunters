@@ -290,7 +290,7 @@ namespace render {
             window->draw(capacity_button_text);
         }
 
-        if(selectedPlayer != nullptr && (selectedPlayer->revealed==true || selectedPlayer->name == myPlayer->name)){
+        if(selectedPlayer != nullptr && (selectedPlayer->revealed==true || selectedPlayer->name == myPlayer->name || renderMan.isSingleThreaded)){
             sf::Sprite sprite = characterCardSprite[static_cast<int>(selectedPlayer->name)];
             sprite.setPosition(1500.f,200.f);
             window->draw(sprite);
