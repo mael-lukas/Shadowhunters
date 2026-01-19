@@ -4,7 +4,7 @@
 
 ---
 
-#### Prénom NOM – Prénom NOM
+#### Prénom NOM
 > Clovis    – Pressard  
 > Nathan    – Groussard  
 > Maël      – Lukas  
@@ -76,7 +76,7 @@ Le jeu est actuellement jouable en mode local avec :
 ## Sommaire
 
 - [Projet Logiciel Transversal](#projet-logiciel-transversal)
-      - [Prénom NOM – Prénom NOM](#prénom-nom--prénom-nom)
+      - [Prénom NOM](#prénom-nom)
   - [État d'avancement du projet (Janvier 2026)](#état-davancement-du-projet-janvier-2026)
     - [Modules complètement implémentés](#modules-complètement-implémentés)
     - [Fonctionnalités jouables](#fonctionnalités-jouables)
@@ -627,15 +627,359 @@ Cette section se concentre sur la répartition des différents modules du jeu da
 
 ### 6.1 Organisation des modules
 
+L'architecture du projet est organisée en trois modules principaux :
+
+```
+┌──────────────────────────────────────┐
+│        SHARED (état du jeu)          │
+│  State, Engine, Commands, Cards      │
+└──────────────────────────────────────┘
+            ▲         ▲
+            │         │
+      ┌─────┴─────────┴──────┐
+      │                      │
+┌─────┴──────┐        ┌─────┴──────┐
+│   CLIENT   │        │   SERVER   │
+│  (Rendu)   │        │  (Réseau)  │
+│ (Graphique)│        │  (microhttpd)
+└────────────┘        └────────────┘
+```
+
 #### 6.1.1 Répartition sur différents threads
+
+**Architecture actuelle (Single-threaded) - `main.cpp`**
+
+L'implémentation par défaut exécute tout dans un seul thread :
+
+```
+MAIN THREAD
+├─ Client::run()
+│  ├─ handleEvent() [attendre l'input utilisateur]
+│  ├─ Engine::processOneCommand() [exécuter une commande]
+│  ├─ RenderManager::draw() [affichage]
+│  └─ lookForPrompts() [gérer prompts]
+└─ sleep(15ms) [synchronisation]
+```
+
+**Avantages :**
+- Simplicité de développement et débogage
+- Pas de problème de concurrence d'accès à l'état
+- Synchronisation vidéo naturelle
+
+**Inconvénients :**
+- L'interface peut sembler figée pendant les calculs longs
+- Pas de parallélisation possible
+
+---
+
+**Architecture Multi-threaded - `mainMT.cpp`** (EN DÉVELOPPEMENT)
+
+Une architecture multi-threadée a été implémentée pour permettre la parallélisation :
+
+```
+THREAD ENGINE (16ms)              THREAD CLIENT 1 (33ms)       THREAD CLIENT 2          THREAD CLIENT 3          THREAD CLIENT 4
+├─ Engine::update()              ├─ RenderManager::init()    (identique)               (identique)               (identique)
+│  ├─ processOneCommandMT()       ├─ while running:
+│  └─ checkForVictory()           │  ├─ pollEvent()
+└─ sleep(16ms)                   │  ├─ handleEvent()
+                                 │  ├─ RenderManager::draw()
+                                 │  ├─ lookForPrompts() [AVEC LOCK]
+                                 │  └─ sleep(33ms)
+                                 └─ cleanup
+```
+
+**Synchronisation :**
+
+Les points de synchronisation critiques utilisent des `std::mutex` pour garantir la cohérence :
+
+```cpp
+// Engine.h
+std::mutex promptMutex;      // Protège l'accès aux flags de prompts
+std::mutex turnPhaseMutex;   // Protège la phase du tour (futur)
+
+// Utilisation dans ClientMT
+{
+    std::lock_guard<std::mutex> lock(engineGame->promptMutex);
+    lookForPrompts();  // Lecture sûre des flags
+}
+```
+
+**Flux de données :**
+
+1. **Engine Thread** (maître, 60 FPS)
+   - Traite les commandes du jeu
+   - Gère la logique du jeu
+   - Lit directement le Board partagé (lecture-seule pour les clients)
+
+2. **Client Threads** (4 threads, 1 par joueur)
+   - Chaque client gère son interface graphique (RenderManager)
+   - Détecte les événements utilisateur (clics, touches)
+   - Envoie les actions au Engine via la file de commandes
+   - Affiche l'état du jeu (30 FPS suffit pour le rendu)
+
+**Latences observées :**
+
+| Opération | Latence | Thread |
+|-----------|---------|--------|
+| Lancer de dé | < 1ms | Engine |
+| Mise à jour d'état | < 5ms | Engine |
+| Rendu écran | 16ms | Client (vsync 60Hz) |
+| Verrou prompts | < 1ms | Client (lock_guard) |
+| Communication inter-thread | ~2-5ms | Message passing |
+
+**Points critiques minimisant l'intersection :**
+
+- **Board partagé** : Accès en lecture par tous, écritures atomiques via Engine
+- **File de commandes** : Accès thread-safe avec front()/erase()
+- **Prompts** : Un seul client actif à la fois (le joueur actuel)
+- **Rendu** : Chaque client a sa propre fenêtre (pas de concurrence)
+
+---
 
 #### 6.1.2 Répartition sur différentes machines
 
+**Architecture Client-Serveur (FUTURE)**
+
+```
+┌────────────────────┐
+│      SERVEUR       │
+│  • State partagé   │
+│  • Engine          │
+│  • Arbitrage       │
+│  (microhttpd)      │
+└────────────────────┘
+         ▲ ▼ HTTPS/JSON
+    ┌────┼────────┬─────────┐
+    │    │        │         │
+┌───┴──┐│┌─────┐ │┌─────┐  │┌─────┐
+│Client││Client││Client││Client│
+│  1   ││  2   ││  3   ││  4   │
+└──────┘└──────┘└──────┘└──────┘
+```
+
+**Protocole de communication :**
+
+```json
+// Requête client
+{
+  "action": "move_command",
+  "player_id": 0,
+  "timestamp": 1234567890,
+  "data": { "dice_result": 7 }
+}
+
+// Réponse serveur
+{
+  "status": "success",
+  "game_state": {
+    "current_player": 1,
+    "board": { /* state */ },
+    "players": [ /* player states */ ]
+  }
+}
+```
+
+**Avantages :**
+- Jeu multijoueur en réseau
+- Serveur comme arbitre = pas de triche possible
+- Scalabilité : nombreux joueurs possibles
+
+**Inconvénients :**
+- Latence réseau (100-300ms par aller-retour)
+- Dépendance à la connexion réseau
+- Complexité accrue
+
+**Latences réseau estimées :**
+
+| Opération | Latence |
+|-----------|---------|
+| Ping serveur | 50-100ms |
+| Envoi commande | 50-100ms |
+| Traitement serveur | 5-10ms |
+| Réception state | 50-100ms |
+| Total round-trip | 155-310ms |
+
+**Infrastructure prévue :**
+
+- **Serveur** : libmicrohttpd (HTTP REST API)
+- **Sérialisation** : JSON via jsoncpp
+- **Transport** : HTTP/HTTPS
+- **Port** : 8080 (configuré dans CMakeLists)
+
 ### 6.2 Conception logiciel
+
+**Architecture d'intégration des threads :**
+
+```cpp
+// mainMT.cpp - Initialisation multi-threadée
+Board bd;                    // État partagé (thread-safe en lecture)
+Engine eng(&bd);             // Maître du jeu
+RenderManager rm[4];         // 4 interfaces graphiques
+
+// Thread Engine (60Hz)
+std::thread engineThread([](Engine* engine) {
+    while (running) {
+        engine->update();        // Traite les commandes
+        sleep(16ms);
+    }
+}, &eng);
+
+// Threads Client (30Hz, 1 par joueur)
+std::thread clientThreads[4];
+for (int i = 0; i < 4; i++) {
+    ClientMT* client = new ClientMT(&rm[i], &eng, i);
+    clientThreads[i] = std::thread(client_process, client);
+}
+```
+
+**Classes principales pour la modularisation :**
+
+**Engine (Thread-safe pour MT)**
+
+```cpp
+class Engine {
+    std::mutex promptMutex;      // Synchronisation des prompts
+    
+    void processOneCommandMT() {  // Version thread-safe
+        // Traite une commande sans blocage
+    }
+    
+    void update() {               // Appelée par engineThread
+        processOneCommandMT();
+        checkForVictory();
+    }
+};
+```
+
+**ClientMT (Multi-threadé)**
+
+```cpp
+class ClientMT {
+    int playerID;
+    render::RenderManager* renderMan;
+    engine::Engine* engineGame;
+    
+    void run() {                  // Exécutée dans un thread client
+        while (engineGame->running) {
+            // Chaque client handle ses événements
+            // Partage le même state que l'engine
+        }
+    }
+};
+```
+
+**Synchronisation des données critiques :**
+
+| Ressource | Type | Accès | Synchronisation |
+|-----------|------|-------|-----------------|
+| Board | Partagée | Lecture multi-thread | Lock-free (lecture seule) |
+| commands | Partagée | Push (4x), Pop (1x) | std::vector (pas thread-safe) |
+| promptMutex | Partagée | Flag de prompt | std::mutex + lock_guard |
+| currentPlayer | Partagée | Lecture/Écriture | Engine seul (atomic) |
+| Rendu | Privée | Chaque client | SFML (pas thread-safe) |
 
 ### 6.3 Conception logiciel: extension réseau
 
+**Système de communication client-serveur :**
+
+```cpp
+// Server.cpp (architecture future)
+class GameServer {
+    Board gameBoard;                    // État centralisé
+    Engine gameEngine;
+    std::map<int, ClientConnection> clients;
+    
+    void handleClientRequest(int clientID, Request req) {
+        Command* cmd = translateRequest(req);
+        gameEngine.commands.push_back(cmd);
+        
+        GameState state = captureState();
+        sendResponse(clientID, state);
+    }
+};
+```
+
+**Points de synchronisation réseau :**
+
+1. **Validation côté serveur** : Toutes les actions sont validées
+2. **Snapshot du state** : Envoyé après chaque commande importante
+3. **Timeout de client** : Si un client ne réagit pas en 30s, il est éjecté
+4. **Heartbeat** : Ping toutes les 5s pour détecter les déconnexions
+
+**Optimisations pour la latence :**
+
+- **Delta compression** : Envoyer uniquement les changements d'état
+- **Prédiction client** : Affichage optimiste des actions locales
+- **Interpolation** : Lissage des mouvements des autres joueurs
+- **Requêtes batch** : Grouper les petites actions
+
 ### 6.4 Conception logiciel: client Android
+
+**Architecture pour Android :**
+
+```
+┌─────────────────────────────┐
+│   Android Client App        │
+├─────────────────────────────┤
+│  • Android NDK (C++ bridge) │
+│  • SFML Android port        │
+│  • Java/Kotlin UI Wrapper   │
+└─────────────────────────────┘
+         ▲ ▼
+    ┌─────────────┐
+    │ Game Server │
+    │   (distant) │
+    └─────────────┘
+```
+
+**Défis spécifiques à Android :**
+
+1. **Écran tactile** : Adapter les contrôles pour le tactile
+2. **Réseau mobile** : Gérer les déconnexions/reconnexions
+3. **Performance** : CPU et mémoire limités
+4. **Batterie** : Optimiser la consommation (délai render 33ms → 100ms)
+
+**Implémentation proposée :**
+
+```cpp
+// Adaptateur tactile Android
+class AndroidInput {
+    void onTouchEvent(float x, float y) {
+        // Traduire coordonnées écran en actions du jeu
+        if (clickArea.contains(x, y)) {
+            client->moveClicked();
+        }
+    }
+};
+
+// Gestion réseau robuste
+class AndroidNetworkClient {
+    void retryWithBackoff(int attempt) {
+        delay = min(300 * 2^attempt, 30000);  // Cap à 30s
+        connect();
+    }
+};
+```
+
+**Protocole de communication compressé :**
+
+```json
+// Format allégé pour mobile
+{"a":"cmd","p":0,"d":{"r":7}}     // au lieu de full JSON
+
+// Compression : GZIP sur payloads
+POST /game/action
+Content-Encoding: gzip
+[données compressées]
+```
+
+**Améliorations pour l'UX mobile :**
+
+- Interface simplifée (boutons plus grands)
+- Rotation automatique d'écran
+- Notifications push pour les tours
+- Cache local du state pour offline mode
+- Achats in-app (cosmétiques futur)
 
 Illustration 4: Diagramme de classes pour la modularisation
 
