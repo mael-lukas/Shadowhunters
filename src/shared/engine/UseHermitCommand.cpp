@@ -44,6 +44,7 @@ void UseHermitCommand::receivePromptAnswer(void* answer)
             int targetId =*static_cast<int*>(answer);
             target= engine.board->playerList[targetId].get();
             target->equipACard(&card);
+            engine.hermitId = targetId;
             engine.isWaitingForHermitTargetPrompt = false;
             isWaitingForTarget = false;
             isWaitingForInfo=true;

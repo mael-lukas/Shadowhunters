@@ -14,11 +14,14 @@ namespace engine
     {
         cardType = type;
     }
+
     void DrawCardCommand::execute()
     {
         if (isWaitingForValidation) {
-            engine.isWaitingForYesNoPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -27,7 +30,9 @@ namespace engine
                 engine.currentTurnPhase = CARD_EFFECT_PHASE;
                 drawCard();
             }
-            engine.isWaitingForYesNoPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -56,8 +61,10 @@ namespace engine
     void DrawCardCommand::receivePromptAnswer(void* answer){
         draw = *static_cast<bool*>(answer);
         std::cout << "answer is : " << static_cast<int>(draw) << std::endl;
-        engine.waitingCommand = nullptr;
+        {  std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForYesNoPrompt = false;
+        }
         isWaitingForValidation = false;
     }
-
 }

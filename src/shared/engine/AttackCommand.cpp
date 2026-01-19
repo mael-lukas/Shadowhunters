@@ -12,21 +12,32 @@ namespace engine {
     void AttackCommand::execute()
     {
         if (isAttackCancelled) {
-            engine.currentTurnPhase = MOVE_PHASE;
-            engine.isWaitingForAttackPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.turnPhaseMutex);
+                engine.currentTurnPhase = MOVE_PHASE;
+            }
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.waitingCommand = nullptr;
+                engine.isWaitingForAttackPrompt = false;
+            }
             engine.goToNextPlayer();
             isDone = true;
             return;
         }
         if (isWaitingForTarget) {
-            engine.isWaitingForAttackPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForAttackPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
-            engine.currentTurnPhase = MOVE_PHASE;
+            {   std::lock_guard<std::mutex> lock(engine.turnPhaseMutex);
+                engine.currentTurnPhase = MOVE_PHASE;
+            }
             attacker->attackOther(*attacked);
-            engine.isWaitingForAttackPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForAttackPrompt = false;
+            }
             engine.goToNextPlayer();
             isDone = true;
         }
@@ -38,14 +49,18 @@ namespace engine {
         int targetID = *static_cast<int*>(answer);
         if (targetID == -1) {
             isAttackCancelled = true;
-            engine.waitingCommand = nullptr;
-            engine.isWaitingForAttackPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.waitingCommand = nullptr;
+                engine.isWaitingForAttackPrompt = false;
+            }
         }
         else {
             attacker = &engine.getCurrentPlayer();
             attacked = engine.board->playerList[targetID].get();
-            engine.waitingCommand = nullptr;
-            engine.isWaitingForAttackPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.waitingCommand = nullptr;
+                engine.isWaitingForAttackPrompt = false;
+            }
             isWaitingForTarget = false;
         }
     }

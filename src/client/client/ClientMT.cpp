@@ -1,4 +1,4 @@
-#include "Client.h"
+#include "ClientMT.h"
 #include "../../shared/engine/DrawCardCommand.h"
 #include "../../shared/engine/MoveCommand.h"
 #include "../../shared/engine/AttackCommand.h"
@@ -8,14 +8,16 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "HermitGiveReceive.h"
+#include <mutex>
+
 
 namespace client {
-    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame) : 
-    renderMan(renderMan), engineGame(engineGame) {}
+    ClientMT::ClientMT(render::RenderManager* renderMan, engine::Engine* engineGame, int playerID) : 
+    renderMan(renderMan), engineGame(engineGame), playerID(playerID) {}
 
-    void Client::run() {
+    void ClientMT::run() {
         renderMan->init();
+        renderMan->clientID = playerID;
         while (renderMan->window.isOpen()) {
             if (engineGame->currentGameState != engine::ONGOING) {
                 sf::Event event;
@@ -25,9 +27,10 @@ namespace client {
                     }
                 }
                 renderMan->drawGameOverScreen(engineGame->currentGameState);
-                std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                std::this_thread::sleep_for(std::chrono::milliseconds(33));
                 continue;
             }
+            renderMan->renderingTurnPlayer = (engineGame->currentPlayerIndex == playerID);
             sf::Event event;
             while (renderMan->window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
@@ -35,36 +38,44 @@ namespace client {
                 }
                 renderMan->handleEvent(event, this);
             }
-            engineGame->processOneCommand();
-            renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);
+            {   std::lock_guard<std::mutex> lock(engineGame->turnPhaseMutex);
+                renderMan->ui_render.setTurnPhase(engineGame->currentTurnPhase);    
+            }
             renderMan->draw();
-            lookForPrompts();
-            engineGame->checkForVictory();
+            {   std::lock_guard<std::mutex> lock(engineGame->promptMutex);
+                lookForPrompts();
+            }
+
             if (engineGame->currentGameState != engine::ONGOING) {
                 std::cout << "Game Over!" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(15));
+            std::this_thread::sleep_for(std::chrono::milliseconds(33));
         }
     }
 
-    void Client::lookForPrompts() {
-        if (engineGame->isWaitingForAttackPrompt) {
-            renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
-        }
-
-        if(engineGame->isWaitingForHermitTargetPrompt){
-
-            //is waiting for effet
-            return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
+    void ClientMT::lookForPrompts() {
+        if(engineGame->isWaitingForHermitInfoPrompt && (playerID==engineGame->hermitId)){
             
-        }
-        if(engineGame->isWaitingForHermitInfoPrompt){
             for(auto card : engineGame->getCurrentPlayer().equipCards){
                 if(card->type == state::HERMIT){
                     //TODO Give
                     return renderMan->openHermitReceivePrompt(card,engineGame->hermitId);
                 }
             }
+        }
+
+
+        if (playerID != engineGame->currentPlayerIndex) {
+            return;
+        }
+
+        if(engineGame->isWaitingForHermitTargetPrompt){
+            return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
+        }
+
+
+        if (engineGame->isWaitingForAttackPrompt) {
+            renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
         }
         if (engineGame->isWaitingForYesNoPrompt) {
             renderMan->openYesNoPrompt();
@@ -92,37 +103,15 @@ namespace client {
         }
     }
 
-    void Client::moveClicked() {
+    void ClientMT::moveClicked() {
         if (!engineGame->isBusy)
-        {   
-            
+        {
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }
     }
 
-    void Client::revealedClicked(){
-        if (!engineGame->isBusy){
-            cmd = new engine::RevealCommand(*engineGame,engineGame->getCurrentPlayer().id);
-            engineGame->commands.push_back(cmd);
-        }
-    }
-
-    void Client::capacityClicked(){
-        if (!engineGame->isBusy){
-            auto& currentPlayer = engineGame->getCurrentPlayer();
-            if (currentPlayer.name == state::FRANKLIN) {
-                cmd = new engine::FranklinCapacityCommand(*engineGame, &currentPlayer);
-                engineGame->commands.push_back(cmd);
-            }
-            else if (currentPlayer.name == state::GEORGES) {
-                cmd = new engine::GeorgesCapacityCommand(*engineGame, &currentPlayer);
-                engineGame->commands.push_back(cmd);
-            }
-        }
-    }
-
-    void Client::cellEffectClicked() {
+    void ClientMT::cellEffectClicked() {
         if (!engineGame->isBusy)
         {
             cmd = engineGame->cellEffectsFactory[engineGame->getCurrentPlayer().position->cell](*engineGame);
@@ -130,21 +119,21 @@ namespace client {
         }
     }
 
-    void Client::damageClicked() {
+    void ClientMT::damageClicked() {
         if (engineGame->isBusy == false) {
             cmd = new engine::AttackCommand(*engineGame, &engineGame->getCurrentPlayer());
             engineGame -> commands.push_back(cmd);
         }
     }
     
-    void Client::YesNoAnswer(bool answer){
+    void ClientMT::YesNoAnswer(bool answer){
         std::cout << "[client] YES NO answer chosen : " << answer << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&answer);
         }
     }
-    void Client::chosenAttackTarget(int targetID) {
+    void ClientMT::chosenAttackTarget(int targetID) {
         std::cout << "[CLIENT] Chosen target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
@@ -152,7 +141,7 @@ namespace client {
         }
     }
 
-    void Client::cellChosen(int cellID){
+    void ClientMT::cellChosen(int cellID){
         std::cout << "[CLIENT] Chosen cell ID: " << cellID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
@@ -167,7 +156,7 @@ namespace client {
         }
     }
 
-    void Client::cardTypeChosen(int type){
+    void ClientMT::cardTypeChosen(int type){
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         std::cout << "Client cardtype chosen: " << type << std::endl;
         if (engineGame->waitingCommand != nullptr) {
@@ -175,7 +164,7 @@ namespace client {
         }
     }
 
-    void Client::woodsAnswerClicked(int buttonID) {
+    void ClientMT::woodsAnswerClicked(int buttonID) {
         std::cout << "[CLIENT] Woods button ID: " << buttonID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
@@ -183,7 +172,7 @@ namespace client {
         }
     }
 
-    void Client::stealEquipAnswer(state::CardClass* chosenCard){
+    void ClientMT::stealEquipAnswer(state::CardClass* chosenCard){
         std::cout << "[CLIENT] Stolen card chosen:" << chosenCard << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
@@ -191,7 +180,7 @@ namespace client {
         }
     }
 
-    void Client::chosenCardEffectTarget(int targetID){
+    void ClientMT::chosenCardEffectTarget(int targetID){
         std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
         if (engineGame->waitingCommand != nullptr) {
@@ -199,14 +188,22 @@ namespace client {
         }
     }
 
-    void Client::chosenHermitTarget(int targetID){
+    void ClientMT::revealedClicked(){
+        if (!engineGame->isBusy){
+            cmd = new engine::RevealCommand(*engineGame, playerID);
+            engineGame->commands.push_back(cmd);
+        }
+    }
+
+    void ClientMT::chosenHermitTarget(int targetID){
         std::cout << "[CLIENT] Chosen hermit effect target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        engineGame->hermitId=targetID;
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
     }
-    void Client::hermitEffect(client::HermitGiveReceive answer){
+    void ClientMT::hermitEffect(client::HermitGiveReceive answer){
         std::cout << "[CLIENT] Chosen hermit effect " << std::endl;
         std::cout << "answer choice" << answer.choice << "\n answer damage" << answer.receive << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
@@ -215,4 +212,18 @@ namespace client {
         }
     }
 
+
+    void ClientMT::capacityClicked(){
+        if (!engineGame->isBusy){
+            auto& currentPlayer = engineGame->getCurrentPlayer();
+            if (currentPlayer.name == state::FRANKLIN) {
+                cmd = new engine::FranklinCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+            else if (currentPlayer.name == state::GEORGES) {
+                cmd = new engine::GeorgesCapacityCommand(*engineGame, &currentPlayer);
+                engineGame->commands.push_back(cmd);
+            }
+        }
+    }
 }

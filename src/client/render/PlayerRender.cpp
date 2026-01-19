@@ -5,9 +5,10 @@
 #include "render/Pawn.h"
 
 namespace render {
-    PlayerRender::PlayerRender(state::Board* board, sf::RenderWindow* win) :
+    PlayerRender::PlayerRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
 
     void PlayerRender::init() {
         std::vector<sf::Color> pawnColors = {
@@ -17,7 +18,7 @@ namespace render {
             sf::Color::Red
         };
 
-        for (std::unique_ptr<state::Player>& player : board->playerList) {
+        for (std::shared_ptr<state::Player>& player : board->playerList) {
             sf::CircleShape* shape_wounds = new sf::CircleShape(15.f);
             sf::CircleShape* shape_position = new sf::CircleShape(15.f);
             shape_wounds->setFillColor(pawnColors[player->id]);
@@ -61,6 +62,9 @@ namespace render {
     }
 
     void PlayerRender::handleEvent(const sf::Event& event, client::Client* client) {
+    }
+
+    void PlayerRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
     }
 
     void PlayerRender::draw() {

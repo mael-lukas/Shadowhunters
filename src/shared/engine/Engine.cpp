@@ -89,10 +89,13 @@ namespace engine
         bool shadowsAlive = false;
         for (auto& player : board->playerList) {
             if (player->isAlive) {
+                {
+                std::lock_guard<std::mutex> lock(board->mutexRole);
                 if (player->getRole() == state::HUNTER) {
                     huntersAlive = true;
                 } else {
                     shadowsAlive = true;
+                }
                 }
             }
         }
@@ -110,17 +113,22 @@ namespace engine
         }
     }
 
-    // void Engine::startTurn() {
-    //     commands.clear();
-    // }
-
-
-    // void Engine::endTurn()
-    // {
-    //     if (!board->playerList.empty())
-    //     {
-    //         currentPlayerIndex = (currentPlayerIndex + 1) % board->playerList.size();
-    //     }
-    // }
+    void Engine::processOneCommandMT() {
+        if (commands.empty()) {
+            return;
+        }
+        isBusy = true;
+        Command* cmd = commands.front();
+        cmd->execute();
+        if (cmd->isDone) {
+            commands.erase(commands.begin());
+            isBusy = false;
+        }
+    }
+    
+    void Engine::update() {
+        processOneCommandMT();
+        checkForVictory();
+    }
 
 }

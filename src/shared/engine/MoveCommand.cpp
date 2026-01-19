@@ -14,15 +14,19 @@ namespace engine {
     void MoveCommand::execute()
     {
         if (isWaitingForCell) {
-            engine.isWaitingForCellPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCellPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
 
         if (cellAnswerReceived) {
             engine.currentTurnPhase = CELL_EFFECT_PHASE;
             engine.board->movePlayerTo(&engine.getCurrentPlayer(), promptCell);
-            engine.isWaitingForCellPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCellPrompt = false;
+            }
             isDone = true;
             return;
         }
@@ -47,8 +51,10 @@ namespace engine {
     void MoveCommand::receivePromptAnswer(void* answer)
     {
         promptCell = static_cast<state::CellClass*>(answer);
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCellPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCellPrompt = false;
+        }
         isWaitingForCell = false;
         cellAnswerReceived = true;
     }

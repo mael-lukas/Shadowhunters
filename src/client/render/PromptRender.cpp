@@ -2,12 +2,15 @@
 #include <iostream>
 #include "state/Board.h"
 #include "client/Client.h"
+#include <mutex>
 #include "client/HermitGiveReceive.h"
 
 namespace render {
-    PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win) :
+    PromptRender::PromptRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
+
     void PromptRender::init() {
         std::string path = std::string(ASSET_PATH);
         if (!font.loadFromFile(path + "/arial.ttf")) {
@@ -47,7 +50,7 @@ namespace render {
             cellSprites.push_back(sprite);
         }
 
-/////////////// Initialize UNDERWORLD GATE PROMPT buttons ////////////////
+        /////////////// Initialize UNDERWORLD GATE PROMPT buttons ////////////////
         cardTypeColors = {sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color(200,200,200)};
         for (int i=0;i<4;i++){
             gateButtons.push_back(sf::RectangleShape(sf::Vector2f(350.f,100.f)));
@@ -91,6 +94,149 @@ namespace render {
 
 
     void PromptRender::handleEvent(const sf::Event& event, client::Client* client) {
+        if (activePromptType == NONE) {
+            return;
+        }
+        if (activePromptType == ATTACK_TARGET) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < targetPlayers.size(); i++) {
+                    if (target_players_buttons[i].getGlobalBounds().contains(clickPos)) {
+                        client->chosenAttackTarget(targetPlayers[i]->id);
+                    }
+                }
+                if (target_players_buttons.back().getGlobalBounds().contains(clickPos)) {
+                    client->chosenAttackTarget(-1);
+                }
+            }
+        }
+        if (activePromptType == WOODS_PROMPT) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < 8; i++) {
+                    if (woodsButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i/2]->isAlive) {
+                        client->woodsAnswerClicked(i);
+                    }
+                }
+                if (woodsButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->woodsAnswerClicked(-1);
+                }
+            }
+        }
+        if (activePromptType == YES_NO){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                if(yes_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(true);
+                }
+                else if (no_button.getGlobalBounds().contains(clickPos)){
+                    client->YesNoAnswer(false);
+                }
+            }
+        }
+        if (activePromptType == GATE_PROMPT){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < gateButtons.size(); i++) {
+                    if (gateButtons[i].getGlobalBounds().contains(clickPos)) {
+                        std::cout << "[PromptRender] Gate button " << i << " clicked." << std::endl;
+                        client->cardTypeChosen(i);
+                    }
+                }
+            }
+        }
+        if (activePromptType == ROLL_7) {
+            sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+            for (int i = 0; i < cellSprites.size(); i++) {
+                if (cellSprites[i].getGlobalBounds().contains(clickPos)) {
+                    client->cellChosen(i);
+                }
+            }
+        }
+        if (activePromptType == STEAL_EQUIP){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < potentialCards.size(); i++) {
+                    if (stealEquipButtons[i].getGlobalBounds().contains(clickPos)) {
+                        client->stealEquipAnswer(potentialCards[i]);
+                    }
+                }
+                if (stealEquipButtons.back().getGlobalBounds().contains(clickPos)) {
+                    client->stealEquipAnswer(nullptr);
+                }
+            }
+        }
+        if (activePromptType == CARD_EFFECT_TARGET){
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < cardEffectTargetButtons.size(); i++) {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos) && board->playerList[i]->isAlive) {
+                        client->chosenCardEffectTarget(board->playerList[i]->id);
+                    }
+                }
+            }
+        }
+        if (activePromptType == HERMIT_GIVE)
+        {
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                for (int i = 0; i < cardEffectTargetButtons.size(); i++)
+                {
+                    if (cardEffectTargetButtons[i].getGlobalBounds().contains(clickPos) && board->playerList.at(i)->isAlive == true && board->playerList.at(i)->id != currentPlayerId)
+                    {   
+                        client->chosenCardEffectTarget(board->playerList[i]->id);
+                    }
+                }
+            }
+        }
+        if (activePromptType == HERMIT_RECEIVE)
+        {
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2f clickPos(event.mouseButton.x, event.mouseButton.y);
+                client::HermitGiveReceive answer;
+                answer.choice=(int)is_card_effective;
+                answer.card = nullptr;
+                answer.receive=0;
+                if (yes_button.getGlobalBounds().contains(clickPos) && is_card_effective)
+                {
+                    switch (hermitCard->effect)
+                    {
+                    case state::GIVEORRECEIVE1:
+                        answer.receive = 1;
+                        break;
+                    case state::HEALORRECEIVE1:
+                        if (board->playerList[hermitId]->wounds != 0)
+                        {
+                            answer.receive = -1;
+                        }
+                        else
+                        {
+                            answer.receive = 1;
+                        }
+                        break;
+                    case state::RECEIVE1:
+                        answer.receive = 1;
+                        break;
+                    case state::RECEIVE2:
+                        answer.receive = 2;
+                        break;
+                    default:
+                        break;
+                    }
+
+                    client->hermitEffect(answer);
+                }
+                else if (no_button.getGlobalBounds().contains(clickPos) && !is_card_effective)
+                {   
+                    client->hermitEffect(answer);
+                }
+            }
+        }
+}
+
+    void PromptRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
         if (activePromptType == NONE) {
             return;
         }
@@ -232,7 +378,7 @@ namespace render {
                 }
             }
         }
-}
+    }
 
     void PromptRender::draw() {
         if (activePromptType == NONE) {
@@ -409,21 +555,25 @@ namespace render {
         if (activePromptType == HERMIT_RECEIVE){
             sf::Text promptText;
             promptText.setFont(font);
-
+            std::cout<<hermitId<<std::endl;
+            std::cout<<"kjdshdkq"<<std::endl;
+            {
+                std::lock_guard<std::mutex> lock(board->mutexRole);
+                state::Player* mescouilles = board->playerList[hermitId].get();
             switch (hermitCard->info)
             {
             
             case state::ISSHADOW:
                 promptText.setString("Are you Shadow: ");
-                is_card_effective=board->playerList[hermitId]->getRole()==state::SHADOW;
+                is_card_effective=(mescouilles->getRole()==state::SHADOW);
                 break;
             case state::ISHUNTER:
                 promptText.setString("Are you Hunter: ");
-                is_card_effective=board->playerList[hermitId]->getRole()==state::HUNTER;
+                is_card_effective=(mescouilles->getRole()==state::HUNTER);
                 break;
             case state::ISNEUTRAL:
                 promptText.setString("Are you Neutral: ");
-                is_card_effective=board->playerList[hermitId]->getRole()==state::NEUTRAL;
+                is_card_effective=(board->playerList[hermitId]->getRole()==state::NEUTRAL);
                 break;
             case state::ISHUNTERORSHADOW:
                 promptText.setString("Are you Hunter or Shadow: ");
@@ -448,12 +598,14 @@ namespace render {
             default:
                 break;
             }
+
+        }
+        
             promptText.setCharacterSize(34);
             promptText.setFillColor(sf::Color::White);
             promptText.setPosition(650.f,190.f);
             window->draw(overlay);
             window->draw(promptText);
-
             sf::Text promptText2;
             promptText2.setFont(font);
             switch (hermitCard->effect)

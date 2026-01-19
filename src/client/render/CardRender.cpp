@@ -4,9 +4,10 @@
 #include "client/Client.h"
 
 namespace render {
-    CardRender::CardRender(state::Board* board, sf::RenderWindow* win) :
+    CardRender::CardRender(state::Board* board, sf::RenderWindow* win, RenderManager& renderMan) :
     board(board),
-    window(win) {}
+    window(win),
+    renderMan(renderMan) {}
 
     void CardRender::init() {
         // TODO: load textures from all cards
@@ -29,12 +30,16 @@ namespace render {
     void CardRender::handleEvent(const sf::Event& event, client::Client* client) {
     }
 
+    void CardRender::handleEvent(const sf::Event& event, client::ClientMT* client) {
+    }
+
+
     void CardRender::draw() {
         ///// text based test /////
-        std::string cardInfo = "Card render info \n";
-        cardInfo += "The black deck contains " + std::to_string(board->darkPack.listOfCards.size()) + " cards.\n";
-        cardInfo += "The white deck contains " + std::to_string(board->whitePack.listOfCards.size()) + " cards.\n";
-        cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
+        // std::string cardInfo = "Card render info \n";
+        // cardInfo += "The black deck contains " + std::to_string(board->darkPack.listOfCards.size()) + " cards.\n";
+        // cardInfo += "The white deck contains " + std::to_string(board->whitePack.listOfCards.size()) + " cards.\n";
+        // cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
         // for (auto& player : board->playerList) {
         //     if (player->equipCards.size() > 0) {
         //         cardInfo += "Player in Cell " + std::to_string(player->position->cell) + " has equipped cards: ";
@@ -75,7 +80,7 @@ namespace render {
                 }
             }
         }
-        test_text.setString(cardInfo);
-        window->draw(test_text);
+        //test_text.setString(cardInfo);
+        //window->draw(test_text);
     }
 }

@@ -179,7 +179,7 @@ namespace state
      * by modifying the id of the player
      * @param playerList the list of players
      */
-    void Board::defineGameOrder(std::vector<std::unique_ptr<Player>> &playerList)
+    void Board::defineGameOrder(std::vector<std::shared_ptr<Player>> &playerList)
     {
         // int nbPlayer = playerList.size();
         // std::vector<int> assignedIDs;
