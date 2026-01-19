@@ -200,8 +200,10 @@ namespace engine {
 
     void WhiteBlessingCommand::execute() {
         if (isWaitingForTarget) {
-            engine.isWaitingForCardEffectTargetPrompt = true;
-            engine.waitingCommand = this;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = true;
+                engine.waitingCommand = this;
+            }
             return;
         }
         else {
@@ -213,7 +215,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForCardEffectTargetPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForCardEffectTargetPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -221,8 +225,10 @@ namespace engine {
     void WhiteBlessingCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForCardEffectTargetPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForCardEffectTargetPrompt = false;
+        }
         isWaitingForTarget = false;
     }
 
@@ -250,9 +256,11 @@ namespace engine {
         }
         
         if (isWaitingForChoice) {
-            engine.isWaitingForYesNoPrompt = true;
-            engine.waitingCommand = this;
-            engine.customPromptText = "Do you want to reveal yourself?";
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = true;
+                engine.waitingCommand = this;
+                engine.customPromptText = "Do you want to reveal yourself?";
+            }
             return;
         }
         else {
@@ -264,7 +272,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForYesNoPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -274,8 +284,10 @@ namespace engine {
         if (choice) {
             user->revealed = true;
         }
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForYesNoPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForYesNoPrompt = false;
+        }
         isWaitingForChoice = false;
     }
 
@@ -303,9 +315,11 @@ namespace engine {
         }
         
         if (isWaitingForChoice) {
-            engine.isWaitingForYesNoPrompt = true;
-            engine.waitingCommand = this;
-            engine.customPromptText = "Do you want to reveal yourself?";
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = true;
+                engine.waitingCommand = this;
+                engine.customPromptText = "Do you want to reveal yourself?";
+            }
             return;
         }
         else {
@@ -317,7 +331,9 @@ namespace engine {
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            engine.isWaitingForYesNoPrompt = false;
+            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+                engine.isWaitingForYesNoPrompt = false;
+            }
             isDone = true;
         }
     }
@@ -327,8 +343,10 @@ namespace engine {
         if (choice) {
             user->revealed = true;
         }
-        engine.waitingCommand = nullptr;
-        engine.isWaitingForYesNoPrompt = false;
+        {   std::lock_guard<std::mutex> lock(engine.promptMutex);
+            engine.waitingCommand = nullptr;
+            engine.isWaitingForYesNoPrompt = false;
+        }
         isWaitingForChoice = false;
     }
 

@@ -78,6 +78,7 @@ namespace client {
             renderMan->openAttackPrompt(engineGame->board->getNeighbours(&engineGame->getCurrentPlayer()));
         }
         if (engineGame->isWaitingForYesNoPrompt) {
+            renderMan->prompt_render.customPromptText = engineGame->customPromptText;
             renderMan->openYesNoPrompt();
         }
         if (engineGame->isWaitingForWoodsPrompt) {

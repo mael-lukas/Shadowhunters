@@ -21,8 +21,8 @@ namespace engine
             {   std::lock_guard<std::mutex> lock(engine.promptMutex);
                 engine.isWaitingForYesNoPrompt = true;
                 engine.waitingCommand = this;
+                engine.customPromptText = "Do you want to draw a card?";
             }
-            engine.customPromptText = "Do you want to draw a card?";
             return;
         }
         else {
