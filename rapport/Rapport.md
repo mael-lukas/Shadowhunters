@@ -11,47 +11,122 @@
 > Léo       – Boutonnet  
 ---
 
+## État d'avancement du projet (Janvier 2026)
+
+Au cours des trois derniers mois, des avancées significatives ont été réalisées sur le projet Shadow Hunters :
+
+### Modules complètement implémentés
+
+**1. Module State (État du jeu)** ✅
+- Toutes les classes d'état sont fonctionnelles : Board, Player, PackOfCards, CellClass, CardClass
+- 6 personnages jouables avec capacités spécifiques : Werewolf, Vampire, Unknown (Shadow) et Franklin, Georges, Emi (Hunter)
+- Système de cartes avec 3 types : Dark, White, Hermit
+- Pattern Observer implémenté pour notifier le rendu des changements d'état
+- Tests unitaires complets validant le comportement
+
+**2. Module Engine (Moteur de jeu)** ✅
+- Architecture basée sur le pattern Command
+- Système de phases de tour : MOVE_PHASE, CELL_EFFECT_PHASE, BATTLE_PHASE
+- 25+ commandes implémentées couvrant toutes les actions de jeu
+- Gestion automatique des tours et vérification des conditions de victoire
+- Factories pour les effets de cellules et de cartes
+- Système de prompts pour les interactions joueur
+
+**3. Module Render (Rendu graphique)** ✅
+- Rendu complet avec SFML : plateau, joueurs, cartes, UI
+- RenderManager coordonnant 5 sous-rendus spécialisés
+- Affichage contextuel selon la phase de jeu
+- Système de prompts graphiques pour les choix
+- Écran de fin de partie
+- Textures scannées du jeu physique intégrées
+
+**4. Module Client** ✅
+- Boucle de jeu principale fonctionnelle
+- Capture des événements utilisateur (clics, touches)
+- Traduction des interactions en commandes pour l'Engine
+- Gestion des prompts et réponses utilisateur
+
+### Fonctionnalités jouables
+
+Le jeu est actuellement jouable en mode local avec :
+- Partie à 4 joueurs (2 Shadows vs 2 Hunters)
+- Déplacement avec lancer de dés
+- Effets de 6 lieux différents (Gate, Woods, Church, Graveyard, Hermit, Altar)
+- Combat entre joueurs
+- Système de cartes Dark et White avec effets variés
+- Capacités spéciales des personnages
+- Révélation stratégique
+- Conditions de victoire fonctionnelles
+
+### En cours de développement
+
+- Intelligence Artificielle (architecture prévue, non implémentée)
+- Mode réseau (architecture préparée pour l'extension)
+
+### Architecture technique
+
+- **Langage** : C++
+- **Bibliothèques** : SFML (graphique), Boost (tests)
+- **Build system** : CMake
+- **Patterns utilisés** : Command, Observer, Factory, Strategy (prévu pour IA)
+- **Tests** : Tests unitaires avec Boost.Test
+
+---
+
 ## Sommaire
 
-- [1 Objectif](#1-objectif)
-  - [1.1 Présentation générale](#11-présentation-générale)
-  - [1.2 Règles du jeu](#12-règles-du-jeu)
-  - [1.3 Conception Logiciel](#13-conception-logiciel)
-- [2 Description et conception des états](#2-description-et-conception-des-états)
-  - [2.1 Description des états](#21-description-des-états)
-  - [2.2 Conception logicielle](#22-conception-logicielle)
-  - [2.3 Conception logicielle: extension pour le rendu](#23-conception-logicielle-extension-pour-le-rendu)
-  - [2.4 Conception logicielle: extension pour le moteur de jeu](#24-conception-logicielle-extension-pour-le-moteur-de-jeu)
-  - [2.5 Ressources](#25-ressources)
-- [3 Rendu: Stratégie et Conception](#3-rendu-stratégie-et-conception)
-  - [3.1 Stratégie de rendu d'un état](#31-stratégie-de-rendu-dun-état)
-  - [3.2 Conception logicielle](#32-conception-logicielle)
-  - [3.3 Conception logicielle: extension pour les animations](#33-conception-logicielle-extension-pour-les-animations)
-  - [3.4 Ressources](#34-ressources)
-  - [3.5 Exemple de rendu](#35-exemple-de-rendu)
-- [4 Règles de changement d'états et moteur de jeu](#4-règles-de-changement-détats-et-moteur-de-jeu)
-  - [4.1 Horloge globale](#41-horloge-globale)
-  - [4.2 Changements extérieurs](#42-changements-extérieur)
-  - [4.3 Changements autonomes](#43-changements-autonomes)
-  - [4.4 Conception logicielle](#44-conception-logicielle)
-  - [4.5 Conception logicielle: extension pour l'IA](#45-conception-logicielle-extension-pour-lia)
-  - [4.6 Conception logicielle: extension pour la parallélisation](#46-conception-logicielle-extension-pour-la-parallélisation)
-- [5 Intelligence Artificielle](#5-intelligence-artificielle)
-  - [5.1 Stratégies](#51-stratégies)
-    - [5.1.1 Intelligence minimale](#511-intelligence-minimale)
-    - [5.1.2 Intelligence basée sur des heuristiques](#512-intelligence-basée-sur-des-heuristiques)
-    - [5.1.3 Intelligence basée sur les arbres de recherche](#513-intelligence-basée-sur-les-arbres-de-recherche)
-  - [5.2 Conception logicielle](#52-conception-logicielle)
-  - [5.3 Conception logicielle: extension pour l'IA composée](#53-conception-logicielle-extension-pour-lia-composée)
-  - [5.4 Conception logicielle: extension pour IA avancée](#54-conception-logicielle-extension-pour-ia-avancée)
-  - [5.5 Conception logicielle: extension pour la parallélisation](#55-conception-logicielle-extension-pour-la-parallélisation)
-- [6 Modularisation](#6-modularisation)
-  - [6.1 Organisation des modules](#61-organisation-des-modules)
-    - [6.1.1 Répartition sur différents threads](#611-répartition-sur-différents-threads)
-    - [6.1.2 Répartition sur différentes machines](#612-répartition-sur-différentes-machines)
-  - [6.2 Conception logiciel](#62-conception-logiciel)
-  - [6.3 Conception logiciel: extension réseau](#63-conception-logiciel-extension-réseau)
-  - [6.4 Conception logiciel: client Android](#64-conception-logiciel-client-android)
+- [Projet Logiciel Transversal](#projet-logiciel-transversal)
+      - [Prénom NOM – Prénom NOM](#prénom-nom--prénom-nom)
+  - [État d'avancement du projet (Janvier 2026)](#état-davancement-du-projet-janvier-2026)
+    - [Modules complètement implémentés](#modules-complètement-implémentés)
+    - [Fonctionnalités jouables](#fonctionnalités-jouables)
+    - [En cours de développement](#en-cours-de-développement)
+    - [Architecture technique](#architecture-technique)
+  - [Sommaire](#sommaire)
+  - [1 Objectif](#1-objectif)
+    - [1.1 Présentation générale](#11-présentation-générale)
+    - [1.2 Règles du jeu](#12-règles-du-jeu)
+    - [1.3 Conception Logiciel](#13-conception-logiciel)
+  - [2 Description et conception des états](#2-description-et-conception-des-états)
+    - [2.1 Description des états](#21-description-des-états)
+      - [2.1.1 État du terrain](#211-état-du-terrain)
+      - [2.1.2 État du joueur](#212-état-du-joueur)
+      - [2.1.3 État du packet de carte](#213-état-du-packet-de-carte)
+    - [2.2 Conception logicielle](#22-conception-logicielle)
+      - [2.2.1 Classes Player](#221-classes-player)
+      - [2.2.2 Classes Board](#222-classes-board)
+      - [2.2.3 Classes Pack of Card](#223-classes-pack-of-card)
+    - [2.3 Conception logicielle: extension pour le rendu](#23-conception-logicielle-extension-pour-le-rendu)
+    - [2.4 Conception logicielle: extension pour le moteur de jeu](#24-conception-logicielle-extension-pour-le-moteur-de-jeu)
+    - [2.5 Ressources](#25-ressources)
+  - [3 Rendu: Stratégie et Conception](#3-rendu-stratégie-et-conception)
+    - [3.1 Stratégie de rendu d'un état](#31-stratégie-de-rendu-dun-état)
+    - [3.2 Conception logicielle](#32-conception-logicielle)
+    - [3.3 Conception logicielle: extension pour les animations](#33-conception-logicielle-extension-pour-les-animations)
+    - [3.4 Ressources](#34-ressources)
+  - [4 Règles de changement d'états et moteur de jeu](#4-règles-de-changement-détats-et-moteur-de-jeu)
+    - [4.1 Horloge globale](#41-horloge-globale)
+    - [4.2 Changements extérieurs](#42-changements-extérieurs)
+    - [4.3 Changements autonomes](#43-changements-autonomes)
+    - [4.4 Conception logicielle](#44-conception-logicielle)
+    - [4.5 Conception logicielle: extension pour l'IA](#45-conception-logicielle-extension-pour-lia)
+    - [4.6 Conception logicielle: extension pour la parallélisation](#46-conception-logicielle-extension-pour-la-parallélisation)
+  - [5 Intelligence Artificielle](#5-intelligence-artificielle)
+    - [5.1 Stratégies](#51-stratégies)
+      - [5.1.1 Intelligence minimale](#511-intelligence-minimale)
+      - [5.1.2 Intelligence basée sur des heuristiques](#512-intelligence-basée-sur-des-heuristiques)
+      - [5.1.3 Intelligence basée sur les arbres de recherche](#513-intelligence-basée-sur-les-arbres-de-recherche)
+    - [5.2 Conception logicielle](#52-conception-logicielle)
+    - [5.3 Conception logicielle: extension pour l'IA composée](#53-conception-logicielle-extension-pour-lia-composée)
+    - [5.4 Conception logicielle: extension pour IA avancée](#54-conception-logicielle-extension-pour-ia-avancée)
+    - [5.5 Conception logicielle: extension pour la parallélisation](#55-conception-logicielle-extension-pour-la-parallélisation)
+  - [6 Modularisation](#6-modularisation)
+    - [6.1 Organisation des modules](#61-organisation-des-modules)
+      - [6.1.1 Répartition sur différents threads](#611-répartition-sur-différents-threads)
+      - [6.1.2 Répartition sur différentes machines](#612-répartition-sur-différentes-machines)
+    - [6.2 Conception logiciel](#62-conception-logiciel)
+    - [6.3 Conception logiciel: extension réseau](#63-conception-logiciel-extension-réseau)
+    - [6.4 Conception logiciel: client Android](#64-conception-logiciel-client-android)
 
 ## 1 Objectif
 
@@ -162,19 +237,30 @@ Les paquets de cartes sont divisés en trois : les cartes visions qui vont appor
 <br><figcaption><br></br><strong>Figure 7 :</strong> Classes Player</figcaption>
 </figure></br>
 La classe Player est ce qui va permettre de définir les différentes informations propres au statut du joueur basique, ce qui correspond à un personnage révélé. Par la suite, cette classe est héritée pour construire les différents rôles nécessitant des effets spécifiques. On peut ainsi observer sur la figure 7 les différents rôles hérités : en rouge ce sont les Shadows et en bleu les Hunters. Par la suite, il devrait potentiellement y avoir l’ajout des cartes Neutres qui auront des effets qui leur seront propres.
-La classe Player est reliée à un énumérateur contenant les différents rôles existants, pour l’instant il n’y a que les rôles Shadow et Hunter.
-Le Player a aussi accès aux informations sur les cartes en sa possession
+La classe Player est reliée à un énumérateur contenant les différents rôles existants. Les rôles Shadow et Hunter sont implémentés, et 4 personnages avec leurs capacités spécifiques sont disponibles :
+
+**Personnages Shadow :**
+- **Werewolf (Loup-garou)** : 14 PV, sa capacité permet de contrer les attaques
+- **Vampire** : 13 PV, récupère des PV en attaquant quand révélé
+
+**Personnages Hunter :**
+- **Franklin** : 12 PV, capacité spéciale implémentée via FranklinCapacityCommand
+- **Georges** : 14 PV, capacité spéciale implémentée via GeorgesCapacityCommand
+
+Le Player a aussi accès aux informations sur les cartes en sa possession via l'attribut `equipCards`
 
 | Methode | Objectif |
 |--------|---------|
-| Player (Board* board, int maxHP, Role role) | Constructeur, sert à initialiser le joueur avec les spécificités de son rôle |
-| bool attackOther (Player& other) | Retourne si l’attaque contre l’autre joueur a été un succès |
-| int getAttacked (Player& source, int damage) | Vérifie si le joueur est attaqué et retourne les dégâts subis par ce dernier |
-| bool dealDamage (int damage, Player& targets) | Vérifie si le joueur visé prend les dégâts provenant de l’attaquant et retourne si la cible est toujours en vie |
-| bool receiveDamage (int damage) | Attribue les dégâts subis par le joueur et retourne si ce dernier est toujours en vie |
-|int getHP () | Récupère les PV max du joueur par rapport à son rôle |
-|Role getRole () | Retourne le rôle du joueur |
-|void useCapacity () | Effectue l’action liée à la capacité du rôle |
+| Player (Board* board, int maxHP, Role role, CharacterName name) | Constructeur, sert à initialiser le joueur avec les spécificités de son rôle et son nom |
+| virtual bool attackOther (Player& other) | Retourne si l'attaque contre l'autre joueur a été un succès (virtuelle pour permettre les capacités spéciales comme celle du Vampire) |
+| virtual int getAttacked (Player& source, int damage) | Vérifie si le joueur est attaqué et retourne les dégâts subis par ce dernier |
+| bool dealDamage (int damage, Player& targets) | Vérifie si le joueur visé prend les dégâts provenant de l'attaquant et retourne si la cible est toujours en vie |
+| bool receiveDamage (int damage) | Attribue les dégâts subis par le joueur et retourne si ce dernier est toujours en vie (peut soigner si négatif) |
+| int getHP () | Récupère les PV max du joueur par rapport à son rôle |
+| Role getRole () | Retourne le rôle du joueur |
+| virtual void useCapacity () | Effectue l'action liée à la capacité du rôle (virtuelle pour chaque personnage) |
+| void equipACard (CardClass* card) | Équipe une carte au joueur |
+| void revealYourself () | Révèle l'identité du joueur |
 
 
 #### 2.2.2 Classes Board
@@ -193,14 +279,18 @@ La classe est reliée à trois énumérations en vert : les types de cartes, les
 Les différents lieux ont été modifiés pour être maintenant des classes contenant l'enumeration des lieux mais aussi un vecteur de player contenant les joueurs sur la case,un vecteur d'int contenant les jets de dés permettant d'aller sur cette case ainsi qu'un int pour savoir dans quelle zone la case se situe.
 | Methode | Objectif |
 |--------|---------|
-| Board() | Constructeur, sert à initialiser le board |
-| int rollDice(rule:RollRule) | Lance un dé en suivant les règles établies au sein de l’énumérateur RollRule et retourne la valeur obtenue |
-| Card drawDark() | Pioche une carte du paquet de cartes dark et retourne la carte |
-| Card drawWhite() | Pioche une carte du paquet de cartes white et retourne la carte |
-| Card drawHermite() | Pioche une carte du paquet de cartes hermite et retourne la carte |
-| vector<Player*> getNeighbours(player: Player&) | Retourne une liste de joueurs voisins au Player |
-| CellClass getOtherCellInSameZone(CellClass: Cell) | Retourne la cellule se trouvant dans la même zone que la cellule choisie |
-|CellClass dieToCell(int die) | Retourne la cellule correspondant au jet de dés
+| Board() | Constructeur, initialise le plateau avec les 4 joueurs (Werewolf, Vampire, Franklin, Georges) positionnés à OUTSIDE |
+| int rollDice(RollRule rule) | Lance un ou deux dés selon les règles (SUM pour d4+d6, DIFF pour leur différence absolue) |
+| CardClass* drawDark() | Pioche une carte du paquet de cartes dark et retourne la carte |
+| CardClass* drawWhite() | Pioche une carte du paquet de cartes white et retourne la carte |
+| CardClass* drawHermit() | Pioche une carte du paquet de cartes hermit et retourne la carte |
+| std::vector<Player*> getNeighbours(Player* player) | Retourne une liste de joueurs dans la même cellule que le joueur |
+| CellClass* getOtherCellInSameZone(CellClass* cell) | Retourne l'autre cellule se trouvant dans la même zone |
+| CellClass* dieToCell(int die) | Convertit le résultat d'un jet de dés en cellule correspondante |
+| void movePlayerTo(Player* player, CellClass* cell) | Déplace un joueur vers une cellule spécifique |
+| void equipCard(Player& player, CardClass* card) | Équipe une carte à un joueur |
+| void defineGameOrder(std::vector<std::unique_ptr<Player>>& playerList) | Définit l'ordre de jeu des joueurs aléatoirement |
+| void discardCard(CardClass* card) | Défausse une carte dans la pile de défausse appropriée |
 
 #### 2.2.3 Classes Pack of Card
 <figure style="text-align: center;">
@@ -222,10 +312,10 @@ Cette classe est reliée à deux énumérations :
 
 | Methode | Objectif |
 |--------|---------|
-| PackOfCards(type:CarType) | Constructeur, sert à initialiser le paquet de cartes par rapport à son type de carte |
-| shuffle() | Mélange le paquet de cartes |
-| CardClass draw() | Pioche une carte du paquet de cartes et retourne la carte |
-| discard(card:Card) | Positionne la carte dans la discard pile |
+| PackOfCards(int nbCards, CardType type) | Constructeur, initialise le paquet avec un nombre de cartes et un type (DARK, WHITE, HERMIT) |
+| void shuffle() | Mélange le paquet de cartes |
+| CardClass* draw() | Pioche une carte du paquet ; si vide, remélange la défausse dans le paquet |
+| void discard(CardClass* card) | Place la carte dans la pile de défausse |
 
 
 ### 2.3 Conception logicielle: extension pour le rendu
@@ -321,25 +411,194 @@ Comme dit plus haut, les différentes classes de rendu sont responsables de l'af
 <img src="img_rapport/Design_Render.png" alt="Render futur du jeu">
 <br><figcaption><br></br><strong>Figure 17 :</strong> Render futur du jeu</figcaption>
 </figure></br>
-Le rendue risque de changer au cours du projet mais l'objectif final du rendue devrait être similaire à ce dernier.
+
+**État actuel du rendu :**
+
+Le rendu graphique est pleinement fonctionnel avec SFML. Les éléments suivants sont affichés :
+
+- **Plateau de jeu** : Les 12 cellules organisées en 6 zones de 2 cellules chacune
+- **Joueurs** : Représentation visuelle des 4 joueurs avec leurs positions sur le plateau
+- **Points de vie** : Affichage des dégâts (wounds) pour chaque joueur
+- **Cartes** : Visualisation des cartes piochées et des cartes équipées
+- **Boutons d'action** : Interface utilisateur avec boutons contextuels selon la phase de jeu :
+  - Bouton "Move" en MOVE_PHASE
+  - Bouton "Cell Effect" en CELL_EFFECT_PHASE
+  - Bouton "Attack" en BATTLE_PHASE
+  - Boutons "Reveal" et "Capacity" disponibles à tout moment
+- **Prompts** : Fenêtres de dialogue pour les choix du joueur (choix de cible d'attaque, choix de carte, etc.)
+- **Écran de fin de partie** : Affichage du vainqueur (Hunters Win / Shadows Win / Draw)
+
+Le système d'Observer permet une mise à jour automatique de l'affichage lorsque l'état du jeu change. Le RenderManager coordonne tous les sous-rendus et est notifié des changements via l'interface IObserver.
+
+**Textures utilisées :**
+
+Les textures scannées du jeu physique sont stockées dans le dossier `res/sh_card_textures/` avec plusieurs sous-dossiers :
+- `sh_cards/` : Cartes de jeu
+- `sh_characters/` : Portraits des personnages
+- `sh_area/` : Zones du plateau
+- `sh_backs/` : Dos des cartes
+- etc.
+
+Le rendu continue d'évoluer au cours du projet mais est déjà très proche de l'objectif final représenté en Figure 17.
 
 
 ## 4 Règles de changement d'états et moteur de jeu
 Dans cette section, il faut présenter les événements qui peuvent faire passer d'un état à un autre. Il faut également décrire les aspects liés au temps, comme la chronologie des événements et les aspects de synchronisation. Une fois ceci présenté, on propose une conception logicielle pour pouvoir mettre en œuvre ces règles, autrement dit le moteur de jeu.
 
 ### 4.1 Horloge globale
+Le moteur de jeu utilise une horloge basée sur les phases de tour (TurnPhase) pour organiser le déroulement d'une partie. Chaque tour est divisé en plusieurs phases :
+- **MOVE_PHASE** : Phase de déplacement du joueur
+- **CELL_EFFECT_PHASE** : Phase d'effet de la cellule où le joueur se trouve
+- **BATTLE_PHASE** : Phase de combat potentiel avec les joueurs dans la même zone
 
-
+Le moteur traite les commandes de manière séquentielle à travers la méthode `processOneCommand()` qui est appelée dans la boucle principale du jeu. Cette approche permet de synchroniser les animations et les effets visuels avec les changements d'état.
 
 ### 4.2 Changements extérieurs
+Les changements extérieurs proviennent des interactions du joueur avec l'interface graphique. Le Client capture les événements (clics de souris) et les transforme en commandes pour l'Engine :
+
+- **Déplacement** : Lorsque le joueur clique sur le bouton "Move", une MoveCommand est créée
+- **Attaque** : Si un joueur clique sur "Attack", une AttackCommand est générée avec le choix de la cible
+- **Révélation** : Le joueur peut se révéler à tout moment via RevealCommand
+- **Utilisation de capacité** : Les capacités spéciales (FranklinCapacityCommand, GeorgesCapacityCommand) sont activées par des clics
+- **Effets de cellule** : Les effets des lieux (GateCommand, WoodsCommand, StealEquipCommand) sont déclenchés automatiquement mais peuvent nécessiter des choix du joueur
+
+Ces commandes sont ajoutées à la file de commandes de l'Engine et exécutées séquentiellement.
 
 ### 4.3 Changements autonomes
+Certains changements se produisent de manière autonome sans intervention directe du joueur :
+
+- **Passage au joueur suivant** : La méthode `goToNextPlayer()` fait automatiquement passer au joueur suivant après la phase de combat
+- **Vérification de victoire** : `checkForVictory()` est appelée automatiquement à chaque fin de tour pour vérifier si un camp a gagné
+- **Effets de cartes** : Certaines cartes ont des effets automatiques (ex: WhiteFlareCommand inflige 2 dégâts à tous les autres joueurs)
+- **Gestion des cartes équipement temporaires** : Les cartes avec `effectTimer = ONELOOP` sont automatiquement défaussées lors du passage au tour suivant
+- **Lancer de dés** : Le lancer de dés pour le déplacement se fait automatiquement, sauf résultat de 7 où le joueur choisit sa destination
 
 ### 4.4 Conception logicielle
+Le moteur de jeu utilise le **pattern Command** pour encapsuler toutes les actions du jeu. Ce design pattern permet de :
+- Enregistrer l'historique des actions
+- Annuler/refaire des actions (fonctionnalité future)
+- Sérialiser les commandes pour le réseau (fonctionnalité future)
+
+<strong>Classe Engine</strong>
+
+| Attribut | Type | Description |
+|----------|------|-------------|
+| board | state::Board* | Référence au plateau de jeu |
+| commands | std::vector<Command*> | File de commandes à exécuter |
+| cellEffectsFactory | std::map | Factory pour créer les commandes d'effets de cellule |
+| cardEffectsFactory | std::map | Factory pour créer les commandes d'effets de carte |
+| currentTurnPhase | TurnPhase | Phase actuelle du tour |
+| currentGameState | GameState | État de la partie (ONGOING, HUNTERS_WIN, SHADOWS_WIN, DRAW) |
+| currentPlayerIndex | int | Index du joueur actuel |
+| waitingCommand | IPromptableCommand* | Commande en attente de réponse du joueur |
+
+| Méthode | Objectif |
+|---------|----------|
+| Engine(state::Board* board) | Constructeur, initialise les factories de commandes |
+| state::Player& getCurrentPlayer() | Retourne le joueur dont c'est le tour |
+| void goToNextPlayer() | Passe au joueur suivant et nettoie les cartes temporaires |
+| void processOneCommand() | Traite une commande de la file |
+| void checkForVictory() | Vérifie les conditions de victoire |
+
+<strong>Classe Command (abstraite)</strong>
+
+| Attribut | Type | Description |
+|----------|------|-------------|
+| isDone | bool | Indique si la commande est terminée |
+
+| Méthode | Objectif |
+|---------|----------|
+| virtual void execute() | Exécute la commande (méthode abstraite) |
+
+<strong>Interface IPromptableCommand</strong>
+
+Certaines commandes nécessitent une interaction avec le joueur (choix d'une cible, choix d'une carte, etc.). Ces commandes implémentent l'interface IPromptableCommand :
+
+| Méthode | Objectif |
+|---------|----------|
+| virtual void receivePromptAnswer(void* answer) | Reçoit la réponse du joueur |
+
+<strong>Commandes implémentées</strong>
+
+Plusieurs types de commandes ont été implémentées :
+
+**Commandes de jeu de base :**
+- **MoveCommand** : Gère le déplacement d'un joueur (lancer de dés, choix de cellule si 7)
+- **AttackCommand** : Gère une attaque entre joueurs
+- **RevealCommand** : Révèle l'identité d'un joueur
+
+**Commandes d'effets de cellule :**
+- **GateCommand** : Permet de choisir entre piocher une carte Dark ou White
+- **WoodsCommand** : Donne le choix entre piocher une carte ou se soigner
+- **StealEquipCommand** : Permet de voler une carte équipement à un adversaire
+- **DrawCardCommand** : Pioche une carte et active son effet si nécessaire
+
+**Commandes de cartes Dark :**
+- **DarkSpiderCommand** : Effet de la carte Araignée
+- **DarkDollCommand** : Effet de la carte Poupée
+- **DarkBatCommand** : Effet de la carte Chauve-souris (inflige 2 dégâts à une cible)
+
+**Commandes de cartes White :**
+- **WhiteFlareCommand** : Inflige 2 dégâts à tous les adversaires
+- **WhiteWaterCommand** : Soigne 2 points de vie
+- **WhiteAidCommand** : Effet de soutien
+- **WhiteAdventCommand** : Effet d'aventure
+- **WhiteBlessingCommand** : Effet de bénédiction
+
+**Commandes de capacités :**
+- **FranklinCapacityCommand** : Capacité spéciale de Franklin
+- **GeorgesCapacityCommand** : Capacité spéciale de Georges
+
+**Commandes Hermit :**
+- **UseHermitCommand** : Utilise une carte Hermit
+
+**Commandes de cartes Black :**
+- **BlackRitualCommand** : Effet de rituel
+- **BlackDynamiteCommand** : Effet de dynamite
 
 ### 4.5 Conception logicielle: extension pour l'IA
 
+L'architecture actuelle du jeu a été conçue pour faciliter l'intégration future d'une Intelligence Artificielle. Le système de commandes permet à l'IA d'utiliser exactement les mêmes interfaces que le joueur humain.
+
+**Architecture prévue :**
+
+L'IA sera implémentée comme un composant séparé qui :
+1. Observe l'état du jeu via le Board (sans tricher - uniquement les informations visibles)
+2. Prend des décisions basées sur cet état
+3. Fait appelle aux commandes (MoveCommand, AttackCommand, etc.) grâce au Client
+4. Envoie ces commandes à l'Engine via le Client
+
+**Intégration future :**
+
+Une classe `AI` pourrait être créée qui :
+- Hérite ou implémente une interface commune avec le Client humain
+- Possède une méthode `makeDecision()` appelée lorsque c'est son tour
+- Génère automatiquement les réponses aux prompts (choix de cible, choix de carte, etc.)
+- Peut être remplacée par différentes stratégies d'IA (Random, heuristique, advanced)
+
+Cette extension ne nécessitera pas de modification majeure de l'architecture existante grâce au pattern Command.
+
 ### 4.6 Conception logicielle: extension pour la parallélisation
+
+Le système actuel n'utilise pas encore de parallélisation, mais l'architecture est conçue pour la supporter :
+
+**Opportunités de parallélisation :**
+
+1. **Rendu séparé** : Le RenderManager pourrait s'exécuter dans un thread séparé de l'Engine
+   - Le pattern Observer facilite déjà cette séparation
+   - Une queue thread-safe de notifications pourrait être utilisée
+
+2. **Calculs d'IA** : Les décisions de l'IA pourraient être calculées en parallèle
+   - Exploration d'arbres de recherche en multi-threading
+   - Évaluation parallèle de plusieurs stratégies
+
+3. **Réseau** : La communication réseau pourrait être gérée dans un thread dédié
+   - Réception/envoi de commandes asynchrones
+   - Synchronisation via des queues thread-safe
+
+**Contraintes actuelles :**
+
+Pour l'instant, le jeu s'exécute dans un seul thread avec une boucle de jeu simple dans `Client::run()`. Cette approche simplifie le développement et le débogage. La parallélisation sera ajoutée lorsque le besoin de performance se fera sentir.
 
 Illustration 3: Diagrammes des classes pour le moteur de jeu
 
