@@ -36,7 +36,11 @@ void engine_process(engine::Engine* engine) {
 void client_process(client::ClientMT* client) {
     nb_of_active_clients++;
     client->run();
-    client->engineGame->board->playerList[client->playerID]->isAlive = false;
+    state::Player* myPlayer = client->engineGame->board->playerList[client->playerID].get();
+    myPlayer->isAlive = false;
+    myPlayer->wounds = myPlayer->getHP();
+    myPlayer->revealed = true;
+    client->renderMan->needsRedraw = true;
     if (client->playerID == client->engineGame->currentPlayerIndex) {
         client->engineGame->goToNextPlayer();
     }
