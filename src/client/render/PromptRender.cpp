@@ -324,23 +324,12 @@ namespace render {
         if(activePromptType == YES_NO){
             sf::Text promptText;
             promptText.setFont(font);
-            std::string text = customPromptText.empty() ? "Would you like to draw a card:" : customPromptText;
+            std::string text = customPromptText;
             promptText.setString(text);
             promptText.setCharacterSize(34);
             promptText.setFillColor(sf::Color::White);
-            sf::Vector2f pos = customPromptText.empty() ? sf::Vector2f(700.f,290.f) : customPromptPosition;
+            sf::Vector2f pos = sf::Vector2f(700.f,290.f);
             promptText.setPosition(pos);
-            
-            if (customPromptText.empty()) {
-                overlay.setPosition(500.f, 200.f);
-                yes_button.setPosition(600.f, 370.f);
-                no_button.setPosition(900.f, 370.f);
-            } else {
-                overlay.setPosition(pos.x - 200.f, pos.y - 50.f);
-                yes_button.setPosition(pos.x - 100.f, pos.y + 60.f);
-                no_button.setPosition(pos.x + 100.f, pos.y + 60.f);
-            }
-            
             window->draw(overlay);
             window->draw(promptText);
             window->draw(yes_button);

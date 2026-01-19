@@ -203,8 +203,11 @@ namespace engine {
     }
 
     void WhiteAdventCommand::execute() {
+        sf::Clock timer;
         if (user->getRole() != state::HUNTER) {
             engine.currentTurnPhase = BATTLE_PHASE;
+            timer.restart();
+            while (timer.getElapsedTime().asSeconds() < 1.5f) {}
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
             isDone = true;
@@ -225,6 +228,7 @@ namespace engine {
         if (isWaitingForChoice) {
             engine.isWaitingForYesNoPrompt = true;
             engine.waitingCommand = this;
+            engine.customPromptText = "Do you want to reveal yourself?";
             return;
         }
         else {
@@ -252,7 +256,10 @@ namespace engine {
     }
 
     void BlackRitualCommand::execute() {
+        sf::Clock timer;
         if (user->getRole() != state::SHADOW) {
+            timer.restart();
+            while (timer.getElapsedTime().asSeconds() < 1.5f) {}
             engine.currentTurnPhase = BATTLE_PHASE;
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
@@ -274,6 +281,7 @@ namespace engine {
         if (isWaitingForChoice) {
             engine.isWaitingForYesNoPrompt = true;
             engine.waitingCommand = this;
+            engine.customPromptText = "Do you want to reveal yourself?";
             return;
         }
         else {
@@ -301,7 +309,10 @@ namespace engine {
     }
 
     void BlackDynamiteCommand::execute() {
+        sf::Clock timer;
         engine.currentTurnPhase = BATTLE_PHASE;
+        timer.restart();
+        while (timer.getElapsedTime().asSeconds() < 1.5f) {}
         
         int result = engine.board->rollDice(state::SUM);
         std::cout << "[DYNAMITE] Rolled " << result << std::endl;

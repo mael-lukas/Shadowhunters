@@ -68,6 +68,7 @@ namespace client {
         }
         if (engineGame->isWaitingForYesNoPrompt) {
             state::Player* currentPlayer = &engineGame->getCurrentPlayer();
+            renderMan->prompt_render.customPromptText = engineGame->customPromptText;
             bool isAdvent = false;
             if (!currentPlayer->equipCards.empty()) {
                 state::CardClass* card = currentPlayer->equipCards.back();
@@ -86,7 +87,7 @@ namespace client {
                 if (playerIndex != -1) {
                     sf::Vector2f bubblePos = renderMan->ui_render.characterBubblesPos[playerIndex];
                     sf::Vector2f promptPos = bubblePos + sf::Vector2f(100.f, 0.f);
-                    renderMan->openYesNoPrompt("Voulez-vous révéler votre identité ?", promptPos);
+                    renderMan->openYesNoPrompt();
                 } else {
                     renderMan->openYesNoPrompt();
                 }
@@ -128,7 +129,6 @@ namespace client {
     void Client::moveClicked() {
         if (!engineGame->isBusy)
         {   
-            
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }

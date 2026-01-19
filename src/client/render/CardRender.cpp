@@ -61,13 +61,13 @@ namespace render {
                 sprite.setScale(0.1f, 0.1f);
                 window->draw(sprite);
                 }
-                else{
+                else {
                     sf::Texture texture;
-                sf::Sprite sprite;
-                std::string path = std::string(ASSET_PATH);
-                if (!texture.loadFromFile(path + "/sh_card_textures/sh_cards/card" + std::to_string(static_cast<int>(card->name)) + ".jpg")) {
-                    std::cerr << "Error loading texture for card " << card->name << std::endl;
-                }
+                    sf::Sprite sprite;
+                    std::string path = std::string(ASSET_PATH);
+                    if (!texture.loadFromFile(path + "/sh_card_textures/sh_cards/card" + std::to_string(static_cast<int>(card->name)) + ".jpg")) {
+                        std::cerr << "Error loading texture for card " << card->name << std::endl;
+                    }
                 sprite.setTexture(texture);
                 sprite.setPosition(1500.f,200.f);
                 sprite.setScale(0.3f, 0.3f);
