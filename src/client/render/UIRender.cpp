@@ -220,11 +220,13 @@ namespace render {
                 client->damageClicked();
                 return;
             }
-            for(int i = 0; i < board->playerList.size(); i++){
+            int clientID = renderMan.clientID;
+            int nbOfPlayers = board->playerList.size();
+            for(int i = 0; i < nbOfPlayers; i++){
                 state::Player* player = board->playerList[i].get();
                 sf::Sprite sprite = characterSprites[static_cast<int>(player->name)];
-                sprite.setRotation(i * 90.f);
-                sprite.setPosition(characterBubblesPos[i]);
+                sprite.setRotation(((i + nbOfPlayers - clientID) % nbOfPlayers) * 90.f);
+                sprite.setPosition(characterBubblesPos[(i + nbOfPlayers - clientID) % nbOfPlayers]);
                 if(sprite.getGlobalBounds().contains(clickPos)){
                     selectedPlayer = player;
                     draw();

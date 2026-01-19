@@ -36,10 +36,10 @@ namespace render {
 
     void CardRender::draw() {
         ///// text based test /////
-        std::string cardInfo = "Card render info \n";
-        cardInfo += "The black deck contains " + std::to_string(board->darkPack.listOfCards.size()) + " cards.\n";
-        cardInfo += "The white deck contains " + std::to_string(board->whitePack.listOfCards.size()) + " cards.\n";
-        cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
+        // std::string cardInfo = "Card render info \n";
+        // cardInfo += "The black deck contains " + std::to_string(board->darkPack.listOfCards.size()) + " cards.\n";
+        // cardInfo += "The white deck contains " + std::to_string(board->whitePack.listOfCards.size()) + " cards.\n";
+        // cardInfo += "The hermit deck contains " + std::to_string(board->hermitPack.listOfCards.size()) + " cards.\n";
         // for (auto& player : board->playerList) {
         //     if (player->equipCards.size() > 0) {
         //         cardInfo += "Player in Cell " + std::to_string(player->position->cell) + " has equipped cards: ";
@@ -80,7 +80,7 @@ namespace render {
                 }
             }
         }
-        test_text.setString(cardInfo);
-        window->draw(test_text);
+        //test_text.setString(cardInfo);
+        //window->draw(test_text);
     }
 }
