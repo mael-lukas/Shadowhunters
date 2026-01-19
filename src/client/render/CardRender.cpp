@@ -49,7 +49,8 @@ namespace render {
         //         cardInfo += "\n";
         //     }
         // }
-        for (int i = 0; i < board->playerList.size(); i++) {
+        int nbOfPlayers = board->playerList.size();
+        for (int i = 0; i < nbOfPlayers; i++) {
             state::Player* player = board->playerList[i].get();
             for (int j = 0; j < player->equipCards.size(); j++) {
                 state::CardClass* card = player->equipCards[j];
@@ -61,8 +62,9 @@ namespace render {
                     std::cerr << "Error loading texture for card " << card->name << std::endl;
                 }
                 sprite.setTexture(texture);
-                sprite.setPosition(playerDefaultPos[i] + playerOffsets[i] * static_cast<float>(j));
-                sprite.setRotation(playerRotations[i]);
+                int real_i = (i + nbOfPlayers - renderMan.clientID) % nbOfPlayers;
+                sprite.setPosition(playerDefaultPos[real_i] + playerOffsets[real_i] * static_cast<float>(j));
+                sprite.setRotation(playerRotations[real_i]);
                 sprite.setScale(0.1f, 0.1f);
                 window->draw(sprite);
                 }

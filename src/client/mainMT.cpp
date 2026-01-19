@@ -55,14 +55,24 @@ int main(int argc,char* argv[])
     Engine eng(&bd);
     RenderManager rm(&bd);
     RenderManager rm2(&bd);
+    RenderManager rm3(&bd);
+    RenderManager rm4(&bd);
     ClientMT client(&rm, &eng, 0);
     ClientMT client2(&rm2, &eng, 1);
+    ClientMT client3(&rm3, &eng, 2);
+    ClientMT client4(&rm4, &eng, 3);    
     std::thread engineThread = std::thread([](engine::Engine* eng){ engine_process(eng); }, &eng);
     std::thread clientThread = std::thread([](client::ClientMT* cli){ client_process(cli); }, &client);
     sleep(1);
     std::thread clientThread2 = std::thread([](client::ClientMT* cli){ client_process(cli); }, &client2);
+    sleep(1);
+    std::thread clientThread3 = std::thread([](client::ClientMT* cli){ client_process(cli); }, &client3);
+    sleep(1);
+    std::thread clientThread4 = std::thread([](client::ClientMT* cli){ client_process(cli); }, &client4);
     clientThread.detach();
     clientThread2.detach();
+    clientThread3.detach();
+    clientThread4.detach();
     engineThread.join();
     return 0;
 }
