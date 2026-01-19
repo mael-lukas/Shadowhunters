@@ -50,6 +50,7 @@ namespace engine
         if (cardType == state::HERMIT){
             card = engine.board->drawHermit();
         }
+        card = new state::CardClass(state::AID1, state::WHITE, state::INSTANT);
         currentPlayer.equipCards.push_back(card);
         if (cardType == state::HERMIT) {
             engine.commands.emplace_back(new UseHermitCommand(engine, *card));

@@ -177,7 +177,7 @@ namespace engine {
             engine.currentTurnPhase = BATTLE_PHASE;
             if (target != nullptr) {
                 target->wounds = 0;
-                target->receiveDamage(0);
+                target->receiveDamage(7);
             }
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
