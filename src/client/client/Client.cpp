@@ -69,7 +69,36 @@ namespace client {
             }
         }
         if (engineGame->isWaitingForYesNoPrompt) {
-            renderMan->openYesNoPrompt();
+            state::Player* currentPlayer = &engineGame->getCurrentPlayer();
+            renderMan->prompt_render.customPromptText = engineGame->customPromptText;
+            bool isAdvent = false;
+            if (!currentPlayer->equipCards.empty()) {
+                state::CardClass* card = currentPlayer->equipCards.back();
+                if (card->name == state::Card::ADVENT1 || card->name == state::Card::ADVENT2) {
+                    isAdvent = true;
+                }
+            }
+            if (isAdvent) {
+                int playerIndex = -1;
+                for (int i = 0; i < engineGame->board->playerList.size(); ++i) {
+                    if (engineGame->board->playerList[i].get() == currentPlayer) {
+                        playerIndex = i;
+                        break;
+                    }
+                }
+                if (playerIndex != -1) {
+                    sf::Vector2f bubblePos = renderMan->ui_render.characterBubblesPos[playerIndex];
+                    sf::Vector2f promptPos = bubblePos + sf::Vector2f(100.f, 0.f);
+                    renderMan->openYesNoPrompt();
+                } else {
+                    renderMan->openYesNoPrompt();
+                }
+            } else {
+                renderMan->openYesNoPrompt();
+            }
+            if (!currentPlayer->equipCards.empty()) {
+                renderMan->showEffectCard(currentPlayer->equipCards.back());
+            }
         }
         if (engineGame->isWaitingForWoodsPrompt) {
             renderMan->openWoodsPrompt();
@@ -91,13 +120,17 @@ namespace client {
         }
         if (engineGame->isWaitingForCardEffectTargetPrompt){
             renderMan->openCardEffectTargetPrompt();
+            // Show the effect card
+            state::Player* currentPlayer = &engineGame->getCurrentPlayer();
+            if (!currentPlayer->equipCards.empty()) {
+                renderMan->showEffectCard(currentPlayer->equipCards.back());
+            }
         }
     }
 
     void Client::moveClicked() {
         if (!engineGame->isBusy)
         {   
-            
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }
@@ -142,6 +175,7 @@ namespace client {
     void Client::YesNoAnswer(bool answer){
         std::cout << "[client] YES NO answer chosen : " << answer << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        renderMan->clearEffectCard();
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&answer);
         }
@@ -196,6 +230,7 @@ namespace client {
     void Client::chosenCardEffectTarget(int targetID){
         std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
         renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        renderMan->clearEffectCard();
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }

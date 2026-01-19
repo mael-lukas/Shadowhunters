@@ -3,6 +3,8 @@
 #include "client/Client.h"
 #include "../shared/state/CharacterName.h"
 #include "../shared/state/Subject.h"
+#include "../shared/state/CardType.h"
+#include "../shared/state/Card.h"
 
 namespace render {
 
@@ -27,6 +29,14 @@ namespace render {
                 std::cerr << "Error loading character texture " << i << std::endl;
             }
             characterFullCard.push_back(texture2);
+        }
+
+        for (int i = 0; i < static_cast<int>(state::Card::NONE); i++) {
+            sf::Texture texture;
+            if (!texture.loadFromFile(path + "/sh_card_textures/sh_cards/card" + std::to_string(i) + ".jpg")) {
+                std::cerr << "Error loading card texture " << i << std::endl;
+            }
+            cardTextures.push_back(texture);
         }
 
         for (int i = 0; i < characterTextures.size(); i++) {
@@ -311,8 +321,12 @@ namespace render {
         }
     }
 
-    void UIRender::setTurnPhase (engine::TurnPhase newTurnPhase) {
+    void UIRender::setTurnPhase(engine::TurnPhase newTurnPhase) {
         currentTurnPhase = newTurnPhase;
+    }
+
+    void UIRender::setEffectCard(state::CardClass* card) {
+        effectCard = card;
     }
 
 };

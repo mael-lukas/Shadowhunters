@@ -14,6 +14,10 @@
 #include "WhiteFlareCommand.h"
 #include "WhiteWaterCommand.h"
 #include "WhiteAidCommand.h"
+#include "WhiteBlessingCommand.h"
+#include "WhiteAdventCommand.h"
+#include "BlackRitualCommand.h"
+#include "BlackDynamiteCommand.h"
 
 namespace engine
 {
@@ -41,6 +45,13 @@ namespace engine
         cardEffectsFactory[state::WATER4] = [](Engine& engine) { return new WhiteWaterCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::AID1] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
         cardEffectsFactory[state::AID2] = [](Engine& engine) { return new WhiteAidCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BLESSING1] = [](Engine& engine) { return new WhiteBlessingCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::BLESSING2] = [](Engine& engine) { return new WhiteBlessingCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::ADVENT1] = [](Engine& engine) { return new WhiteAdventCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::ADVENT2] = [](Engine& engine) { return new WhiteAdventCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::RITUAL1] = [](Engine& engine) { return new BlackRitualCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::RITUAL2] = [](Engine& engine) { return new BlackRitualCommand(engine, &engine.getCurrentPlayer()); };
+        cardEffectsFactory[state::DYNAMITE] = [](Engine& engine) { return new BlackDynamiteCommand(engine, &engine.getCurrentPlayer()); };
 
         board->playerList[0]->isTurnPlayer = true;
     }

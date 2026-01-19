@@ -130,6 +130,12 @@ namespace render {
         }
     }
 
+    void RenderManager::openYesNoPrompt(const std::string& customText, sf::Vector2f position){
+        prompt_render.activePromptType = YES_NO;
+        prompt_render.setCustomPrompt(customText, position);
+        needsRedraw = true;
+    }
+
     void RenderManager::openWoodsPrompt() {
         prompt_render.activePromptType = WOODS_PROMPT;
         {  std::lock_guard<std::mutex> lock(redrawMutex);
@@ -160,5 +166,15 @@ namespace render {
         {  std::lock_guard<std::mutex> lock(redrawMutex);
             needsRedraw = true;
         }
+    }
+    void RenderManager::showEffectCard(state::CardClass* card){
+        effectCard = card;
+        ui_render.setEffectCard(card);
+        needsRedraw = true;
+    }
+    void RenderManager::clearEffectCard(){
+        effectCard = nullptr;
+        ui_render.setEffectCard(nullptr);
+        needsRedraw = true;
     }
 }
