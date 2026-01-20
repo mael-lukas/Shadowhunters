@@ -18,6 +18,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 ### Modules complètement implémentés
 
 **1. Module State (État du jeu)** 
+
 - Toutes les classes d'état sont fonctionnelles : Board, Player, PackOfCards, CellClass, CardClass
 - 6 personnages jouables avec capacités spécifiques : Werewolf, Vampire, Unknown (Shadow) et Franklin, Georges, Emi (Hunter)
 - Système de cartes avec 3 types : Dark, White, Hermit
@@ -25,6 +26,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 - Tests unitaires complets validant le comportement
 
 **2. Module Engine (Moteur de jeu)** 
+
 - Architecture basée sur le pattern Command
 - Système de phases de tour : MOVE_PHASE, CELL_EFFECT_PHASE, BATTLE_PHASE
 - 25+ commandes implémentées couvrant toutes les actions de jeu
@@ -33,6 +35,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 - Système de prompts pour les interactions joueur
 
 **3. Module Render (Rendu graphique)** 
+
 - Rendu complet avec SFML : plateau, joueurs, cartes, UI
 - RenderManager coordonnant 5 sous-rendus spécialisés
 - Affichage contextuel selon la phase de jeu
@@ -41,6 +44,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 - Textures scannées du jeu physique intégrées
 
 **4. Module Client** 
+
 - Boucle de jeu principale fonctionnelle
 - Capture des événements utilisateur (clics, touches)
 - Traduction des interactions en commandes pour l'Engine
@@ -49,6 +53,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 ### Fonctionnalités jouables
 
 Le jeu est actuellement jouable en mode local avec :
+
 - Partie à 4 joueurs (2 Shadows vs 2 Hunters)
 - Déplacement avec lancer de dés
 - Effets de 6 lieux différents (Gate, Woods, Church, Graveyard, Hermit, Altar)
@@ -150,7 +155,7 @@ Exemple de rendue d'une partie:
 
 ### 1.2 Règles du jeu
 
-Le jeu est divisé en trois camp:
+Le jeu est divisé en trois camps:
 
 - les Shadows ayant pour but d'éliminer les groupes adverses
 - les Hunters ont le même but que les Shadows
@@ -800,15 +805,6 @@ std::mutex turnPhaseMutex;   // Protège la phase du tour (futur)
    - Envoie les actions au Engine via la file de commandes
    - Affiche l'état du jeu (30 FPS suffit pour le rendu)
 
-**Latences observées :**
-
-| Opération | Latence | Thread |
-|-----------|---------|--------|
-| Lancer de dé | < 1ms | Engine |
-| Mise à jour d'état | < 5ms | Engine |
-| Rendu écran | 16ms | Client (vsync 60Hz) |
-| Verrou prompts | < 1ms | Client (lock_guard) |
-| Communication inter-thread | ~2-5ms | Message passing |
 
 **Points critiques minimisant l'intersection :**
 
@@ -820,76 +816,6 @@ std::mutex turnPhaseMutex;   // Protège la phase du tour (futur)
 ---
 
 #### 6.1.2 Répartition sur différentes machines
-
-**Architecture Client-Serveur (FUTURE)**
-
-```
-┌────────────────────┐
-│      SERVEUR       │
-│  • State partagé   │
-│  • Engine          │
-│  • Arbitrage       │
-│  (microhttpd)      │
-└────────────────────┘
-         ▲ ▼ HTTPS/JSON
-    ┌────┼────────┬─────────┐
-    │    │        │         │
-┌───┴──┐│┌─────┐ │┌─────┐  │┌─────┐
-│Client││Client││Client││Client│
-│  1   ││  2   ││  3   ││  4   │
-└──────┘└──────┘└──────┘└──────┘
-```
-
-**Protocole de communication :**
-
-```json
-// Requête client
-{
-  "action": "move_command",
-  "player_id": 0,
-  "timestamp": 1234567890,
-  "data": { "dice_result": 7 }
-}
-
-// Réponse serveur
-{
-  "status": "success",
-  "game_state": {
-    "current_player": 1,
-    "board": { /* state */ },
-    "players": [ /* player states */ ]
-  }
-}
-```
-
-**Avantages :**
-
-- Jeu multijoueur en réseau
-- Serveur comme arbitre = pas de triche possible
-- Scalabilité : nombreux joueurs possibles
-
-**Inconvénients :**
-
-- Latence réseau (100-300ms par aller-retour)
-- Dépendance à la connexion réseau
-- Complexité accrue
-
-**Latences réseau estimées :**
-
-| Opération | Latence |
-|-----------|---------|
-| Ping serveur | 50-100ms |
-| Envoi commande | 50-100ms |
-| Traitement serveur | 5-10ms |
-| Réception state | 50-100ms |
-| Total round-trip | 155-310ms |
-
-**Infrastructure prévue :**
-
-- **Serveur** : libmicrohttpd (HTTP REST API)
-- **Sérialisation** : JSON via jsoncpp
-- **Transport** : HTTP/HTTPS
-- **Port** : 8080 (configuré dans CMakeLists)
 
 ### 6.2 Conception logiciel
 
@@ -964,39 +890,6 @@ class ClientMT {
 | Rendu | Privée | Chaque client | SFML (pas thread-safe) |
 
 ### 6.3 Conception logiciel: extension réseau
-
-**Système de communication client-serveur :**
-
-```cpp
-// Server.cpp (architecture future)
-class GameServer {
-    Board gameBoard;                    // État centralisé
-    Engine gameEngine;
-    std::map<int, ClientConnection> clients;
-    
-    void handleClientRequest(int clientID, Request req) {
-        Command* cmd = translateRequest(req);
-        gameEngine.commands.push_back(cmd);
-        
-        GameState state = captureState();
-        sendResponse(clientID, state);
-    }
-};
-```
-
-**Points de synchronisation réseau :**
-
-1. **Validation côté serveur** : Toutes les actions sont validées
-2. **Snapshot du state** : Envoyé après chaque commande importante
-3. **Timeout de client** : Si un client ne réagit pas en 30s, il est éjecté
-4. **Heartbeat** : Ping toutes les 5s pour détecter les déconnexions
-
-**Optimisations pour la latence :**
-
-- **Delta compression** : Envoyer uniquement les changements d'état
-- **Prédiction client** : Affichage optimiste des actions locales
-- **Interpolation** : Lissage des mouvements des autres joueurs
-- **Requêtes batch** : Grouper les petites actions
 
 ### 6.4 Conception logiciel: client Android
 
