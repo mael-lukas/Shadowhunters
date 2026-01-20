@@ -62,5 +62,5 @@
         "chrono": "cpp",
         "iomanip": "cpp",
         "format": "cpp"
-    }
+    },
 }

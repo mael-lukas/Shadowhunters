@@ -121,7 +121,7 @@ add_compile_definitions(ASSET_PATH="${ASSET_PATH}")
 # Add source subdirectories
 add_subdirectory(src/shared)
 add_subdirectory(src/client)
-#add_subdirectory(src/server)
+add_subdirectory(src/server)
 
 # Rapport generation
 add_subdirectory(rapport)
