@@ -17,14 +17,14 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 
 ### Modules complètement implémentés
 
-**1. Module State (État du jeu)** ✅
+**1. Module State (État du jeu)** 
 - Toutes les classes d'état sont fonctionnelles : Board, Player, PackOfCards, CellClass, CardClass
 - 6 personnages jouables avec capacités spécifiques : Werewolf, Vampire, Unknown (Shadow) et Franklin, Georges, Emi (Hunter)
 - Système de cartes avec 3 types : Dark, White, Hermit
 - Pattern Observer implémenté pour notifier le rendu des changements d'état
 - Tests unitaires complets validant le comportement
 
-**2. Module Engine (Moteur de jeu)** ✅
+**2. Module Engine (Moteur de jeu)** 
 - Architecture basée sur le pattern Command
 - Système de phases de tour : MOVE_PHASE, CELL_EFFECT_PHASE, BATTLE_PHASE
 - 25+ commandes implémentées couvrant toutes les actions de jeu
@@ -32,7 +32,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 - Factories pour les effets de cellules et de cartes
 - Système de prompts pour les interactions joueur
 
-**3. Module Render (Rendu graphique)** ✅
+**3. Module Render (Rendu graphique)** 
 - Rendu complet avec SFML : plateau, joueurs, cartes, UI
 - RenderManager coordonnant 5 sous-rendus spécialisés
 - Affichage contextuel selon la phase de jeu
@@ -40,7 +40,7 @@ Au cours des trois derniers mois, des avancées significatives ont été réalis
 - Écran de fin de partie
 - Textures scannées du jeu physique intégrées
 
-**4. Module Client** ✅
+**4. Module Client** 
 - Boucle de jeu principale fonctionnelle
 - Capture des événements utilisateur (clics, touches)
 - Traduction des interactions en commandes pour l'Engine
@@ -131,6 +131,7 @@ Le jeu est actuellement jouable en mode local avec :
 ## 1 Objectif
 
 ### 1.1 Présentation générale
+
 Durant ce projet, l'objectif est de reproduire le jeu Shadow Hunter. Shadow Hunter est un jeu de plateau, développé par Yasutaka Ikeda, c'est un jeu de bluff où le but est de faire gagner son camp, que ce soit les Hunter, Shadow ou les personnages neutres. Pour ce faire, le joueur devra réussir à déterminer qui sont ses alliés et qui sont ses ennemis. Ce jeu, à travers sa partie bluff, peut faire penser au jeu du loup-garou mais la comparaison en reste là, car contrairement à ce dernier qui tourne autour des débats, Shadow Hunter introduit des mécaniques bien différentes, que ce soit par la possibilité de combattre avec les joueurs, l'attribution de différents rôles, l'utilisation de cartes d’équipement et à effet immédiat. Cela apporte ainsi de nouveaux niveaux de complexité dans l'obtention de la victoire.
 Le plateau de jeu peut être vu en Figure 1.
 
@@ -148,14 +149,17 @@ Exemple de rendue d'une partie:
 
 
 ### 1.2 Règles du jeu
+
 Le jeu est divisé en trois camp:
-- les Shadows ayant pour but d'éliminer les groupes adverse
+
+- les Shadows ayant pour but d'éliminer les groupes adverses
 - les Hunters ont le même but que les Shadows
 - les Neutres ont des conditions de victoire propre au rôle du joueur  
 
 Dans les camps chaque rôle à un effet qui lui est propre et qui peut être utilisé uniquement après que ce dernier ce soit révêler. Les effets peuvent être utilisable qu'une seule fois par tour ou une unique fois par partie.
 
 Le plateau visible à la Figure 3 trois parties :
+
 - une partie à gauche contenant les points de vie ainsi que les informations à propos des points de vie max des différents rôles ;
 - une partie au milieu contenant les cartes des différentes zones et lieux ;
 - une partie à droite contenant les cartes effets (les cartes Ténèbres, les cartes Lumières et les cartes Vision)
@@ -166,6 +170,7 @@ Le plateau visible à la Figure 3 trois parties :
 </figure></br>
 
 Les cartes effets sont divisé en trois:
+
 - Les cartes vision qui ont pour but de donner une information sur le camps du joueur ciblé;
         <br><figure style="text-align: center;">
         <img src="img_rapport/figure4_carte_vision.jpg" alt="Carte vision">
@@ -184,10 +189,12 @@ Les cartes effets sont divisé en trois:
         </figure></br>
 
 Parmis les cartes ténèbres et lumières, il y a deux types de cartes:
+
 - les cartes équipements qui accompagneront le joueur tout le long de la partie.
 - les cartes à utilisation immédiate
 
 Déroulement d'une partie:
+
 - Avant de commencer la partie, le positionnement des différents lieux est fait de manière aléatoire. 
 Après cela, les joueurs ont leurs rôles attribués aléatoirement, puis ces derniers ont leurs ordre définis par un lancer de dé.
 - Un tours de jeu commence par un lancer de dé pour savoir où le joueur doit aller (somme d'un d4 et d'un d6), la somme des dé indique le lieu où  le joueur doit se déplacer, un 7 lui laisse choisir mais il doit toujours changer de lieu(il n'est pas possible de rester deux fois sur le même lieu).    
@@ -195,6 +202,7 @@ Le joueur peut ensuite effectuer l'effet indiqué sur la carte lieux et, si il y
 - La révélation peux ce faire à tout instant, même pendant le tour de l'adversaire.
 
 Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition des camps
+
 | Nombre de joueur | Nombre de Shadow | Nombre de Hunter | Nombre de Neutre |
 |--------|---------|--------|---------|
 | 4 | 2 | 2 | 0 |
@@ -205,6 +213,7 @@ Une partie peut être jouer de 4 à 8 joueurs changeant ainsi la répartition de
 
 
 ### 1.3 Conception Logiciel
+
 Pour la suite de la production du projet, a été décidé de partir sur le mode de jeu à 4 joueurs car ce dernier permet de rendre la première version à produire du projet plus simple car enlevant le camp Neutre, ce qui enlève de nombreuse condition de victoire différentes.
 
 Etant donner que nous avons en notre possession le jeu, il est alors possible de scanner les différent élément du jeu afin de pouvoir les intégrers à notre code. L'ajout de cet aspect graphique est ce qui peut être produit ultérieuremnt.
@@ -216,34 +225,48 @@ Etant donner que nous avons en notre possession le jeu, il est alors possible de
 L'objectif de cette section est une description très fine des états dans le projet. Plusieurs niveaux de descriptions sont attendus. Le premier doit être général, afin que le lecteur puisse comprendre les éléments et principes en jeux. Le niveau suivant est celui de la conception logicielle. Pour ce faire, on présente à la fois un diagramme des classes, ainsi qu'un commentaire détaillé de ce diagramme. Indiquer l'utilisation de patron de conception sera très apprécié. Notez bien que les règles de changement d'état ne sont pas attendues dans cette section, même s'il n'est pas interdit d'illustrer de temps à autre des états par leurs possibles changements.
 
 ### 2.1 Description des états
+
 L'état du jeu est formé par 4 joueurs et un terrain. Le joueur 1 effectue ses différentes actions et les joueurs restants sont contrôlés par des Intelligences Artificielles (ou d'autres joueurs). Le terrain, quant à lui, affiche la position des joueurs ainsi que leurs dégâts subis, mais aussi les différents paquets de cartes.
 
 #### 2.1.1 État du terrain
+
 Le terrain est constitué de trois parties : une partie indiquant les points de vie où les jetons de chacun représenteront les dégâts subis par chaque joueur.
 La seconde partie sera celle des lieux représentant la position des joueurs à l’instant T. Cela permet de savoir s’il y a des joueurs dans la même zone, mais aussi de connaître les effets de chaque lieu.
 La troisième partie est la pioche, où il y a trois tas de cartes : vision, lumière et ténèbres.
 L’attribution et l’utilisation de ces différentes parties ne sont pas contrôlées directement par le joueur mais par les résultats de lancers de dé que ce dernier effectuera. L’analyse des lancers de dé n’est pas faite par le board mais par l’engine dont nous discuterons ultérieurement.
 
 #### 2.1.2 État du joueur
+
 Les joueurs ont accès aux différentes informations propres à leurs rôles ainsi qu’à leurs équipements. Ils ont aussi la possibilité d’attaquer ou non un adversaire s’ils se trouvent au sein de la même zone. Le joueur a aussi la possibilité de se révéler afin de pouvoir utiliser son effet.
 
 #### 2.1.3 État du packet de carte
+
 Les paquets de cartes sont divisés en trois : les cartes visions qui vont apporter des informations aux joueurs concernant leurs adversaires, les cartes lumières qui donnent des effets aux joueurs et les cartes ténèbres qui font de même.
 
 ### 2.2 Conception logicielle
+
 #### 2.2.1 Classes Player
+
 <figure style="text-align: center;">
 <img src="img_rapport/figure7_class_Player.png" alt="Classes Player">
 <br><figcaption><br></br><strong>Figure 7 :</strong> Classes Player</figcaption>
 </figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure7_1_class_Player.png" alt="Classes Player">
+<br><figcaption><br></br><strong>Figure 7 :</strong> Nouvelles classes Player</figcaption>
+</figure></br>
+
 La classe Player est ce qui va permettre de définir les différentes informations propres au statut du joueur basique, ce qui correspond à un personnage révélé. Par la suite, cette classe est héritée pour construire les différents rôles nécessitant des effets spécifiques. On peut ainsi observer sur la figure 7 les différents rôles hérités : en rouge ce sont les Shadows et en bleu les Hunters. Par la suite, il devrait potentiellement y avoir l’ajout des cartes Neutres qui auront des effets qui leur seront propres.
 La classe Player est reliée à un énumérateur contenant les différents rôles existants. Les rôles Shadow et Hunter sont implémentés, et 4 personnages avec leurs capacités spécifiques sont disponibles :
 
 **Personnages Shadow :**
+
 - **Werewolf (Loup-garou)** : 14 PV, sa capacité permet de contrer les attaques
 - **Vampire** : 13 PV, récupère des PV en attaquant quand révélé
 
 **Personnages Hunter :**
+
 - **Franklin** : 12 PV, capacité spéciale implémentée via FranklinCapacityCommand
 - **Georges** : 14 PV, capacité spéciale implémentée via GeorgesCapacityCommand
 
@@ -264,6 +287,7 @@ Le Player a aussi accès aux informations sur les cartes en sa possession via l'
 
 
 #### 2.2.2 Classes Board
+
 <figure style="text-align: center;">
 <img src="img_rapport/figure8_class_Board.png" alt="Classes Board">
 <br><figcaption><br></br><strong>Figure 8 :</strong> Classes Board</figcaption>
@@ -273,10 +297,16 @@ La classe est reliée à trois énumérations en vert : les types de cartes, les
 
 <figure style="text-align: center;">
 <img src="img_rapport/figure8_1_class_Board.png" alt="Classes Board">
-<br><figcaption><br></br><strong>Figure 8 V2 :</strong> Nouvelle classe Board</figcaption>
+<br><figcaption><br></br><strong>Figure 8 V2 :</strong> Nouvelle classe Board (Novembre)</figcaption>
+</figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure8_2_class_Board.png" alt="Classes Board">
+<br><figcaption><br></br><strong>Figure 8 V3 :</strong> Nouvelle classe Board(Janvier)</figcaption>
 </figure></br>
 
 Les différents lieux ont été modifiés pour être maintenant des classes contenant l'enumeration des lieux mais aussi un vecteur de player contenant les joueurs sur la case,un vecteur d'int contenant les jets de dés permettant d'aller sur cette case ainsi qu'un int pour savoir dans quelle zone la case se situe.
+
 | Methode | Objectif |
 |--------|---------|
 | Board() | Constructeur, initialise le plateau avec les 4 joueurs (Werewolf, Vampire, Franklin, Georges) positionnés à OUTSIDE |
@@ -293,13 +323,19 @@ Les différents lieux ont été modifiés pour être maintenant des classes cont
 | void discardCard(CardClass* card) | Défausse une carte dans la pile de défausse appropriée |
 
 #### 2.2.3 Classes Pack of Card
+
 <figure style="text-align: center;">
 <img src="img_rapport/figure9_class_PackOfCards.png" alt="Classes Board">
 <br><figcaption><br></br><strong>Figure 9 :</strong> Classes PackOfCards</figcaption>
 </figure></br>
 
 <figure style="text-align: center;">
-<img src="img_rapport/figure9_1_class_PackOfCards.png_Class_PackOfCards.png" alt="Classes Pack of Card new">
+<img src="img_rapport/figure9_1_class_PackOfCards.png" alt="Classes Pack of CardV2">
+<br><figcaption><br></br><strong>Figure 9 V2:</strong> Classes PackOfCards</figcaption>
+</figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure9_2_class_PackOfCards.png" alt="Classes Pack of CardV3">
 <br><figcaption><br></br><strong>Figure 9 V2:</strong> Classes PackOfCards</figcaption>
 </figure></br>
 
@@ -319,6 +355,7 @@ Cette classe est reliée à deux énumérations :
 
 
 ### 2.3 Conception logicielle: extension pour le rendu
+
 <figure style="text-align: center;">
 <img src="img_rapport/figure10_state_render_extension.png" alt="Classes Observer">
 <br><figcaption><br></br><strong>Figure 10 :</strong> State, extension pour le rendu</figcaption>
@@ -326,6 +363,7 @@ Cette classe est reliée à deux énumérations :
 Le rendu doit être informé lors d'un changement du State pour afficher les modifications nécessaires. Pour cela le design pattern Observer est utilisé. Les classes Board et Player sont des sujets (Subject) connaissant tous leurs observateurs et pouvant les notifier d'un changement. Le rendu sera alors un observateur du State.
 
 <strong>Subject</strong>
+
 | Methode | Objectif |
 |--------|---------|
 | void addObserver(observer:IObserver*) | Ajoute un observateur à la liste des observateurs |
@@ -333,6 +371,7 @@ Le rendu doit être informé lors d'un changement du State pour afficher les mod
 | void notifyObservers() | Notifie tous les observateurs d'un changement d'état |
 
 <strong>IObserver</strong>
+
 | Methode | Objectif |
 |--------|---------|
 | void getNotified(e:StateEventID) | Traite la notification reçue |
@@ -345,12 +384,19 @@ Le rendu doit être informé lors d'un changement du State pour afficher les mod
 <img src="img_rapport/figure11_dia_state.png" alt="Diagramme des classes état">
 <br><figcaption><br></br><strong>Figure 11 :</strong> Diagramme des classes d'état</figcaption>
 </figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure11_1_dia_state.png" alt="Diagramme des classes état V2">
+<br><figcaption><br></br><strong>Figure 11 :</strong> Diagramme des classes d'état</figcaption>
+</figure></br>
+
 On peut maintenant observer les différentes interactions entre les différents états, que ce soit entre le Player et le Board, où chacun d’entre eux a la nécessité de faire appel à l’autre pour effectuer certaines méthodes. Il en est de même pour PackOfCard et Board.
 
 
 ## 3 Rendu: Stratégie et Conception
 
 ### 3.1 Stratégie de rendu d'un état
+
 Différents éléments doivent être rendus à l'écran pendant une partie de Shadowhunters. Cela inclu le plateau de jeu lui même, les cartes, les informations relatives aux joueurs. Plusieures classes sont alors créées, chacune responsable du rendu de certains éléments du jeu et de l'écoute des interactions utilisateur (clics, appuis de touches) avec ces éléments.  
 
 Une classe RenderManager est responsable de la coordination des différents rendus. Elle est un observer du State et est notifiée à chaque changement d'état. Elle demande alors aux différentes classes de rendu de mettre à jour leur affichage en fonction des nouvelles informations du State. Elle délègue également la capture des interactions utilisateur aux classes de rendu.  
@@ -364,6 +410,11 @@ Pour l'instant le Client modifie directement le State, mais lorsque l'Engine ser
 <figure style="text-align: center;">
 <img src="img_rapport/figure12_classe_rendermanager.png" alt="Diagramme des classes de Render">
 <br><figcaption><br></br><strong>Figure 12 :</strong> Classe RenderManager</figcaption>
+</figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/figure12_1_classe_rendermanager.png" alt="Diagramme des classes de Render">
+<br><figcaption><br></br><strong>Figure 12 :</strong> Nouvelle Classe RenderManager</figcaption>
 </figure></br>
 
 | Methode | Objectif |
@@ -398,14 +449,25 @@ Comme dit plus haut, les différentes classes de rendu sont responsables de l'af
 </figure></br>
 
 <figure style="text-align: center;">
+<img src="img_rapport/figure14_1_dia_render.png" alt="Diagramme des classes de Render">
+<br><figcaption><br></br><strong>Figure 14 :</strong> Diagramme de classes de Render V2</figcaption>
+</figure></br>
+
+<figure style="text-align: center;">
 <img src="img_rapport/figure15_dia_client.png" alt="Diagramme des classes de Client">
 <br><figcaption><br></br><strong>Figure 15 :</strong> Diagramme de classes de Client</figcaption>
 </figure></br>
 
 <figure style="text-align: center;">
-<img src="img_rapport/test_render.png" alt="Render actuel du jeu">
+<img src="img_rapport/test_render.png" alt="Render du jeu en Novembre">
 <br><figcaption><br></br><strong>Figure 16 :</strong> Render actuel du jeu</figcaption>
 </figure></br>
+
+<figure style="text-align: center;">
+<img src="img_rapport/test_render_1.png" alt="Render actuel du jeu">
+<br><figcaption><br></br><strong>Figure 16 :</strong> Render actuel du jeu</figcaption>
+</figure></br>
+
 
 <figure style="text-align: center;">
 <img src="img_rapport/Design_Render.png" alt="Render futur du jeu">
@@ -416,7 +478,7 @@ Comme dit plus haut, les différentes classes de rendu sont responsables de l'af
 
 Le rendu graphique est pleinement fonctionnel avec SFML. Les éléments suivants sont affichés :
 
-- **Plateau de jeu** : Les 12 cellules organisées en 6 zones de 2 cellules chacune
+- **Plateau de jeu** : Les 6 cellules organisées en 3 zones de 2 cellules chacune
 - **Joueurs** : Représentation visuelle des 4 joueurs avec leurs positions sur le plateau
 - **Points de vie** : Affichage des dégâts (wounds) pour chaque joueur
 - **Cartes** : Visualisation des cartes piochées et des cartes équipées
@@ -443,10 +505,13 @@ Le rendu continue d'évoluer au cours du projet mais est déjà très proche de 
 
 
 ## 4 Règles de changement d'états et moteur de jeu
+
 Dans cette section, il faut présenter les événements qui peuvent faire passer d'un état à un autre. Il faut également décrire les aspects liés au temps, comme la chronologie des événements et les aspects de synchronisation. Une fois ceci présenté, on propose une conception logicielle pour pouvoir mettre en œuvre ces règles, autrement dit le moteur de jeu.
 
 ### 4.1 Horloge globale
+
 Le moteur de jeu utilise une horloge basée sur les phases de tour (TurnPhase) pour organiser le déroulement d'une partie. Chaque tour est divisé en plusieurs phases :
+
 - **MOVE_PHASE** : Phase de déplacement du joueur
 - **CELL_EFFECT_PHASE** : Phase d'effet de la cellule où le joueur se trouve
 - **BATTLE_PHASE** : Phase de combat potentiel avec les joueurs dans la même zone
@@ -454,6 +519,7 @@ Le moteur de jeu utilise une horloge basée sur les phases de tour (TurnPhase) p
 Le moteur traite les commandes de manière séquentielle à travers la méthode `processOneCommand()` qui est appelée dans la boucle principale du jeu. Cette approche permet de synchroniser les animations et les effets visuels avec les changements d'état.
 
 ### 4.2 Changements extérieurs
+
 Les changements extérieurs proviennent des interactions du joueur avec l'interface graphique. Le Client capture les événements (clics de souris) et les transforme en commandes pour l'Engine :
 
 - **Déplacement** : Lorsque le joueur clique sur le bouton "Move", une MoveCommand est créée
@@ -465,6 +531,7 @@ Les changements extérieurs proviennent des interactions du joueur avec l'interf
 Ces commandes sont ajoutées à la file de commandes de l'Engine et exécutées séquentiellement.
 
 ### 4.3 Changements autonomes
+
 Certains changements se produisent de manière autonome sans intervention directe du joueur :
 
 - **Passage au joueur suivant** : La méthode `goToNextPlayer()` fait automatiquement passer au joueur suivant après la phase de combat
@@ -474,7 +541,9 @@ Certains changements se produisent de manière autonome sans intervention direct
 - **Lancer de dés** : Le lancer de dés pour le déplacement se fait automatiquement, sauf résultat de 7 où le joueur choisit sa destination
 
 ### 4.4 Conception logicielle
+
 Le moteur de jeu utilise le **pattern Command** pour encapsuler toutes les actions du jeu. Ce design pattern permet de :
+
 - Enregistrer l'historique des actions
 - Annuler/refaire des actions (fonctionnalité future)
 - Sérialiser les commandes pour le réseau (fonctionnalité future)
@@ -523,22 +592,26 @@ Certaines commandes nécessitent une interaction avec le joueur (choix d'une cib
 Plusieurs types de commandes ont été implémentées :
 
 **Commandes de jeu de base :**
+
 - **MoveCommand** : Gère le déplacement d'un joueur (lancer de dés, choix de cellule si 7)
 - **AttackCommand** : Gère une attaque entre joueurs
 - **RevealCommand** : Révèle l'identité d'un joueur
 
 **Commandes d'effets de cellule :**
+
 - **GateCommand** : Permet de choisir entre piocher une carte Dark ou White
 - **WoodsCommand** : Donne le choix entre piocher une carte ou se soigner
 - **StealEquipCommand** : Permet de voler une carte équipement à un adversaire
 - **DrawCardCommand** : Pioche une carte et active son effet si nécessaire
 
 **Commandes de cartes Dark :**
+
 - **DarkSpiderCommand** : Effet de la carte Araignée
 - **DarkDollCommand** : Effet de la carte Poupée
 - **DarkBatCommand** : Effet de la carte Chauve-souris (inflige 2 dégâts à une cible)
 
 **Commandes de cartes White :**
+
 - **WhiteFlareCommand** : Inflige 2 dégâts à tous les adversaires
 - **WhiteWaterCommand** : Soigne 2 points de vie
 - **WhiteAidCommand** : Effet de soutien
@@ -546,13 +619,16 @@ Plusieurs types de commandes ont été implémentées :
 - **WhiteBlessingCommand** : Effet de bénédiction
 
 **Commandes de capacités :**
+
 - **FranklinCapacityCommand** : Capacité spéciale de Franklin
 - **GeorgesCapacityCommand** : Capacité spéciale de Georges
 
 **Commandes Hermit :**
+
 - **UseHermitCommand** : Utilise une carte Hermit
 
 **Commandes de cartes Black :**
+
 - **BlackRitualCommand** : Effet de rituel
 - **BlackDynamiteCommand** : Effet de dynamite
 
@@ -563,6 +639,7 @@ L'architecture actuelle du jeu a été conçue pour faciliter l'intégration fut
 **Architecture prévue :**
 
 L'IA sera implémentée comme un composant séparé qui :
+
 1. Observe l'état du jeu via le Board (sans tricher - uniquement les informations visibles)
 2. Prend des décisions basées sur cet état
 3. Fait appelle aux commandes (MoveCommand, AttackCommand, etc.) grâce au Client
@@ -571,6 +648,7 @@ L'IA sera implémentée comme un composant séparé qui :
 **Intégration future :**
 
 Une classe `AI` pourrait être créée qui :
+
 - Hérite ou implémente une interface commune avec le Client humain
 - Possède une méthode `makeDecision()` appelée lorsque c'est son tour
 - Génère automatiquement les réponses aux prompts (choix de cible, choix de carte, etc.)
@@ -604,7 +682,9 @@ Illustration 3: Diagrammes des classes pour le moteur de jeu
 
 
 ## 5 Intelligence Artificielle
+
 Cette section est dédiée aux stratégies et outils développés pour créer un joueur artificiel. Ce robot doit utiliser les mêmes commandes qu'un joueur humain, ie utiliser les mêmes actions/ordres que ceux produit par le clavier ou la souris. Le robot ne doit pas avoir accès à plus information qu'un joueur humain. Comme pour les autres sections, commencez par présenter la stratégie, puis la conception logicielle.
+
 ### 5.1 Stratégies
 
 #### 5.1.1 Intelligence minimale
@@ -623,6 +703,7 @@ Cette section est dédiée aux stratégies et outils développés pour créer un
 
 
 ## 6 Modularisation
+
 Cette section se concentre sur la répartition des différents modules du jeu dans différents processus. Deux niveaux doivent être considérés. Le premier est la répartition des modules sur différents threads. Notons bien que ce qui est attendu est un parallélisation maximale des traitements: il faut bien démontrer que l'intersection des processus communs ou bloquant est minimale. Le deuxième niveau est la répartition des modules sur différentes machines, via une interface réseau. Dans tous les cas, motivez vos choix, et indiquez également les latences qui en résulte.
 
 ### 6.1 Organisation des modules
@@ -662,11 +743,13 @@ MAIN THREAD
 ```
 
 **Avantages :**
+
 - Simplicité de développement et débogage
 - Pas de problème de concurrence d'accès à l'état
 - Synchronisation vidéo naturelle
 
 **Inconvénients :**
+
 - L'interface peut sembler figée pendant les calculs longs
 - Pas de parallélisation possible
 
@@ -780,11 +863,13 @@ std::mutex turnPhaseMutex;   // Protège la phase du tour (futur)
 ```
 
 **Avantages :**
+
 - Jeu multijoueur en réseau
 - Serveur comme arbitre = pas de triche possible
 - Scalabilité : nombreux joueurs possibles
 
 **Inconvénients :**
+
 - Latence réseau (100-300ms par aller-retour)
 - Dépendance à la connexion réseau
 - Complexité accrue
@@ -915,72 +1000,5 @@ class GameServer {
 
 ### 6.4 Conception logiciel: client Android
 
-**Architecture pour Android :**
-
-```
-┌─────────────────────────────┐
-│   Android Client App        │
-├─────────────────────────────┤
-│  • Android NDK (C++ bridge) │
-│  • SFML Android port        │
-│  • Java/Kotlin UI Wrapper   │
-└─────────────────────────────┘
-         ▲ ▼
-    ┌─────────────┐
-    │ Game Server │
-    │   (distant) │
-    └─────────────┘
-```
-
-**Défis spécifiques à Android :**
-
-1. **Écran tactile** : Adapter les contrôles pour le tactile
-2. **Réseau mobile** : Gérer les déconnexions/reconnexions
-3. **Performance** : CPU et mémoire limités
-4. **Batterie** : Optimiser la consommation (délai render 33ms → 100ms)
-
-**Implémentation proposée :**
-
-```cpp
-// Adaptateur tactile Android
-class AndroidInput {
-    void onTouchEvent(float x, float y) {
-        // Traduire coordonnées écran en actions du jeu
-        if (clickArea.contains(x, y)) {
-            client->moveClicked();
-        }
-    }
-};
-
-// Gestion réseau robuste
-class AndroidNetworkClient {
-    void retryWithBackoff(int attempt) {
-        delay = min(300 * 2^attempt, 30000);  // Cap à 30s
-        connect();
-    }
-};
-```
-
-**Protocole de communication compressé :**
-
-```json
-// Format allégé pour mobile
-{"a":"cmd","p":0,"d":{"r":7}}     // au lieu de full JSON
-
-// Compression : GZIP sur payloads
-POST /game/action
-Content-Encoding: gzip
-[données compressées]
-```
-
-**Améliorations pour l'UX mobile :**
-
-- Interface simplifée (boutons plus grands)
-- Rotation automatique d'écran
-- Notifications push pour les tours
-- Cache local du state pour offline mode
-- Achats in-app (cosmétiques futur)
-
-Illustration 4: Diagramme de classes pour la modularisation
 
 </div>
