@@ -1,8 +1,10 @@
 #include <boost/test/unit_test.hpp>
 #include "../../src/shared/state.h"
+#include "../../src/client/render.h"
 #include <iostream>
 
 using namespace state;
+using namespace render;
 
 BOOST_AUTO_TEST_CASE(TestState) {
     PackOfCards whitePack(WHITECOUNT, WHITE);
@@ -81,6 +83,37 @@ BOOST_AUTO_TEST_CASE(TestStateBoard) {
     }
     //===================================================
 
+
+    PackOfCards pack(2, DARK);
+    for (int i = 0; i < state::DARKCOUNT - state::WHITECOUNT - 1; ++i) {
+        CardClass* card = pack.draw();
+        pack.discard(card);
+    }
+    CardClass* card = pack.draw();
+    Werewolf* wf = new Werewolf(&bd);
+    bd.equipCard(*wf, card);
+    BOOST_CHECK_EQUAL(wf->equipCards.size(), 1);
+    
+    CardClass* card1 = new CardClass(FLARE1, WHITE, INSTANT);
+    bd.discardCard(card1);
+    CardClass* card2 = new CardClass(RITUAL1, DARK, INSTANT);
+    bd.discardCard(card2);
+    CardClass* card3 = new CardClass(HERMIT1, HERMIT, INSTANT);
+    bd.discardCard(card3);
+    CardClass* card4 = new CardClass(FLARE1, static_cast<CardType>(5), INSTANT);
+    bd.discardCard(card4);
+
+    RenderManager* rm = new RenderManager(&bd);
+    bd.addObserver(rm);
+    bd.removeObserver(rm);
+
+    CellClass* otherCell = bd.dieToCell(8);
+    BOOST_CHECK_EQUAL(otherCell->isDieToThisCell(8), true);
+    BOOST_CHECK_EQUAL(otherCell->isDieToThisCell(3), false);
+
+    bd.rollDice(ONLYD4);
+    bd.rollDice(ONLYD6);
+
 }
 
 BOOST_AUTO_TEST_CASE(TestStatePlayer) {
@@ -103,6 +136,16 @@ BOOST_AUTO_TEST_CASE(TestStatePlayer) {
     BOOST_CHECK_EQUAL(wf.dealDamage(9,emi),true);
     //Wait for getAttacked to be implemented
     //BOOST_CHECK_EQUAL(wf.attackOther(emi),false);
+
+    Player* player = new Player(&bd, 8, HUNTER, GEORGES);
+    BOOST_CHECK_EQUAL(player->getHP(),8);
+    BOOST_CHECK_EQUAL(player->revealed,false);
+    player->revealYourself();
+    BOOST_CHECK_EQUAL(player->revealed,true);
+    player->useCapacity();
+    player->equipACard(new CardClass(FLARE1, WHITE, INSTANT));
+    BOOST_CHECK_EQUAL(player->equipCards.size(),1);
+
 }
 
 BOOST_AUTO_TEST_CASE(TestStateCharacters) {

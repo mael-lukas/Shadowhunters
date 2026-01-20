@@ -143,7 +143,7 @@ namespace engine {
         sf::Clock timer;
         engine.currentTurnPhase = BATTLE_PHASE;
         timer.restart();
-        while (timer.getElapsedTime().asSeconds() < 1.5f) {}  
+        while (timer.getElapsedTime().asSeconds() < 1.0f) {}  
         for (auto& player : engine.board->playerList) {
             if (player.get() != &engine.getCurrentPlayer() && player->isAlive) {
                 player->receiveDamage(2);
@@ -158,7 +158,7 @@ namespace engine {
         sf::Clock timer;
         engine.currentTurnPhase = BATTLE_PHASE;
         timer.restart();
-        while (timer.getElapsedTime().asSeconds() < 1.5f) {}
+        while (timer.getElapsedTime().asSeconds() < 1.0f) {}
         user->receiveDamage(-2);
         engine.board->discardCard(user->equipCards.back());
         user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
@@ -237,7 +237,7 @@ namespace engine {
         if (user->getRole() != state::HUNTER) {
             engine.currentTurnPhase = BATTLE_PHASE;
             timer.restart();
-            while (timer.getElapsedTime().asSeconds() < 1.5f) {}
+            while (timer.getElapsedTime().asSeconds() < 1.0f) {}
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
             isDone = true;
@@ -263,20 +263,6 @@ namespace engine {
             }
             return;
         }
-        else {
-            engine.currentTurnPhase = BATTLE_PHASE;
-            if (user->revealed) {
-                user->wounds = 0;
-                user->receiveDamage(0);
-                std::cout << "[ADVENT] " << user->name << " revealed and was fully healed!" << std::endl;
-            }
-            engine.board->discardCard(user->equipCards.back());
-            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
-                engine.isWaitingForYesNoPrompt = false;
-            }
-            isDone = true;
-        }
     }
 
     void WhiteAdventCommand::receivePromptAnswer(void* answer) {
@@ -295,7 +281,7 @@ namespace engine {
         sf::Clock timer;
         if (user->getRole() != state::SHADOW) {
             timer.restart();
-            while (timer.getElapsedTime().asSeconds() < 1.5f) {}
+            while (timer.getElapsedTime().asSeconds() < 1.0f) {}
             engine.currentTurnPhase = BATTLE_PHASE;
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
@@ -321,20 +307,6 @@ namespace engine {
                 engine.customPromptText = "Do you want to reveal yourself?";
             }
             return;
-        }
-        else {
-            engine.currentTurnPhase = BATTLE_PHASE;
-            if (user->revealed) {
-                user->wounds = 0;
-                user->receiveDamage(0);
-                std::cout << "[DIABOLIC RITUAL] " << user->name << " revealed and was fully healed!" << std::endl;
-            }
-            engine.board->discardCard(user->equipCards.back());
-            user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
-            {   std::lock_guard<std::mutex> lock(engine.promptMutex);
-                engine.isWaitingForYesNoPrompt = false;
-            }
-            isDone = true;
         }
     }
 
