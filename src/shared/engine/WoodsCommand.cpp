@@ -53,6 +53,7 @@ namespace engine {
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
             target->receiveDamage(damage);
+            std::cout << "[WoodsCommand] Target selected: Player " << target->id << " Damage: " << damage << std::endl;
         }
         isDone = true;
     }

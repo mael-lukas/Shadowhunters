@@ -54,6 +54,7 @@ namespace engine {
             std::cout << "Dark Spider AI: User:" << user->id << " received 2 damage. His wounds: " << user->wounds << std::endl;
         }
         if (!user->equipCards.empty()) {
+            std::cout << "Dark Spider AI: Discarding Dark Spider card." << std::endl;
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
         }
@@ -96,8 +97,6 @@ namespace engine {
 
     void DarkDollCommand::executeAI() {
         std::cout << "Dark Doll AI executed" << std::endl;
-        std::cout << "Dark Doll AI: Target:" << target->id << std::endl; 
-        //std::cout << "Dark Doll AI: Target selected: Player " << target->id << std::endl;
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
             int result = engine.board->rollDice(state::ONLYD6);
@@ -112,7 +111,9 @@ namespace engine {
                 std::cout << "Dark Doll AI: User:" << user->id << " received 3 damage." << std::endl;
             }
         }
-        std::cout << "Dark Doll AI: Discarding Dark Doll card." << std::endl;
+        else{
+            std::cout << "Dark Doll AI: Discarding Dark Doll card." << std::endl;
+        }
         if (!user->equipCards.empty()) {
             engine.board->discardCard(user->equipCards.back());
             user->equipCards.erase(std::find(user->equipCards.begin(),user->equipCards.end(),user->equipCards.back()));
@@ -151,6 +152,7 @@ namespace engine {
 
     //A modifier pour que la target soit choisie par l'IA
     void DarkBatCommand::executeAI() {
+        std::cout << "Dark Bat AI executed" << std::endl;
         engine.currentTurnPhase = BATTLE_PHASE;
         if (target != nullptr) {
             std::cout << "Dark Bat AI: Player:" << target->id << " HP: " << target->wounds << std::endl;
@@ -302,12 +304,30 @@ namespace engine {
 // ReceiveAnswer
     void DarkSpiderCommand::receiveAnswer(void* answer) {
         target = static_cast<state::Player*>(answer);
+        if(target != nullptr){
+            std::cout << "Dark Spider target received: Player ID " << target->id << std::endl;
+        }
+        else {
+            std::cout << "Dark Spider target received: nullptr" << std::endl;
+        }
     }
     void DarkDollCommand::receiveAnswer(void* answer) {
         target = static_cast<state::Player*>(answer);
+        if(target != nullptr){
+            std::cout << "Dark Doll target received: Player ID " << target->id << std::endl;
+        }
+        else {
+            std::cout << "Dark Doll target received: nullptr" << std::endl;
+        }
     }
     void DarkBatCommand::receiveAnswer(void* answer) {
         target = static_cast<state::Player*>(answer);
+        if(target != nullptr){
+            std::cout << "Dark Bat target received: Player ID " << target->id << std::endl;
+        }
+        else {
+            std::cout << "Dark Bat target received: nullptr" << std::endl;
+        }
     }
     void WhiteFlareCommand::receiveAnswer(void* answer) {
     }

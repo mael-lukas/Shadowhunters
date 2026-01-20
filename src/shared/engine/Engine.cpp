@@ -80,6 +80,15 @@ namespace engine
         state::Player& currentPlayer = getCurrentPlayer();
         Command* cmd = commands.front();
         if( currentPlayer.type != state::HUMAN) {
+            /*std::cout << "[ENGINE] AI command" << std::endl;
+            if(cmd->target != nullptr){
+                std::cout << "[ENGINE] AI Command target: Player ID " << cmd->target->id << std::endl;
+            }
+            else {
+                std::cout << "[ENGINE] AI Command target: nullptr" << std::endl;
+                
+            }
+            std::cout << "[ENGINE] Executing AI command" << std::endl;*/
             cmd->executeAI();
         }
         else{

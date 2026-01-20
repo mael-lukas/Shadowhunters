@@ -38,7 +38,8 @@ namespace engine {
 
     void AttackCommand::executeAI()
     {
-        if(attacked == nullptr) {
+        //std::cout << "[AI] Attacker ID: " << attacker->id << "[AI] target ID: " << attacked->id << std::endl;
+        if(attacked == nullptr || attacked == attacker) {
             std::cout << "[AI] " << attacker->id << " chooses not to attack." << std::endl;
             engine.goToNextPlayer();
             engine.currentTurnPhase = MOVE_PHASE;
@@ -79,6 +80,13 @@ namespace engine {
     }
 
     void AttackCommand::receiveAnswer(void* answer) {
+        std::cout << "Receive Answer called in AttackCommand" << std::endl;
         attacked = static_cast<state::Player*>(answer);
+        if(attacked == nullptr) {
+            std::cout << "Attack cancelled via receiveAnswer" << std::endl;
+        }
+        else {
+            std::cout << "Target selected via receiveAnswer: Player " << attacked->id << std::endl;
+        }
     }
 }

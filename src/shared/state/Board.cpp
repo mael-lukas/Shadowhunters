@@ -209,7 +209,7 @@ namespace state
          * will be replaced by user choice later
          */
         LevelAI temporareLevel = RANDOM;
-        int numberOfAI = 3;
+        int numberOfAI = 4;
         //--------------------------------------------------------
 
         for(int i = 0; i < playerList.size(); i++) {

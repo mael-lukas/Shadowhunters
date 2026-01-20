@@ -49,6 +49,7 @@ namespace engine
             card = engine.board->drawWhite();
         }
         if (cardType == state::DARK){
+            std::cout << "Drawing DARK card" << std::endl;
             card = engine.board->drawDark();
         }
         if (cardType == state::HERMIT){
@@ -77,5 +78,9 @@ namespace engine
     }
 
     void DrawCardCommand::receiveAnswer(void* answer) {
+        draw = *static_cast<bool*>(answer);
+        std::cout << "receive answer called in DrawCardCommand, draw = " << draw << std::endl;
+        engine.waitingCommand = nullptr;
+        isWaitingForValidation = false;
     }
 }

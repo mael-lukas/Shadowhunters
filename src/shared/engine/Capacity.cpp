@@ -24,6 +24,18 @@ namespace engine {
         }
     }
 
+    void FranklinCapacityCommand::executeAI() {
+        // AI implementation can be added here if needed
+    }
+
+    bool FranklinCapacityCommand::needTarget() {
+        return true;
+    }
+
+    void FranklinCapacityCommand::receiveAnswer(void* answer) {
+        // Implementation can be added here if needed
+    }
+
     void FranklinCapacityCommand::receivePromptAnswer(void* answer) {
         int targetID = *static_cast<int*>(answer);
         target = engine.board->playerList[targetID].get();
@@ -47,6 +59,18 @@ namespace engine {
             engine.isWaitingForCardEffectTargetPrompt = false;
             isDone = true;
         }
+    }
+
+    void GeorgesCapacityCommand::executeAI() {
+        // AI implementation can be added here if needed
+    }
+
+    bool GeorgesCapacityCommand::needTarget() {
+        return true;
+    }
+
+    void GeorgesCapacityCommand::receiveAnswer(void* answer) {
+        // Implementation can be added here if needed
     }
 
     void GeorgesCapacityCommand::receivePromptAnswer(void* answer) {

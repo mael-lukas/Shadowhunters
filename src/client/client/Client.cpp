@@ -11,14 +11,15 @@
 #include "HermitGiveReceive.h"
 
 namespace client {
-    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame, ai::RandomAI* randomAI) : 
-    renderMan(renderMan), engineGame(engineGame), randomAI(randomAI) {}
+    Client::Client(render::RenderManager* renderMan, engine::Engine* engineGame): 
+    renderMan(renderMan), engineGame(engineGame) {}
 
     void Client::run() {
         sf::Clock clock; // démarre le chrono
         sf::Time elapsed1;
         std::cout << elapsed1.asSeconds() << std::endl;
         renderMan->init();
+        randomAI = new ai::RandomAI(engineGame->board, engineGame);
         while (renderMan->window.isOpen()) {
             if (engineGame->currentGameState != engine::ONGOING) {
                 sf::Event event;
@@ -41,7 +42,7 @@ namespace client {
                     else {}
                 }
                 elapsed1 = clock.getElapsedTime();
-                if(elapsed1.asSeconds() > 0.7f){
+                if(elapsed1.asSeconds() > 0.01f){
                     renderMan->draw();
                     if (!engineGame->isBusy && engineGame->commands.empty()) {
                         switch(engineGame->getCurrentPlayer().type ){
@@ -61,12 +62,12 @@ namespace client {
                                 break;
                         }
                     }
-                    if(!engineGame->isBusy && !engineGame->commands.empty()){
+                    /*if(!engineGame->isBusy && !engineGame->commands.empty()){
                         if(engineGame->commands.front()->needTarget()){
                             std::cout<<"La première commande est : " << engineGame->commands.front() << std::endl;
                             randomAI->cardTarget(engineGame->commands.front());
                         }
-                    }
+                    }*/
                         //std::cout << "[CLIENT
                     engineGame ->processOneCommand();
                     clock.restart();
@@ -90,7 +91,7 @@ namespace client {
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
             
             engineGame->checkForVictory();
-            if (engineGame->currentGameState != engine::ONGOING) {
+            if(engineGame->currentGameState != engine::ONGOING) {
                 std::cout << "Game Over!" << std::endl;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
@@ -103,10 +104,8 @@ namespace client {
         }
 
         if(engineGame->isWaitingForHermitTargetPrompt){
-
             //is waiting for effet
             return renderMan->openHermitGivePrompt(engineGame->getCurrentPlayer().id);
-            
         }
         if(engineGame->isWaitingForHermitInfoPrompt){
             for(auto card : engineGame->getCurrentPlayer().equipCards){
@@ -145,7 +144,6 @@ namespace client {
     void Client::moveClicked() {
         if (!engineGame->isBusy)
         {   
-            
             cmd = new engine::MoveCommand(*engineGame);
             engineGame->commands.push_back(cmd);
         }
@@ -240,7 +238,9 @@ namespace client {
 
     void Client::chosenCardEffectTarget(int targetID){
         //std::cout << "[CLIENT] Chosen card effect target ID: " << targetID << std::endl;
-        renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        if(engineGame->getCurrentPlayer().type == state::LevelAI::HUMAN){
+            renderMan->prompt_render.activePromptType = render::PromptType::NONE;
+        }
         if (engineGame->waitingCommand != nullptr) {
             engineGame->waitingCommand->receivePromptAnswer(&targetID);
         }
@@ -261,5 +261,7 @@ namespace client {
             engineGame->waitingCommand->receivePromptAnswer(&answer);
         }
     }
+
+
 
 }
