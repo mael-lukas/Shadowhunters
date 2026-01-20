@@ -693,19 +693,40 @@ Cette section est dédiée aux stratégies et outils développés pour créer un
 ### 5.1 Stratégies
 
 #### 5.1.1 Intelligence minimale
+L'objectif de cette IA sera de réaliser de manière aléatoire les différentes actions qui lui sont proposées. Que ce soit se déplacer, se révéler, attaquer ou non, et utiliser les effets de cartes. Ainsi, lorsque cette dernière joue, il n'y a ni allié ni ennemi.
 
 #### 5.1.2 Intelligence basée sur des heuristiques
+L’IA heuristique aurait pour but de gagner la partie en découvrant les membres du camp ennemi puis de les attaquer. Elle devra prendre en compte les différentes interactions et évaluer ces dernières. L’évaluation dépendra du moment dans la partie. Par exemple, si les rôles des autres joueurs ne sont pas connus, alors le fait d’obtenir des cartes Hermite sera favorisé. Alors que dans une autre phase de jeu, où les rôles sont connus, l’objectif serait de récupérer des équipements ou d’aller dans les mêmes zones que les joueurs adverses afin de les attaquer.
 
 #### 5.1.3 Intelligence basée sur les arbres de recherche
+L’IA avancée n’a pas été commencée, mais cette dernière fonctionnerait avec une estimation des meilleurs coûts à la suite du premier jet de dé. Par exemple, si on obtient un 7, il faudrait faire le meilleur choix de cellule où aller et déterminer les actions qui vont s’ensuivre. Dans le cas où ce n’est pas un 7, il faudrait déterminer la meilleure action lorsque l’on se trouve dans la cellule.
 
 ### 5.2 Conception logicielle
+La modification du niveau et du nombre d’IA se fait directement dans le board, dans le code.
+  
+#### 5.2.1 Intellignece minimale
+Pour effectuer les choix aléatoires, on utilise notre fonction randomChoice dans les différents cas, en l’adaptant en fonction de la situation. Nous allons ainsi expliquer le fonctionnement phase par phase :
+- Move:  
+On lance un dé puis on se déplace vers la zone associée. Si on obtient un 7, on relance le dé jusqu’à obtenir une valeur différente de 7. Lorsque l’on arrive sur la cellule, on passe à la phase suivante.
+- CellEffect:  
+L’effet dépend de notre position et choisit de façon aléatoire les différents paramètres de cette cellule, que ce soit le choix de l’effet ou de la cible. Ensuite, on passe à DrawCard si l’effet est de piocher une carte, ou bien directement à la Battle Phase.
+- DrawCard:  
+On pioche la carte et on utilise l’effet de celle-ci avec des arguments définis aléatoirement par l’IA.
+- BattlePhase:  
+On attaque un adversaire aléatoire parmi les voisins du joueur.
+- Revealed  
+La révélation peut se faire à n’importe quel moment pendant le tour du joueur. Une probabilité de 5/100 a été définie afin d’éviter que cela soit trop fréquent ou trop rare.
 
-### 5.3 Conception logicielle: extension pour l'IA composée
+#### 5.2.3 Conception logicielle: extension pour l'IA composée
+On conserve le même système de phases, mais la différence est que l’IA effectue des choix non aléatoires. Il y a l’ajout de scores afin de prioriser les différents choix possibles, que ce soit pour les cellules avec scoreMove, ou pour les attaques avec scoreAttack, qui dépend de plusieurs informations comme le niveau de blessure, le fait que le joueur ait révélé son rôle ou non, ou encore le nombre d’équipements qu’il possède.
+#### 5.2.4 Conception logicielle: extension pour IA avancée
 
-### 5.4 Conception logicielle: extension pour IA avancée
+#### 5.2.5 Conception logicielle: extension pour la parallélisation
 
-### 5.5 Conception logicielle: extension pour la parallélisation
-
+<figure style="text-align: center;">
+<img src="img_rapport/figure16_dia_IA.png" alt="Diagramme UML de l'IA">
+<br><figcaption><br></br><strong>Figure 18 :</strong> Diagramme UML de l'IA</figcaption>
+</figure></br>
 
 ## 6 Modularisation
 
@@ -721,14 +742,14 @@ L'architecture du projet est organisée en trois modules principaux :
 │  State, Engine, Commands, Cards      │
 └──────────────────────────────────────┘
             ▲         ▲
-            │         │
+            │         │  
       ┌─────┴─────────┴──────┐
       │                      │
-┌─────┴──────┐        ┌─────┴──────┐
-│   CLIENT   │        │   SERVER   │
-│  (Rendu)   │        │  (Réseau)  │
-│ (Graphique)│        │  (microhttpd)
-└────────────┘        └────────────┘
+┌─────┴──────┐        ┌──────┴───────┐
+│   CLIENT   │        │   SERVER     │
+│  (Rendu)   │        │  (Réseau)    │
+│ (Graphique)│        │  (microhttpd)│
+└────────────┘        └──────────────┘
 ```
 
 #### 6.1.1 Répartition sur différents threads
