@@ -41,9 +41,7 @@ namespace ai
             auto* cmd = new engine::MoveCommand(*engine);
             int die;
             currentPos = engine->getCurrentPlayer().position;
-            
             do {
-                
                 do {
                     die = engine->board->rollDice(state::RollRule::SUM);
                     std::cout << "Die rolled: " << die << std::endl;
