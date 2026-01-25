@@ -718,8 +718,10 @@ On attaque un adversaire aléatoire parmi les voisins du joueur.
 La révélation peut se faire à n’importe quel moment pendant le tour du joueur. Une probabilité de 5/100 a été définie afin d’éviter que cela soit trop fréquent ou trop rare.
 
 #### 5.2.3 Conception logicielle: extension pour l'IA composée
-On conserve le même système de phases, mais la différence est que l’IA effectue des choix non aléatoires. Il y a l’ajout de scores afin de prioriser les différents choix possibles, que ce soit pour les cellules avec scoreMove, ou pour les attaques avec scoreAttack, qui dépend de plusieurs informations comme le niveau de blessure, le fait que le joueur ait révélé son rôle ou non, ou encore le nombre d’équipements qu’il possède.
+On conserve le même système de phases, mais la différence est que l’IA effectue des choix non aléatoires. On divise notre système en 2 phases, la phases prises d'information où l'objectif sera de récupérer ce déplacer vers des zones donnant des cartes Hermit en évitant tout attaque tant que la phase n'a pas été résolue. Dans un second temps on passe en phase combat ce qui favorise le déplacement en direction de cible potentiel.
+
 #### 5.2.4 Conception logicielle: extension pour IA avancée
+Il y a l’ajout de scores afin de prioriser les différents choix possibles, que ce soit pour les cellules avec scoreMove, ou pour les attaques avec scoreAttack, qui dépend de plusieurs informations comme le niveau de blessure, le fait que le joueur ait révélé son rôle ou non, ou encore le nombre d’équipements qu’il possède.
 
 #### 5.2.5 Conception logicielle: extension pour la parallélisation
 
